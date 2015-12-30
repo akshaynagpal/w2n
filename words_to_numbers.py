@@ -52,20 +52,6 @@ indian_number_system = {
     'crore': 10000000
 }
 
-#######################################################################################
-"""
-testing for american_number_system
-
-'one hundred and forty two': 1,100,40,2 -> 1*100+40+2 = 142
-'three thousand four hundred and seventy four': 3, 1000, 4,100, 70, 4 -> 3*1000,4*100,70+4 = 3474
-'thirty five thousand seven hundred eight nine' : 30,5,1000,7,100,80,9 ->
-'thirty five thousand seven hundred ninety': 30,5,1000,7,100,90
-'three hundred thousand four hundred forty two': 3,100,1000,4,100,40,2
-"""
-########################################################################################
-
-
-
 def word_to_num(number_sentence):
     split_words = number_sentence.split()  # split sentence into words
     clean_numbers = []  # removing and, & etc.
@@ -113,8 +99,6 @@ def word_to_num(number_sentence):
         hundreds = 0
     total_sum += hundreds
     # print "hundreds",str(hundreds)
-        
-    print total_sum
     return total_sum
 
 
@@ -133,6 +117,8 @@ def number_formation(number_words):
             return numbers[0]+numbers[1]
     else:
         return numbers[0]
+
+""" testing....
 
 word_to_num('one hundred and forty two')
 
@@ -155,3 +141,5 @@ word_to_num('thirty five thousand seven hundred eighty one')
 word_to_num('one hundred twenty three million four hundred fifty six thousand seven hundred and eighty one')
 
 word_to_num('four hundred and forty three thousand') ##
+
+"""
