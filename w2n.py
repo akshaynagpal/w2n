@@ -23,7 +23,7 @@ american_number_system = {
     'million': 1000000,
     'billion': 1000000000
 }
-
+"""
 #TODO
 indian_number_system = {
     'zero': 0,
@@ -51,7 +51,7 @@ indian_number_system = {
     'lakh': 100000,
     'crore': 10000000
 }
-
+"""
 def word_to_num(number_sentence):
     number_sentence = number_sentence.lower()
     split_words = number_sentence.split()  # split sentence into words
