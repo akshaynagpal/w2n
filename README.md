@@ -3,7 +3,7 @@ Convert number words (eg. twenty one) to numeric digits (21)
 
 #Installation
 
-`pip install w2n'
+    pip install w2n
 
 #Usage
     >>> from w2n import w2n  
