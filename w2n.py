@@ -53,6 +53,7 @@ indian_number_system = {
 }
 
 def word_to_num(number_sentence):
+    number_sentence = number_sentence.lower()
     split_words = number_sentence.split()  # split sentence into words
     clean_numbers = []  # removing and, & etc.
     for word in split_words:
