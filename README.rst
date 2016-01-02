@@ -10,7 +10,8 @@ Installation
 ++++++++++++
 You can install the module using Python Package Index using the below command.
 
->>>pip install word2number
+>>> pip install word2number
+
 
 +++++
 Usage
