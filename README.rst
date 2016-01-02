@@ -10,20 +10,17 @@ Installation
 ++++++++++++
 You can install the module using Python Package Index using the below command.
 
-.. code:: python
-pip install word2number
+>>>pip install word2number
 
 +++++
 Usage
 +++++
 First you have to import the module using the below code.
 
-.. code:: python
 >>> from word2number import w2n
 
 Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.
 
-.. code:: python
 >>> print w2n.word_to_num("two million three thousand nine hundred and eighty four")
 2003984
 
