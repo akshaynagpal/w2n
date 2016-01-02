@@ -20,12 +20,11 @@ First you have to import the module using the below code.::
 
 >>> from w2n import w2n
 
-
-
 Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.::
 
 >>> print w2n.word_to_num("two million three thousand nine hundred and eighty four")
-    2003984
+
+2003984
 
 +++++++++++
 Bugs/Errors
