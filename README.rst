@@ -10,9 +10,8 @@ Installation
 ++++++++++++
 You can install the module using Python Package Index using the below command.
 
-.. code:: bash
+.. code:: python
 pip install w2n
-
 
 +++++
 Usage
