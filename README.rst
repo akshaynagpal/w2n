@@ -8,10 +8,10 @@ Below is the installation, usage and other details of this module.
 ++++++++++++
 Installation
 ++++++++++++
-You can install the module using Python Package Index using the below command.
-
 Please ensure that you have **updated pip** to the latest version before installing word2number.
 This module works with only **Python 2.x** for now. Support for Python 3.x will be added soon.
+
+You can install the module using Python Package Index using the below command.
 
 >>> pip install word2number
 
