@@ -10,6 +10,9 @@ Installation
 ++++++++++++
 You can install the module using Python Package Index using the below command.
 
+Please ensure that you have **updated pip** to the latest version before installing word2number.
+This module works with only **Python 2.x** for now. Support for Python 3.x will be added soon.
+
 >>> pip install word2number
 
 
@@ -28,6 +31,10 @@ Then you can use the **word_to_num** method to convert a number-word to numeric 
 +++++++++++
 Bugs/Errors
 +++++++++++
+
+1. Please ensure that you have updated pip to the latest version before installing word2number.
+2. This module works with only Python 2.x for now. Support for Python 3.x will be added soon.
+
 If you find any bugs/errors in the usage of above code, please send an email at akshay2626@gmail.com or raise an issue through `Github
 <http://github.com/akshaynagpal/w2n>`_.
 
