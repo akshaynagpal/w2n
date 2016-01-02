@@ -8,7 +8,7 @@ Below is the installation, usage and other details of this module.
 ++++++++++++
 Installation
 ++++++++++++
-You can install the module using Python Package Index using the below command.::
+You can install the module using Python Package Index using the below command.
 
 .. code:: bash
 pip install w2n
@@ -17,12 +17,12 @@ pip install w2n
 +++++
 Usage
 +++++
-First you have to import the module using the below code.::
+First you have to import the module using the below code.
 
 .. code:: python
 >>> from w2n import w2n
 
-Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.::
+Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.
 
 .. code:: python
 >>> print w2n.word_to_num("two million three thousand nine hundred and eighty four")
