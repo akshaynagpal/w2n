@@ -11,7 +11,7 @@ Installation
 You can install the module using Python Package Index using the below command.
 
 .. code:: python
-pip install w2n
+pip install word2number
 
 +++++
 Usage
@@ -19,7 +19,7 @@ Usage
 First you have to import the module using the below code.
 
 .. code:: python
->>> from w2n import w2n
+>>> from word2number import w2n
 
 Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.
 
@@ -30,7 +30,7 @@ Then you can use the **word_to_num** method to convert a number-word to numeric 
 +++++++++++
 Bugs/Errors
 +++++++++++
-If you find any bugs/errors in the usage of above code, please send an email at akshay2626@gmail.com or contact through `Github
+If you find any bugs/errors in the usage of above code, please send an email at akshay2626@gmail.com or raise an issue through `Github
 <http://github.com/akshaynagpal/w2n>`_.
 
 +++++++
