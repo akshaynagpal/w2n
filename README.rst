@@ -9,27 +9,27 @@ Below is the installation, usage and other details of this module.
 Installation
 ++++++++++++
 You can install the module using Python Package Index using the below command.::
-
->>>pip install w2n
+.. code:: bash
+    pip install w2n
 
 
 +++++
 Usage
 +++++
 First you have to import the module using the below code.::
-
->>> from w2n import w2n
+.. code:: python
+    >>> from w2n import w2n
 
 Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.::
-
->>> print w2n.word_to_num("two million three thousand nine hundred and eighty four")
-2003984
+.. code:: python
+    >>> print w2n.word_to_num("two million three thousand nine hundred and eighty four")
+    2003984
 
 +++++++++++
 Bugs/Errors
 +++++++++++
 If you find any bugs/errors in the usage of above code, please send an email at akshay2626@gmail.com or contact through `Github
-<http://github.com/akshaynagpal/w2n>` _.
+<http://github.com/akshaynagpal/w2n>`_.
 
 +++++++
 License
