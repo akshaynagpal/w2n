@@ -12,13 +12,13 @@ def open_file(fname):
 setup(
   name = 'word2number',
   packages = ['word2number'], # this must be the same as the name above
-  version = '0.1',
+  version = '0.2',
   license=open('LICENSE.txt').read(),
   description = 'Convert number words(eg. three hundred and forty two) to numbers(342).',
   author = 'Akshay Nagpal',
   author_email = 'akshay2626@gmail.com',
   url = 'https://github.com/akshaynagpal/w2n', # use the URL to the github repo
-  download_url = 'https://github.com/akshaynagpal/w2n/tarball/0.1', # I'll explain this in a second
+  download_url = 'https://github.com/akshaynagpal/w2n/tarball/0.2', # I'll explain this in a second
   keywords = ['numbers', 'convert', 'words'], # arbitrary keywords
   classifiers = [
       'Intended Audience :: Developers',
