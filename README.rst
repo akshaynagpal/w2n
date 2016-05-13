@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/akshaynagpal/w2n.svg?branch=master)](https://travis-ci.org/akshaynagpal/w2n)
 ==============
 Word to Number
 ==============
