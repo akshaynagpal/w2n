@@ -1,48 +1,39 @@
 [![Build Status](https://travis-ci.org/akshaynagpal/w2n.svg?branch=master)](https://travis-ci.org/akshaynagpal/w2n)
+# Word to Number
 
-==============
-Word to Number
-==============
 This is a Python module to convert number words (eg. twenty one) to numeric digits (21).
 It works for positive numbers upto the range of 999,999,999,999 (i.e. billions)
 Below is the installation, usage and other details of this module.
 
-++++++++++++
-Installation
-++++++++++++
+## Installation
+
 Please ensure that you have **updated pip** to the latest version before installing word2number.
 This module works with only **Python 2.x** for now. Support for Python 3.x will be added soon.
 
 You can install the module using Python Package Index using the below command.
 
->>> pip install word2number
+    pip install word2number
 
+## Usage
 
-+++++
-Usage
-+++++
 First you have to import the module using the below code.
 
->>> from word2number import w2n
+    from word2number import w2n
 
 Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.
 
->>> print w2n.word_to_num("two million three thousand nine hundred and eighty four")
-2003984
+    print w2n.word_to_num("two million three thousand nine hundred and eighty four")
+    2003984
 
-+++++++++++
-Bugs/Errors
-+++++++++++
+## Bugs/Errors
 
 1. Please ensure that you have updated pip to the latest version before installing word2number.
 2. This module works with only Python 2.x for now. Support for Python 3.x will be added soon.
 
-If you find any bugs/errors in the usage of above code, please send an email at akshay2626@gmail.com or raise an issue through `Github
-<http://github.com/akshaynagpal/w2n>`_.
+If you find any bugs/errors in the usage of above code, please send an email at akshay2626@gmail.com or raise an issue through [Github](http://github.com/akshaynagpal/w2n).
 
-+++++++
-License
-+++++++
+
+## License
 The MIT License (MIT)
 
 Copyright (c) 2016 Akshay Nagpal (github.com/akshaynagpal)
