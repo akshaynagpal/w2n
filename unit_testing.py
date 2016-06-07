@@ -13,6 +13,7 @@ class TestW2N(unittest.TestCase):
 		self.assertEqual(w2n.word_to_num('eleven'),11)
 		self.assertEqual(w2n.word_to_num('nineteen billion and nineteen'),19000000019)
 		self.assertEqual(w2n.word_to_num('one hundred and forty two'),142)
+		self.assertEqual(w2n.word_to_num('one hundred thirty-five'),135)
 
 if __name__ == '__main__':
 	unittest.main()
