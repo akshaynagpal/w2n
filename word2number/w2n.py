@@ -69,9 +69,10 @@ def word_to_num(number_sentence):
         if word in american_number_system:
             clean_numbers.append(word)
 
-    # Error message if the user enters invalid input!        
+    # Print error message if the user enters invalid input, return "None" result
     if len(clean_numbers) == 0:
-        return "Error: Please enter a valid number word (eg. two million twenty three thousand and forty nine) "
+        print("Error: Please enter a valid number word (eg. two million twenty three thousand and forty nine) ")
+	return(None)
 
     billion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
     million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
