@@ -1,3 +1,6 @@
+from __future__ import print_function
+
+
 american_number_system = {
     'zero': 0,
     'one': 1,
@@ -122,13 +125,14 @@ def get_decimal_sum(decimal_digit_words):
 """
 function to return integer for an input `number_sentence` string
 input: string
-output: int or double
+output: int or double or None
 """
 
 
 def word_to_num(number_sentence):
     if type(number_sentence) is not str:
-        return "Error: Type is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')"
+        print("Error: Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
+        return None
     number_sentence = number_sentence.lower()  # converting input to lowercase
 
     if(number_sentence.isdigit()):  # return the number if user enters a number string
@@ -146,11 +150,12 @@ def word_to_num(number_sentence):
 
     # Error message if the user enters invalid input!
     if len(clean_numbers) == 0:
-        return "Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)"
-
+        print("Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+        return None        
     # Error if user enters million,billion, thousand or decimal point twice
     if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point')> 1:
-        return "Error: Redundant number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)"
+        print("Error: Redundant number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+        return None
 
     # separate decimal part of number (if exists)
     if clean_numbers.count('point') == 1:
@@ -162,7 +167,8 @@ def word_to_num(number_sentence):
     thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
 
     if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index>-1 and million_index < billion_index):
-        return "Error: Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)"
+        print("Error: Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+        return None
 
     total_sum = 0  # storing the number to be returned
 

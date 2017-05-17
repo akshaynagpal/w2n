@@ -28,16 +28,16 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('point nineteen'), 0)
 
     def test_negatives(self):
-        self.assertEqual(w2n.word_to_num('112-'), 'Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)')
-        self.assertEqual(w2n.word_to_num('-'), 'Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)')
-        self.assertEqual(w2n.word_to_num('on'), 'Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)')
-        self.assertEqual(w2n.word_to_num('million million'), 'Error: Redundant number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)')
-        self.assertEqual(w2n.word_to_num('three million million'), 'Error: Redundant number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)')
-        self.assertEqual(w2n.word_to_num('million four million'), 'Error: Redundant number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)')
-        self.assertEqual(w2n.word_to_num('thousand million'), 'Error: Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)')
-        self.assertEqual(w2n.word_to_num('one billion point two million twenty three thousand and forty nine point two three six nine'), 'Error: Redundant number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)')
+        self.assertEqual(w2n.word_to_num('112-'), None)
+        self.assertEqual(w2n.word_to_num('-'), None)
+        self.assertEqual(w2n.word_to_num('on'), None)
+        self.assertEqual(w2n.word_to_num('million million'), None)
+        self.assertEqual(w2n.word_to_num('three million million'), None)
+        self.assertEqual(w2n.word_to_num('million four million'), None)
+        self.assertEqual(w2n.word_to_num('thousand million'), None)
+        self.assertEqual(w2n.word_to_num('one billion point two million twenty three thousand and forty nine point two three six nine'), None)
         self.assertEqual(w2n.word_to_num('seventh point nineteen'), 0)
-        self.assertEqual(w2n.word_to_num(112), 'Error: Type is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')')
+        self.assertEqual(w2n.word_to_num(112), None)
 
 if __name__ == '__main__':
     unittest.main()
