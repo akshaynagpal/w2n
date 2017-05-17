@@ -12,6 +12,10 @@ You can install the module using Python Package Index using the below command.
 
     pip install word2number
 
+Make sure you install all requirements given in requirements.txt
+```
+pip install -r requirements.txt
+```
 ## Usage
 
 First you have to import the module using the below code.
