@@ -1,6 +1,10 @@
-.. image:: https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/akshaynagpal/w2n
+|pic1| |pic2|
 
+.. |pic1| image:: https://travis-ci.org/akshaynagpal/w2n.svg?branch=master 
+  :target: https://travis-ci.org/akshaynagpal/w2n
+
+.. |pic2| image:: https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/akshaynagpal/w2n
 ==============
 Word to Number
 ==============
