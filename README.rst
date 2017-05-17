@@ -1,3 +1,6 @@
+.. image:: https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg
+  :target: https://codecov.io/gh/akshaynagpal/w2n
+
 ==============
 Word to Number
 ==============
@@ -33,30 +36,4 @@ Bugs/Errors
 1. Please ensure that you have updated pip to the latest version before installing word2number.
 2. This module works with only Python 2.x for now. Support for Python 3.x will be added soon.
 
-If you find any bugs/errors in the usage of above code, please send an email at akshay2626@gmail.com or raise an issue through `Github
-<http://github.com/akshaynagpal/w2n>`_.
-
-+++++++
-License
-+++++++
-The MIT License (MIT)
-
-Copyright (c) 2016 Akshay Nagpal (https://github.com/akshaynagpal)
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+If you find any bugs/errors in the usage of above code, please raise an issue through `Github <http://github.com/akshaynagpal/w2n>`_. If you don't know how to use Github or raise an issue through it, I suggest that you should learn it. Else, send an email to akshay2626@gmail.com with a clear example that can reproduce the issue.

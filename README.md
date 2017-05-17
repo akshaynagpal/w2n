@@ -29,8 +29,7 @@ Then you can use the **word_to_num** method to convert a number-word to numeric 
 1. Please ensure that you have updated pip to the latest version before installing word2number.
 2. This module works with only Python 2.x for now. Support for Python 3.x will be added soon.
 
-If you find any bugs/errors in the usage of above code, please send an email at akshay2626@gmail.com or raise an issue through [Github](http://github.com/akshaynagpal/w2n).
-
+If you find any bugs/errors in the usage of above code, please raise an issue through [Github](http://github.com/akshaynagpal/w2n). If you don't know how to use Github or raise an issue through it, I suggest that you should learn it. Else, send an email to akshay2626@gmail.com with a clear example that can reproduce the issue.
 
 ## License
 The MIT License (MIT)
