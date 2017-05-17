@@ -133,6 +133,7 @@ def word_to_num(number_sentence):
     if type(number_sentence) is not str:
         print("Error: Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
         return None
+    number_sentence = number_sentence.replace('-', ' ')
     number_sentence = number_sentence.lower()  # converting input to lowercase
 
     if(number_sentence.isdigit()):  # return the number if user enters a number string
