@@ -55,6 +55,12 @@ Please ensure that you have updated pip to the latest version before installing 
 
 If you find any bugs/errors in the usage of above code, please raise an issue through [Github](http://github.com/akshaynagpal/w2n). If you don't know how to use Github or raise an issue through it, I suggest that you should learn it. Else, send an email to akshay2626@gmail.com with a clear example that can reproduce the issue.
 
+## Contributors
+- Ben Batorsky [bpben](https://github.com/bpben)
+- Alex [ledovsky](https://github.com/ledovsky)
+- Tal Yarkoni [tyarkoni](https://github.com/tyarkoni)
+- ButteredGroove [ButteredGroove](https://github.com/ButteredGroove)
+
 ## License
 The MIT License (MIT)
 

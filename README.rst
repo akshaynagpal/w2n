@@ -1,10 +1,5 @@
-|pic1| |pic2|
+|travis_pic| |codecov_pic|
 
-.. |pic1| image:: https://travis-ci.org/akshaynagpal/w2n.svg?branch=master 
-  :target: https://travis-ci.org/akshaynagpal/w2n
-
-.. |pic2| image:: https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg
-  :target: https://codecov.io/gh/akshaynagpal/w2n
 ==============
 Word to Number
 ==============
@@ -19,6 +14,9 @@ You can install the module using Python Package Index using the below command.
 
 >>> pip install word2number
 
+Make sure you install all requirements given in requirements.txt
+
+>>> pip install -r requirements.txt
 
 +++++
 Usage
@@ -59,3 +57,17 @@ Bugs/Errors
 Please ensure that you have updated pip to the latest version before installing word2number.
 
 If you find any bugs/errors in the usage of above code, please raise an issue through `Github <http://github.com/akshaynagpal/w2n>`_. If you don't know how to use Github or raise an issue through it, I suggest that you should learn it. Else, send an email to akshay2626@gmail.com with a clear example that can reproduce the issue.
+
+++++++++++++
+Contributors
+++++++++++++
+- Ben Batorsky (`bpben <https://github.com/bpben>`__)
+- Alex (`ledovsky <https://github.com/ledovsky>`__)
+- Tal Yarkoni (`tyarkoni <https://github.com/tyarkoni>`__)
+- ButteredGroove (`ButteredGroove <https://github.com/ButteredGroove>`__)
+
+.. |travis_pic| image:: https://travis-ci.org/akshaynagpal/w2n.svg?branch=master 
+   :target: https://travis-ci.org/akshaynagpal/w2n
+
+.. |codecov_pic| image:: https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/akshaynagpal/w2n
