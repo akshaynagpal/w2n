@@ -30,8 +30,11 @@ american_number_system = {
     'hundred': 100,
     'thousand': 1000,
     'million': 1000000,
-    'billion': 1000000000
+    'billion': 1000000000,
+    'point': '.'
 }
+
+decimal_words = ['zero','one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
 """
 #TODO
@@ -74,81 +77,6 @@ indian_number_system = {
 
 
 """
-method to return integer for an input `number_sentence` string
-"""
-
-
-def word_to_num(number_sentence):
-    number_sentence = number_sentence.lower()  # converting input to lowercase
-
-    if(number_sentence.isdigit()):  # return the number if user enters a number string
-        return int(number_sentence)
-
-    split_words = number_sentence.split()  # split sentence into words
-
-    clean_numbers = []
-
-    # removing and, & etc.
-    for word in split_words:
-        if word in american_number_system:
-            clean_numbers.append(word)
-
-    # Error message if the user enters invalid input!
-    if len(clean_numbers) == 0:
-        return "Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)"
-
-    # Error if user enters million,billion, thousand twice
-    if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1:
-        return "Error: Redundant number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)"
-
-    billion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
-    million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
-    thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
-
-    if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index>-1 and million_index < billion_index):
-        return "Error: Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)"
-
-    total_sum = 0  # storing the number to be returned
-
-    if billion_index > -1:
-        billion_multiplier = number_formation(clean_numbers[0:billion_index])
-        # print "billion_multiplier",str(billion_multiplier)
-        total_sum += billion_multiplier * 1000000000
-
-    if million_index > -1:
-        if billion_index > -1:
-            million_multiplier = number_formation(clean_numbers[billion_index+1:million_index])
-        else:
-            million_multiplier = number_formation(clean_numbers[0:million_index])
-        total_sum += million_multiplier * 1000000
-        # print "million_multiplier",str(million_multiplier)
-
-    if thousand_index > -1:
-        if million_index > -1:
-            thousand_multiplier = number_formation(clean_numbers[million_index+1:thousand_index])
-        elif billion_index > -1 and million_index == -1:
-            thousand_multiplier = number_formation(clean_numbers[billion_index+1:thousand_index])
-        else:
-            thousand_multiplier = number_formation(clean_numbers[0:thousand_index])
-        total_sum += thousand_multiplier * 1000
-        # print "thousand_multiplier",str(thousand_multiplier)
-
-    if thousand_index > -1 and thousand_index != len(clean_numbers)-1:
-        hundreds = number_formation(clean_numbers[thousand_index+1:])
-    elif million_index > -1 and million_index != len(clean_numbers)-1:
-        hundreds = number_formation(clean_numbers[million_index+1:])
-    elif billion_index > -1 and billion_index != len(clean_numbers)-1:
-        hundreds = number_formation(clean_numbers[billion_index+1:])
-    elif thousand_index == -1 and million_index == -1 and billion_index == -1:
-        hundreds = number_formation(clean_numbers)
-    else:
-        hundreds = 0
-    total_sum += hundreds
-    # print "hundreds",str(hundreds)
-    return total_sum
-
-
-"""
 function to form numeric multipliers for million, billion, thousand etc.
 
 input: list of strings
@@ -171,3 +99,109 @@ def number_formation(number_words):
             return numbers[0] + numbers[1]
     else:
         return numbers[0]
+
+
+"""
+function to convert post decimal digit words to numerial digits
+input: list of strings
+output: double
+"""
+
+
+def get_decimal_sum(decimal_digit_words):
+    decimal_number_str = []
+    for dec_word in decimal_digit_words:
+        if(dec_word not in decimal_words):
+            return 0
+        else:
+            decimal_number_str.append(american_number_system[dec_word])
+    final_decimal_string = '0.' + ''.join(map(str,decimal_number_str))
+    return float(final_decimal_string)
+
+
+"""
+function to return integer for an input `number_sentence` string
+input: string
+output: int or double
+"""
+
+
+def word_to_num(number_sentence):
+    if type(number_sentence) is not str:
+        return "Error: Type is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')"
+    number_sentence = number_sentence.lower()  # converting input to lowercase
+
+    if(number_sentence.isdigit()):  # return the number if user enters a number string
+        return int(number_sentence)
+
+    split_words = number_sentence.strip().split()  # split sentence into words
+
+    clean_numbers = []
+    clean_decimal_numbers = []
+
+    # removing and, & etc.
+    for word in split_words:
+        if word in american_number_system:
+            clean_numbers.append(word)
+
+    # Error message if the user enters invalid input!
+    if len(clean_numbers) == 0:
+        return "Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)"
+
+    # Error if user enters million,billion, thousand or decimal point twice
+    if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point')> 1:
+        return "Error: Redundant number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)"
+
+    # separate decimal part of number (if exists)
+    if clean_numbers.count('point') == 1:
+        clean_decimal_numbers = clean_numbers[clean_numbers.index('point')+1:]
+        clean_numbers = clean_numbers[:clean_numbers.index('point')]
+
+    billion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
+    million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
+    thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
+
+    if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index>-1 and million_index < billion_index):
+        return "Error: Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)"
+
+    total_sum = 0  # storing the number to be returned
+
+    if len(clean_numbers) > 0:
+        if billion_index > -1:
+            billion_multiplier = number_formation(clean_numbers[0:billion_index])
+            total_sum += billion_multiplier * 1000000000
+
+        if million_index > -1:
+            if billion_index > -1:
+                million_multiplier = number_formation(clean_numbers[billion_index+1:million_index])
+            else:
+                million_multiplier = number_formation(clean_numbers[0:million_index])
+            total_sum += million_multiplier * 1000000
+
+        if thousand_index > -1:
+            if million_index > -1:
+                thousand_multiplier = number_formation(clean_numbers[million_index+1:thousand_index])
+            elif billion_index > -1 and million_index == -1:
+                thousand_multiplier = number_formation(clean_numbers[billion_index+1:thousand_index])
+            else:
+                thousand_multiplier = number_formation(clean_numbers[0:thousand_index])
+            total_sum += thousand_multiplier * 1000
+
+        if thousand_index > -1 and thousand_index != len(clean_numbers)-1:
+            hundreds = number_formation(clean_numbers[thousand_index+1:])
+        elif million_index > -1 and million_index != len(clean_numbers)-1:
+            hundreds = number_formation(clean_numbers[million_index+1:])
+        elif billion_index > -1 and billion_index != len(clean_numbers)-1:
+            hundreds = number_formation(clean_numbers[billion_index+1:])
+        elif thousand_index == -1 and million_index == -1 and billion_index == -1:
+            hundreds = number_formation(clean_numbers)
+        else:
+            hundreds = 0
+        total_sum += hundreds
+
+    # adding decimal part to total_sum (if exists)
+    if len(clean_decimal_numbers) > 0:
+        decimal_sum = get_decimal_sum(clean_decimal_numbers)
+        total_sum += decimal_sum
+
+    return total_sum
