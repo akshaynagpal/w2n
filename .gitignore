@@ -2,3 +2,4 @@
 .codeintel/
 .idlerc/
 .pypirc
+*.pyc
