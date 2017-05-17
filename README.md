@@ -19,30 +19,37 @@ First you have to import the module using the below code.
     from word2number import w2n
 
 Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.
-
+```
     print(w2n.word_to_num("two million three thousand nine hundred and eighty four"))
     2003984
-    
+```
+```
     print(w2n.word_to_num('two point three')) 
     2.3
-
+```
+```
     print(w2n.word_to_num('112')) 
     112
-
+```
+```
     print(w2n.word_to_num('point one')) 
     0.1
+```
 
+```
     print(w2n.word_to_num('one hundred thirty-five')) 
     135
-
+```
+```
     print(w2n.word_to_num('million million'))
     Error: Redundant number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)
-	None
-
+    None
+```
+```
     print(w2n.word_to_num('blah'))
     Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)
     None
-
+```
 ## Bugs/Errors
 
 Please ensure that you have updated pip to the latest version before installing word2number.
