@@ -25,7 +25,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('point one'), 0.1)
         self.assertEqual(w2n.word_to_num('point'), 0)
         self.assertEqual(w2n.word_to_num('point nineteen'), 0)
-        self.assertEqual(w2n.word_to_num('one hundred thirty-five'),135)
+        self.assertEqual(w2n.word_to_num('one hundred thirty-five'), 135)
 
     def test_negatives(self):
         self.assertEqual(w2n.word_to_num('112-'), None)
