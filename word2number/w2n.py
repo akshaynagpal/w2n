@@ -34,7 +34,7 @@ american_number_system = {
     'point': '.'
 }
 
-decimal_words = ['zero','one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
 """
 #TODO

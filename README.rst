@@ -1,9 +1,7 @@
 ==============
 Word to Number
 ==============
-This is a Python module to convert number words (eg. twenty one) to numeric digits (21).
-It works for positive numbers upto the range of 999,999,999,999 (i.e. billions)
-Below is the installation, usage and other details of this module.
+This is a Python module to convert number words (eg. twenty one) to numeric digits (21). It works for positive numbers upto the range of 999,999,999,999 (i.e. billions).
 
 ++++++++++++
 Installation
@@ -43,7 +41,7 @@ License
 +++++++
 The MIT License (MIT)
 
-Copyright (c) 2016 Akshay Nagpal (github.com/akshaynagpal)
+Copyright (c) 2016 Akshay Nagpal (https://github.com/akshaynagpal)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
