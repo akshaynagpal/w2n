@@ -38,6 +38,7 @@ Make sure you install all requirements given in requirements.txt
 Usage
 +++++
 First you have to import the module using the below code.
+
 .. code-block:: python
 
     from word2number import w2n
