@@ -54,7 +54,7 @@ author = u'Akshay Nagpal'
 # built documents.
 #
 # The short X.Y version.
-version = u''
+version = u'1.0'
 # The full version, including alpha/beta/rc tags.
 release = u''
 
@@ -148,7 +148,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'word2number', u'word2number Documentation',
-     author, 'word2number', 'One line description of project.',
+     author, 'word2number', 'Convert number words to numeric digits',
      'Miscellaneous'),
 ]
 
