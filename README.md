@@ -1,4 +1,4 @@
-# Word to Number [![Build Status](https://travis-ci.org/akshaynagpal/w2n.svg?branch=master)](https://travis-ci.org/akshaynagpal/w2n)  [![codecov](https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg)](https://codecov.io/gh/akshaynagpal/w2n)
+# Word to Number ![Build Status](https://travis-ci.org/akshaynagpal/w2n.svg?branch=master)  ![codecov](https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg) ![rtdbadge](https://readthedocs.org/projects/w2n/badge/)
 
 This is a Python module to convert number words (eg. twenty one) to numeric digits (21).
 It works for positive numbers upto the range of 999,999,999,999 (i.e. billions)
