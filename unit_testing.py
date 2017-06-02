@@ -31,18 +31,18 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('million'), 1000000)
         self.assertEqual(w2n.word_to_num('billion'), 1000000000)
         self.assertEqual(w2n.word_to_num('nine point nine nine nine'), 9.999)
+        self.assertEqual(w2n.word_to_num('seventh point nineteen'), 0)
 
     def test_negatives(self):
-        with self.assertRaises(ValueError):
-            w2n.word_to_num('112-')
-            w2n.word_to_num('-')
-            w2n.word_to_num('on')
-            w2n.word_to_num('million million')
-            w2n.word_to_num('three million million')
-            w2n.word_to_num('million four million')
-            w2n.word_to_num('thousand million')
-            w2n.word_to_num('one billion point two million twenty three thousand and forty nine point two three six nine')
-            w2n.word_to_num('seventh point nineteen')
-            w2n.word_to_num(112)
+        self.assertRaises(ValueError, w2n.word_to_num, '112-')
+        self.assertRaises(ValueError, w2n.word_to_num, '-')
+        self.assertRaises(ValueError, w2n.word_to_num, 'on')
+        self.assertRaises(ValueError, w2n.word_to_num, 'million million')
+        self.assertRaises(ValueError, w2n.word_to_num, 'three million million')
+        self.assertRaises(ValueError, w2n.word_to_num, 'million four million')
+        self.assertRaises(ValueError, w2n.word_to_num, 'thousand million')
+        self.assertRaises(ValueError, w2n.word_to_num, 'one billion point two million twenty three thousand and forty nine point two three six nine')
+        self.assertRaises(ValueError, w2n.word_to_num, 112)
+
 if __name__ == '__main__':
     unittest.main()
