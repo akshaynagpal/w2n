@@ -6,6 +6,9 @@ american_number_system = {
     'one': 1,
     'two': 2,
     'three': 3,
+    'first': 1, 
+    'second': 2, 
+    'third': 3, 
     'four': 4,
     'five': 5,
     'six': 6,
@@ -36,6 +39,8 @@ american_number_system = {
     'billion': 1000000000,
     'point': '.'
 }
+
+number_endings = ['st', 'nd', 'rd', 'th']
 
 decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
@@ -148,6 +153,16 @@ def word_to_num(number_sentence):
     for word in split_words:
         if word in american_number_system:
             clean_numbers.append(word)
+        else:
+            word_split = list(word)
+            # used below line instead of f"{word_split[-2]}{word_split[-1]}" in number_endings for backward compatibility
+            if word_split[-2] + '' + word_split[-1] in number_endings:  
+                del word_split[-2:]
+                updated_number = ''.join(word_split)
+                if updated_number in american_number_system:
+                    clean_numbers.append(updated_number)
+                elif updated_number.isdigit():
+                    return updated_number
 
     # Error message if the user enters invalid input!
     if len(clean_numbers) == 0:
