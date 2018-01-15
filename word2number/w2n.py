@@ -152,9 +152,9 @@ def word_to_num(number_sentence):
             clean_numbers.append(word)
         else:
             word_split = list(word)
-            if f"{word_split[-2]}{word_split[-1]}" in number_endings:
-                del word_split[-1]
-                del word_split[-1]
+            # used below line instead of f"{word_split[-2]}{word_split[-1]}" in number_endings for backward compatibility
+            if word_split[-2] + '' + word_split[-1] in number_endings:  
+                del word_split[-2:]
                 updated_number = ''.join(word_split)
                 if updated_number in american_number_system:
                     clean_numbers.append(updated_number)
