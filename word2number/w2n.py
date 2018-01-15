@@ -37,6 +37,8 @@ american_number_system = {
     'point': '.'
 }
 
+number_endings = ['st', 'nd', 'rd', 'th']
+
 decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
 """
@@ -148,6 +150,16 @@ def word_to_num(number_sentence):
     for word in split_words:
         if word in american_number_system:
             clean_numbers.append(word)
+        else:
+            word_split = list(word)
+            if f"{word_split[-2]}{word_split[-1]}" in number_endings:
+                del word_split[-1]
+                del word_split[-1]
+                updated_number = ''.join(word_split)
+                if updated_number in american_number_system:
+                    clean_numbers.append(updated_number)
+                elif updated_number.isdigit():
+                    return updated_number
 
     # Error message if the user enters invalid input!
     if len(clean_numbers) == 0:
