@@ -37,6 +37,40 @@ american_number_system = {
     'point': '.'
 }
 
+american_ordinals = {
+    'first': 'one',
+    'second': 'two',
+    'third': 'three',
+    'fourth': 'four',
+    'fifth': 'five',
+    'sixth': 'six',
+    'seventh': 'seven',
+    'eighth': 'eight',
+    'ninth': 'nine',
+    'tenth': 'ten',
+    'eleventh': 'eleven',
+    'twelfth': 'twelve',
+    'thirteenth': 'thirteen',
+    'fourteenth': 'fourteen',
+    'fifteenth': 'fifteen',
+    'sixteenth': 'sixteen',
+    'seventeenth': 'seventeen',
+    'eighteenth': 'eighteen',
+    'nineteenth': 'nineteen',
+    'twentieth': 'twenty',
+    'thirtieth': 'thirty',
+    'fortieth': 'fourty',
+    'fiftieth': 'fifty',
+    'sixtieth': 'sixty',
+    'seventieth': 'seventy',
+    'eightieth': 'eighty',
+    'nintieth': 'ninety',
+    'hundredth': 'hundred',
+    'thousandth': 'thousand',
+    'millionth': 'million',
+    'billionth': 'billion',
+}
+
 decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
 """
@@ -145,9 +179,13 @@ def word_to_num(number_sentence):
     clean_decimal_numbers = []
 
     # removing and, & etc.
-    for word in split_words:
+    last_word_index = len(split_words) - 1
+    for index, word in enumerate(split_words):
         if word in american_number_system:
             clean_numbers.append(word)
+        elif word in american_ordinals and index == last_word_index and 'point' not in clean_numbers:
+            number_word = american_ordinals[word]
+            clean_numbers.append(number_word)
 
     # Error message if the user enters invalid input!
     if len(clean_numbers) == 0:
@@ -174,7 +212,7 @@ def word_to_num(number_sentence):
     if len(clean_numbers) > 0:
         # hack for now, better way TODO
         if len(clean_numbers) == 1:
-                total_sum += american_number_system[clean_numbers[0]]
+            total_sum += american_number_system[clean_numbers[0]]
 
         else:
             if billion_index > -1:
