@@ -199,9 +199,9 @@ def word_to_num(number_sentence):
 
             if thousand_index > -1 and thousand_index != len(clean_numbers)-1:
                 hundreds = number_formation(clean_numbers[thousand_index+1:])
-            elif million_index > -1 and million_index != len(clean_numbers)-1:
+            elif million_index > -1 and million_index != len(clean_numbers)-1 and thousand_index != len(clean_numbers)-1:
                 hundreds = number_formation(clean_numbers[million_index+1:])
-            elif billion_index > -1 and billion_index != len(clean_numbers)-1:
+            elif billion_index > -1 and billion_index != len(clean_numbers)-1 and thousand_index != len(clean_numbers)-1:
                 hundreds = number_formation(clean_numbers[billion_index+1:])
             elif thousand_index == -1 and million_index == -1 and billion_index == -1:
                 hundreds = number_formation(clean_numbers)
