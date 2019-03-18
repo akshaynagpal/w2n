@@ -196,13 +196,12 @@ def word_to_num(number_sentence):
             three_digit_number_word, postfix = group, 'unit'
         if three_digit_number_word:
             three_digit_number = number_formation(three_digit_number_word)
-        else:  # if there is no three_digit_number_word, a bare
-               # postfix like 'thousand' should be interpreted as
-               # 1,000
+        # else if there is no three_digit_number_word, a bare postfix like
+        # 'thousand' should be interpreted as 1,000
+        else:
             three_digit_number = 1
         postfix_value = three_digit_postfixes.get(postfix, 1)
         total_sum += three_digit_number * postfix_value
-
 
     # adding decimal part to total_sum (if exists)
     if len(clean_decimal_numbers) > 0:
