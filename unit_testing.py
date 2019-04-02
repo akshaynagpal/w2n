@@ -3,7 +3,7 @@ from word2number import w2n
 
 
 class TestW2N(unittest.TestCase):
-    def test_positives(self):
+    def test_word_to_num_positives(self):
         self.assertEqual(w2n.word_to_num("two million three thousand nine hundred and eighty four"), 2003984)
         self.assertEqual(w2n.word_to_num("nineteen"), 19)
         self.assertEqual(w2n.word_to_num("two thousand and nineteen"), 2019)
@@ -33,7 +33,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('nine point nine nine nine'), 9.999)
         self.assertEqual(w2n.word_to_num('seventh point nineteen'), 0)
 
-    def test_negatives(self):
+    def test_word_to_num_negatives(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')
         self.assertRaises(ValueError, w2n.word_to_num, '-')
         self.assertRaises(ValueError, w2n.word_to_num, 'on')
@@ -43,6 +43,22 @@ class TestW2N(unittest.TestCase):
         self.assertRaises(ValueError, w2n.word_to_num, 'thousand million')
         self.assertRaises(ValueError, w2n.word_to_num, 'one billion point two million twenty three thousand and forty nine point two three six nine')
         self.assertRaises(ValueError, w2n.word_to_num, 112)
+
+    def test_num_to_word_positives(self):
+        self.assertEqual(w2n.num_to_word(2003984), "two million three thousand nine hundred eighty four")
+        self.assertEqual(w2n.num_to_word(19), "nineteen")
+        self.assertEqual(w2n.num_to_word(2019), "two thousand nineteen")
+        self.assertEqual(w2n.num_to_word(2003019), "two million three thousand nineteen")
+        self.assertEqual(w2n.num_to_word(3000000000), 'three billion')
+        self.assertEqual(w2n.num_to_word(3000000), 'three million')
+        self.assertEqual(w2n.num_to_word(9.999), 'nine point nine nine nine')
+        self.assertEqual(w2n.num_to_word(0), 'zero')
+        self.assertEqual(1002023049.2369, w2n.word_to_num(w2n.num_to_word(1002023049.2369)))
+
+    def test_num_to_word_negatives(self):
+        self.assertRaises(ValueError, w2n.num_to_word, '112')
+        self.assertRaises(ValueError, w2n.num_to_word, ['fifty'])
+        self.assertRaises(ValueError, w2n.num_to_word, True)
 
 if __name__ == '__main__':
     unittest.main()
