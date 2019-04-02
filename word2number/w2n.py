@@ -1,7 +1,8 @@
 from __future__ import print_function
+from bidict import bidict
 
 
-american_number_system = {
+american_number_system = bidict({
     'zero': 0,
     'one': 1,
     'two': 2,
@@ -35,13 +36,13 @@ american_number_system = {
     'million': 1000000,
     'billion': 1000000000,
     'point': '.'
-}
+})
 
 decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
 """
 #TODO
-indian_number_system = {
+indian_number_system = bidict({
     'zero': 0,
     'one': 1,
     'two': 2,
@@ -75,7 +76,7 @@ indian_number_system = {
     'lac': 100000,
     'lakh': 100000,
     'crore': 10000000
-}
+})
 """
 
 
@@ -215,3 +216,42 @@ def word_to_num(number_sentence):
         total_sum += decimal_sum
 
     return total_sum
+
+
+"""
+function to return string of words for a float or int input
+input: int or float
+output: string
+"""
+
+
+def num_to_word(number):
+    if type(number) not in (int, float):
+        raise ValueError("Type of input is not a number! Please enter a valid number (eg. \'42\' or \'0.01\')")
+
+    # unique case: zero
+    if number == 0:
+        return "zero"
+
+    # get list of unique number word values, descending
+    sorted_nums = sorted(filter(lambda x: (x and type(x) == int), american_number_system.inverse.keys()), reverse=True)
+
+    # convert non-fractal portion into words
+    def get_int_words(num, words=[]):
+        for sn in sorted_nums:
+            if int(num/sn) > 0:
+                if sn >= 100:
+                    get_int_words(int(num/sn), words)
+                words.append(american_number_system.inverse[sn])
+                num %= sn
+            # import pdb; pdb.set_trace()
+        return words
+    out_words = get_int_words(number)
+
+    # convert fractal portion into words (if exists)
+    if number % 1:
+        out_words.append("point")
+        for int_char in str(number).split('.')[1]:
+            out_words.append(american_number_system.inverse[int(int_char)])
+
+    return " ".join(out_words)
