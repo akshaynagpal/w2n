@@ -53,7 +53,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.num_to_word(3000000), 'three million')
         self.assertEqual(w2n.num_to_word(9.999), 'nine point nine nine nine')
         self.assertEqual(w2n.num_to_word(0), 'zero')
-        self.assertEqual(1002023049.2369, w2n.word_to_num(w2n.num_to_word(1002023049.2369)))
+        self.assertEqual(1002023049.24, w2n.word_to_num(w2n.num_to_word(1002023049.24)))
 
     def test_num_to_word_negatives(self):
         self.assertRaises(ValueError, w2n.num_to_word, '112')
