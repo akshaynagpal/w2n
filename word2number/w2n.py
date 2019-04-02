@@ -244,7 +244,6 @@ def num_to_word(number):
                     get_int_words(int(num/sn), words)
                 words.append(american_number_system.inverse[sn])
                 num %= sn
-            # import pdb; pdb.set_trace()
         return words
     out_words = get_int_words(number)
 
