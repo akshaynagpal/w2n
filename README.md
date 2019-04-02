@@ -53,6 +53,24 @@ print(w2n.word_to_num('blah'))
 Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)
 None
 ```
+
+You can also use the **num_to_word** method to convert an int or float to a number-word string, as shown below.
+```
+print w2n.num_to_word(42)
+"forty two"
+```
+```
+print w2n.num_to_word(7654321)
+"seven million six hundred fifty four thousand three hundred twenty one"
+```
+```
+print w2n.num_to_word(1.23456)
+"one point two three four five six"
+```
+```
+print w2n.num_to_word("five")
+Error: Type of input is not a number! Please enter a valid number (eg. '42' or '0.01')
+```
 ## Bugs/Errors
 
 Please ensure that you have updated pip to the latest version before installing word2number.
@@ -64,6 +82,7 @@ If you find any bugs/errors in the usage of above code, please raise an issue th
 - Alex [ledovsky](https://github.com/ledovsky)
 - Tal Yarkoni [tyarkoni](https://github.com/tyarkoni)
 - ButteredGroove [ButteredGroove](https://github.com/ButteredGroove)
+- Adam Rhine [OptimusRhine](https://github.com/OptimusRhine)
 
 ## License
 The MIT License (MIT)

@@ -57,6 +57,23 @@ Then you can use the **word_to_num** method to convert a number-word to numeric 
     Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)
     None
 
+You can also use the **num_to_word** method to convert an int or float to a number-word string, as shown below.
+
+.. code-block:: python
+
+    >>> print w2n.num_to_word(42)
+    "forty two"
+
+    >>> print w2n.num_to_word(7654321)
+    "seven million six hundred fifty four thousand three hundred twenty one"
+
+    >>> print w2n.num_to_word(1.23456)
+    "one point two three four five six"
+
+    >>> print w2n.num_to_word("five")
+    Error: Type of input is not a number! Please enter a valid number (eg. '42' or '0.01')
+
+
 +++++++++++
 Bugs/Errors
 +++++++++++
@@ -72,6 +89,7 @@ Contributors
 - Alex (`ledovsky <https://github.com/ledovsky>`__)
 - Tal Yarkoni (`tyarkoni <https://github.com/tyarkoni>`__)
 - ButteredGroove (`ButteredGroove <https://github.com/ButteredGroove>`__)
+- Adam Rhine (`OptimusRhine <https://github.com/OptimusRhine>`__)
 
 .. |travis_pic| image:: https://travis-ci.org/akshaynagpal/w2n.svg?branch=master 
    :target: https://travis-ci.org/akshaynagpal/w2n
