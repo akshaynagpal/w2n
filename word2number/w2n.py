@@ -1,7 +1,4 @@
-from __future__ import print_function
-
-
-american_number_system = {
+number_system_en = {
     'zero': 0,
     'one': 1,
     'two': 2,
@@ -41,7 +38,7 @@ decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 
 
 """
 #TODO
-indian_number_system = {
+number_system_hi = {
     'zero': 0,
     'one': 1,
     'two': 2,
@@ -90,7 +87,7 @@ return value: integer
 def number_formation(number_words):
     numbers = []
     for number_word in number_words:
-        numbers.append(american_number_system[number_word])
+        numbers.append(number_system_en[number_word])
     if len(numbers) == 4:
         return (numbers[0] * numbers[1]) + numbers[2] + numbers[3]
     elif len(numbers) == 3:
@@ -117,7 +114,7 @@ def get_decimal_sum(decimal_digit_words):
         if(dec_word not in decimal_words):
             return 0
         else:
-            decimal_number_str.append(american_number_system[dec_word])
+            decimal_number_str.append(number_system_en[dec_word])
     final_decimal_string = '0.' + ''.join(map(str,decimal_number_str))
     return float(final_decimal_string)
 
@@ -146,7 +143,7 @@ def word_to_num(number_sentence):
 
     # removing and, & etc.
     for word in split_words:
-        if word in american_number_system:
+        if word in number_system_en:
             clean_numbers.append(word)
 
     # Error message if the user enters invalid input!
@@ -174,7 +171,7 @@ def word_to_num(number_sentence):
     if len(clean_numbers) > 0:
         # hack for now, better way TODO
         if len(clean_numbers) == 1:
-                total_sum += american_number_system[clean_numbers[0]]
+                total_sum += number_system_en[clean_numbers[0]]
 
         else:
             if billion_index > -1:

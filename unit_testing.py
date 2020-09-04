@@ -3,7 +3,7 @@ from word2number import w2n
 
 
 class TestW2N(unittest.TestCase):
-    def test_positives(self):
+    def test_positives_en(self):
         self.assertEqual(w2n.word_to_num("two million three thousand nine hundred and eighty four"), 2003984)
         self.assertEqual(w2n.word_to_num("nineteen"), 19)
         self.assertEqual(w2n.word_to_num("two thousand and nineteen"), 2019)
@@ -33,7 +33,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('nine point nine nine nine'), 9.999)
         self.assertEqual(w2n.word_to_num('seventh point nineteen'), 0)
 
-    def test_negatives(self):
+    def test_negatives_en(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')
         self.assertRaises(ValueError, w2n.word_to_num, '-')
         self.assertRaises(ValueError, w2n.word_to_num, 'on')
