@@ -56,6 +56,12 @@ Then you can use the **word_to_num** method to convert a number-word to numeric 
     Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)
     None
 
+
+word2number user change the import to
+
+    from word2numberi18n import w2n
+
+
 +++++++++++
 Bugs/Errors
 +++++++++++

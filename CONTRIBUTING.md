@@ -1,2 +1,2 @@
 # Contributing to w2n
-If you find any bugs/errors in the usage of above code, please raise an issue through Github. If you don't know how to use Github or raise an issue through it, I suggest that you should learn it. Else, send an email to akshay2626@gmail.com with a clear example that can reproduce the issue.
+If you find any bugs/errors in the usage of above code, please raise an issue through Github. If you don't know how to use Github or raise an issue through it, I suggest that you should learn it. 

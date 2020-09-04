@@ -1,5 +1,10 @@
-# MocOS
+# MacOS
 .DS_Store
+
+# Python package build strukture
+build/
+dist/
+*.egg-info/
 
 # PyDev
 .project

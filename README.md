@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 First you have to import the module using the below code.
 
-    from word2number import w2n
+    from word2numberi18n import w2n
 
 Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.
 ```
@@ -53,6 +53,11 @@ print(w2n.word_to_num('blah'))
 Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)
 None
 ```
+
+### for word2number user
+Change your import from word2number to word2numberi18n.
+
+    from word2numberi18n import w2n
 
 ## i18n
 word2number looking for your specific language with

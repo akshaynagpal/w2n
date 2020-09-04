@@ -1,5 +1,5 @@
 import unittest
-from word2numberI18n import w2n
+from word2numberi18n import w2n
 
 
 class TestW2N(unittest.TestCase):
