@@ -76,7 +76,7 @@ If you don't know how to use Github or raise an issue through it, I suggest that
 Thanks to 
 ++++++++++++
 Thanks to word2number coder and contributors 
-- Akshay Nagpal (`akshaynagpal <https://github.com/akshaynagpal`__)
+- Akshay Nagpal (`akshaynagpal <https://github.com/akshaynagpal>`__)
 - Ben Batorsky (`bpben <https://github.com/bpben>`__)
 - Alex (`ledovsky <https://github.com/ledovsky>`__)
 - Tal Yarkoni (`tyarkoni <https://github.com/tyarkoni>`__)
