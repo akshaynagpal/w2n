@@ -1,4 +1,4 @@
-# Word to Number ![Build Status](https://travis-ci.org/akshaynagpal/w2n.svg?branch=master)  ![codecov](https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg) ![rtdbadge](https://readthedocs.org/projects/w2n/badge/)
+# Word to Number
 
 This is a Python module to convert number words (eg. twenty one) to numeric digits (21).
 It works for positive numbers upto the range of 999,999,999,999 (i.e. billions)
@@ -53,13 +53,22 @@ print(w2n.word_to_num('blah'))
 Error: No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)
 None
 ```
+
+## i18n
+word2number looking for your specific language with
+    1. defined environment variable w2n.lang with ISO lang code like en, hi, de and if not found
+    2. over locale.getdefaultlocale() and if not found
+    3. over environment variable "LANGUAGE" and if not found
+    4. fallback to english 
+Place in the data directory your language specific dictionary file with ISO lang code in the name.
+    
+
 ## Bugs/Errors
+- german language need more specific algorithm
 
-Please ensure that you have updated pip to the latest version before installing word2number.
-
-If you find any bugs/errors in the usage of above code, please raise an issue through [Github](http://github.com/akshaynagpal/w2n). If you don't know how to use Github or raise an issue through it, I suggest that you should learn it. Else, send an email to akshay2626@gmail.com with a clear example that can reproduce the issue.
-
-## Contributors
+## Thanks
+Thanks to word2number coder and contributors 
+- Akshay Nagpal [akshaynagpal](https://github.com/akshaynagpal)
 - Ben Batorsky [bpben](https://github.com/bpben)
 - Alex [ledovsky](https://github.com/ledovsky)
 - Tal Yarkoni [tyarkoni](https://github.com/tyarkoni)

@@ -1,9 +1,8 @@
-|travis_pic| |codecov_pic|
-
 ==============
 Word to Number
 ==============
 This is a Python module to convert number words (eg. twenty one) to numeric digits (21). It works for positive numbers upto the range of 999,999,999,999 (i.e. billions).
+It supports i18n under Python3.
 
 ++++++++++++
 Installation
@@ -63,18 +62,17 @@ Bugs/Errors
 
 Please ensure that you have updated pip to the latest version before installing word2number.
 
-If you find any bugs/errors in the usage of above code, please raise an issue through `Github <http://github.com/akshaynagpal/w2n>`_. If you don't know how to use Github or raise an issue through it, I suggest that you should learn it. Else, send an email to akshay2626@gmail.com with a clear example that can reproduce the issue.
+If you find any bugs/errors in the usage of above code, please raise an issue through `Github <https://github.com/bastie/w2ni18n>`_. 
+If you don't know how to use Github or raise an issue through it, I suggest that you should learn it. 
+
 
 ++++++++++++
-Contributors
+Thanks to 
 ++++++++++++
+Thanks to word2number coder and contributors 
+- Akshay Nagpal (`akshaynagpal <https://github.com/akshaynagpal`__)
 - Ben Batorsky (`bpben <https://github.com/bpben>`__)
 - Alex (`ledovsky <https://github.com/ledovsky>`__)
 - Tal Yarkoni (`tyarkoni <https://github.com/tyarkoni>`__)
 - ButteredGroove (`ButteredGroove <https://github.com/ButteredGroove>`__)
 
-.. |travis_pic| image:: https://travis-ci.org/akshaynagpal/w2n.svg?branch=master 
-   :target: https://travis-ci.org/akshaynagpal/w2n
-
-.. |codecov_pic| image:: https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg
-   :target: https://codecov.io/gh/akshaynagpal/w2n
