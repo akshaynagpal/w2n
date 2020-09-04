@@ -1,4 +1,8 @@
-number_system_en = {
+import os
+import locale
+import codecs
+
+number_system_fallback = {
     'zero': 0,
     'one': 1,
     'two': 2,
@@ -34,7 +38,35 @@ number_system_en = {
     'point': '.'
 }
 
-decimal_words = list(number_system_en.keys())[:10]
+lang = locale.getlocale()[0]
+if "w2n.lang" in os.environ :
+    lang = os.environ ["w2n.lang"]
+if None == lang :
+    lang = locale.getdefaultlocale()
+if None == lang or None == lang [0] :
+    lang = None
+    if "LANGUAGE" in os.environ :
+        lang = os.environ["LANGUAGE"]
+if None == lang :
+    lang = "en" # fallback
+lang = lang[:2]
+
+filebased_number_system = {}
+data_file = os.path.dirname(__file__)+os.sep+"data"+os.sep+"number_system_"+lang+".txt"
+with codecs.open(data_file, "rU", encoding="utf-8") as number_system_data:
+    for line in number_system_data:
+        if line.startswith('#') :
+            pass
+        else :
+            (key, val) = line.split()
+            if "point" != key :
+                val = int(val)
+            filebased_number_system[key] = val
+        
+number_system = filebased_number_system
+
+
+decimal_words = list(number_system.keys())[:10]
 
 
 """
@@ -48,7 +80,7 @@ return value: integer
 def number_formation(number_words):
     numbers = []
     for number_word in number_words:
-        numbers.append(number_system_en[number_word])
+        numbers.append(number_system[number_word])
     if len(numbers) == 4:
         return (numbers[0] * numbers[1]) + numbers[2] + numbers[3]
     elif len(numbers) == 3:
@@ -75,7 +107,7 @@ def get_decimal_sum(decimal_digit_words):
         if(dec_word not in decimal_words):
             return 0
         else:
-            decimal_number_str.append(number_system_en[dec_word])
+            decimal_number_str.append(number_system[dec_word])
     final_decimal_string = '0.' + ''.join(map(str,decimal_number_str))
     return float(final_decimal_string)
 
@@ -104,7 +136,7 @@ def word_to_num(number_sentence):
 
     # removing and, & etc.
     for word in split_words:
-        if word in number_system_en:
+        if word in number_system:
             clean_numbers.append(word)
 
     # Error message if the user enters invalid input!
@@ -132,7 +164,7 @@ def word_to_num(number_sentence):
     if len(clean_numbers) > 0:
         # hack for now, better way TODO
         if len(clean_numbers) == 1:
-                total_sum += number_system_en[clean_numbers[0]]
+                total_sum += number_system[clean_numbers[0]]
 
         else:
             if billion_index > -1:
