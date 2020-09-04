@@ -1,3 +1,11 @@
+# MocOS
+.DS_Store
+
+# PyDev
+.project
+.pydevproject
+
+# from fork
 .idea/
 .codeintel/
 .idlerc/
