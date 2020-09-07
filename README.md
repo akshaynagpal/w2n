@@ -66,7 +66,30 @@ word2number looking for your specific language with
     3. over environment variable "LANGUAGE" and if not found
     4. fallback to english 
 Place in the data directory your language specific dictionary file with ISO lang code in the name.
-    
+   
+### Request new language ###
+Do follow steps
+    1. check your request (directory data), textfile name ISO-639-1 code
+    2. if not found check ISO-639-3 code
+    3. if not found create new file with new ISO-639-1/3 code
+
+#### Example ####
+You want to tranfer NLP CARD to numeric value for Lower Sorbian. German (de) isn't it. 
+You do not found an ISO-639-1 code, you do not found an ISO-639-1 file for ```dsb``` extension.
+You create a new file ```number_system_dsb.txt``` with utf-8 encoding
+    null 0
+    jaden 1
+    dwa 2
+    tśi 3
+    styri 4
+    pěś 5
+    šesć 6
+    sedym 7
+    wósym 8
+    źewjeś 9
+    źaseś 10
+    [...]
+    point ,
 
 ## Bugs/Errors
 - german language need more specific algorithm
