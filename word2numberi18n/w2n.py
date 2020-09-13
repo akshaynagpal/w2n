@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2016 - Akshay Nagpal <akshaynagpal@user.noreplay.github.com>
+# SPDX-FileCopyrightText: 2020 - Sebastian Ritter <bastie@users.noreply.github.com>
+# SPDX-License-Identifier: MIT
+
 import os
 import locale
 import codecs

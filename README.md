@@ -1,6 +1,6 @@
-# Word to Number
+# Word to Number i18n
 
-This is a Python module to convert number words (eg. twenty one) to numeric digits (21).
+This is the i18n extension Python module to convert number words (eg. twenty one) to numeric digits (21).
 It works for positive numbers upto the range of 999,999,999,999 (i.e. billions)
 Below is the installation, usage and other details of this module.
 
@@ -125,3 +125,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
