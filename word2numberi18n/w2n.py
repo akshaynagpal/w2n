@@ -5,6 +5,7 @@
 import os
 import locale
 import codecs
+import re
 
 number_system_fallback = {
     'zero': 0,
@@ -133,7 +134,7 @@ def word_to_num(number_sentence):
     if(number_sentence.isdigit()):  # return the number if user enters a number string
         return int(number_sentence)
 
-    split_words = number_sentence.strip().split()  # strip extra spaces and split sentence into words
+    split_words = re.findall(r'\w+', number_sentence)  # strip extra spaces and comma and than split sentence into words
 
     clean_numbers = []
     clean_decimal_numbers = []

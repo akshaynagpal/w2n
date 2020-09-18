@@ -94,6 +94,9 @@ You create a new file ```number_system_dsb.txt``` with utf-8 encoding
 ## Bugs/Errors
 - german language need more specific algorithm
 
+### w2n fixed ###
+- ```Add regex to fix comma bug``` fixed by jnelson16
+
 ## Thanks
 Thanks to word2number coder and contributors 
 - Akshay Nagpal [akshaynagpal](https://github.com/akshaynagpal)
@@ -101,11 +104,13 @@ Thanks to word2number coder and contributors
 - Alex [ledovsky](https://github.com/ledovsky)
 - Tal Yarkoni [tyarkoni](https://github.com/tyarkoni)
 - ButteredGroove [ButteredGroove](https://github.com/ButteredGroove)
+- Jonathan Nelson [jnelsen16](https://github.com/jnelson16)
 
 ## License
 The MIT License (MIT)
 
 Copyright (c) 2016 Akshay Nagpal 
+
 Copyright (c) 2020 Sebastian Ritter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
