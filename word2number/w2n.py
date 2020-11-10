@@ -86,8 +86,6 @@ def word_to_num(phrase):
     postDecimalCount = 0
     
     for num in num_generator(phrase):
-        print(num)
-        print(running_total)
         if num == '.':
             postDecimalCount = -1
             
@@ -115,7 +113,6 @@ def word_to_num(phrase):
             postDecimalCount = 0
             
         elif len(str(num)) != len(str(running_total[-1])) or postDecimalCount:
-            print("{} {} {}".format(running_total[-1] == 0,len(str(num)) != len(str(running_total[-1])),postDecimalCount))
             # Special case to pre-adjust the decimal value, in case someone puts something like 
             # 'point nineteen'
             if postDecimalCount:
@@ -127,14 +124,8 @@ def word_to_num(phrase):
         else:
             running_total.append(0)
             running_total[-1] = num
-        print(running_total)
-        print()
         
     if all( num < 10 for num in running_total ):
         return sum( num * 10**i for i, num in enumerate(reversed(running_total)) )
     else:
         return sum(running_total)
-    
-test = 'one zero one five point nine'
-print(test)
-print(word_to_num(test))
