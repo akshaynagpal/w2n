@@ -50,7 +50,8 @@ place_names = {
 word_to_number = { **num_names, **place_names, **dec_names }
             
 def num_generator(phrase):
-    words = [ word for word in phrase.lower().replace('-',' ').replace(',','').split(' ') if word != 'and' and word != '' ]
+    
+    words = [ word for word in phrase.lower().replace('-',' ').replace(',','').split(' ') if word not in [ 'and', '&', '' ] ]
     
     if len(words) == 0:
         raise ValueError('No valid words provided')

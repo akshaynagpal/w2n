@@ -14,6 +14,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('eleven'), 11)
         self.assertEqual(w2n.word_to_num('nineteen billion and nineteen'), 19000000019)
         self.assertEqual(w2n.word_to_num('one hundred and forty two'), 142)
+        self.assertEqual(w2n.word_to_num('one hundred & forty two'), 142)
         self.assertEqual(w2n.word_to_num('112'), 112)
         self.assertEqual(w2n.word_to_num('11211234'), 11211234)
         self.assertEqual(w2n.word_to_num('five'), 5)
