@@ -56,10 +56,10 @@ def num_generator(phrase):
         raise ValueError('No valid words provided')
     
     # Check if there are any illegal duplicates
-    if 1 < words.count('point'):
+    if 1 < sum( words.count(dec) for dec in dec_names ):
         raise ValueError('Duplicate number word provided: point')
         
-    for place in ( *place_names, *dec_names ):
+    for place in place_names:
         if place != 'hundred' and 1 < words.count(place):
             raise ValueError('Duplicate number word provided: {}'.format(place))
             return 0
@@ -82,10 +82,12 @@ def word_to_num(phrase):
     if type(phrase) is not str:
         raise ValueError('Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')')
     
-    running_total = [0]
+    running_total = [ 0 ]
     postDecimalCount = 0
     
     for num in num_generator(phrase):
+        print(num)
+        print(running_total)
         if num == '.':
             postDecimalCount = -1
             
@@ -112,7 +114,8 @@ def word_to_num(phrase):
             running_total.append(0)
             postDecimalCount = 0
             
-        else:
+        elif len(str(num)) != len(str(running_total[-1])) or postDecimalCount:
+            print("{} {} {}".format(running_total[-1] == 0,len(str(num)) != len(str(running_total[-1])),postDecimalCount))
             # Special case to pre-adjust the decimal value, in case someone puts something like 
             # 'point nineteen'
             if postDecimalCount:
@@ -120,5 +123,18 @@ def word_to_num(phrase):
             running_total[-1] += num * 10**postDecimalCount
             if postDecimalCount:
                 postDecimalCount -= 1
+                
+        else:
+            running_total.append(0)
+            running_total[-1] = num
+        print(running_total)
+        print()
         
-    return sum(running_total)
+    if all( num < 10 for num in running_total ):
+        return sum( num * 10**i for i, num in enumerate(reversed(running_total)) )
+    else:
+        return sum(running_total)
+    
+test = 'one zero one five point nine'
+print(test)
+print(word_to_num(test))
