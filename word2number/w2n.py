@@ -9,6 +9,7 @@ num_names = {
     'seven': 7,
     'eight': 8,
     'nine': 9,
+    'niner': 9,
     'ten': 10,
     'eleven': 11,
     'twelve': 12,
@@ -27,7 +28,11 @@ num_names = {
     'seventy': 70,
     'eighty': 80,
     'ninety': 90,
+}
+
+dec_names = {
     'point': '.',
+    'decimal': '.',
 }
 
 place_names = {
@@ -38,19 +43,34 @@ place_names = {
     'trillion':     1000000000000,
     'quadrillion':  1000000000000000,
     'quintillion':  1000000000000000000,
+    'sextillion':   1000000000000000000000,
+    'septillion':   1000000000000000000000000,
 }
 
-word_to_number = { **num_names, **place_names }
+word_to_number = { **num_names, **place_names, **dec_names }
             
 def num_generator(phrase):
-    for word in phrase.lower().replace('-',' ').replace(',','').split(' '):
-        if word.lower() == 'and':
-            continue
-        if word.isalpha():
+    words = [ word for word in phrase.lower().replace('-',' ').replace(',','').split(' ') if word != 'and' and word != '' ]
+    
+    if len(words) == 0:
+        raise ValueError('No valid words provided')
+    
+    # Check if there are any illegal duplicates
+    if 1 < words.count('point'):
+        raise ValueError('Duplicate number word provided: point')
+        
+    for place in ( *place_names, *dec_names ):
+        if place != 'hundred' and 1 < words.count(place):
+            raise ValueError('Duplicate number word provided: {}'.format(place))
+            return 0
+    
+    for word in words:
+        if word.replace('.', '').replace(',', '').replace(';', '').isalpha():
+            word = word.replace('.', '').replace(',', '').replace(';', '')
             try:
                 yield word_to_number[word]
             except KeyError:
-                raise ValueError("Non-number words provided: {}".format(word))
+                raise ValueError('Non-number words provided: {}'.format(word))
                 return 0
         else:
             try:
@@ -60,7 +80,7 @@ def num_generator(phrase):
     
 def word_to_num(phrase):
     if type(phrase) is not str:
-        raise ValueError("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
+        raise ValueError('Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')')
     
     running_total = [0]
     postDecimalCount = 0
@@ -94,7 +114,7 @@ def word_to_num(phrase):
             
         else:
             # Special case to pre-adjust the decimal value, in case someone puts something like 
-            # "point nineteen"
+            # 'point nineteen'
             if postDecimalCount:
                 postDecimalCount -= len(str(num)) - 1
             running_total[-1] += num * 10**postDecimalCount

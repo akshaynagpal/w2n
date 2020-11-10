@@ -4,10 +4,10 @@ from word2number import w2n
 
 class TestW2N(unittest.TestCase):
     def test_positives(self):
-        self.assertEqual(w2n.word_to_num("two million three thousand nine hundred and eighty four"), 2003984)
-        self.assertEqual(w2n.word_to_num("nineteen"), 19)
-        self.assertEqual(w2n.word_to_num("two thousand and nineteen"), 2019)
-        self.assertEqual(w2n.word_to_num("two million three thousand and nineteen"), 2003019)
+        self.assertEqual(w2n.word_to_num('two million three thousand nine hundred and eighty four'), 2003984)
+        self.assertEqual(w2n.word_to_num('nineteen'), 19)
+        self.assertEqual(w2n.word_to_num('two thousand and nineteen'), 2019)
+        self.assertEqual(w2n.word_to_num('two million three thousand and nineteen'), 2003019)
         self.assertEqual(w2n.word_to_num('three billion'), 3000000000)
         self.assertEqual(w2n.word_to_num('three million'), 3000000)
         self.assertEqual(w2n.word_to_num('one hundred twenty three million four hundred fifty six thousand seven hundred and eighty nine'), 123456789)
@@ -30,22 +30,24 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('point'), 0)
         self.assertEqual(w2n.word_to_num('point nineteen'), 0.19)
         self.assertEqual(w2n.word_to_num('one hundred thirty-five'), 135)
+        self.assertEqual(w2n.word_to_num('one decimal niner'), 1.9)
         self.assertEqual(w2n.word_to_num('hundred'), 100)
         self.assertEqual(w2n.word_to_num('thousand'), 1000)
         self.assertEqual(w2n.word_to_num('million'), 1000000)
         self.assertEqual(w2n.word_to_num('billion'), 1000000000)
         self.assertEqual(w2n.word_to_num('nine point nine nine nine'), 9.999)
+        self.assertEqual(w2n.word_to_num('thousand million'), 1000000000)
 
     def test_negatives(self):
         self.assertRaises(ValueError, w2n.word_to_num, 'seventh point nineteen')
-        self.assertRaises(ValueError, w2n.word_to_num, '112-')
+        self.assertRaises(ValueError, w2n.word_to_num, '19 calculators')
         self.assertRaises(ValueError, w2n.word_to_num, '-')
         self.assertRaises(ValueError, w2n.word_to_num, 'on')
+        self.assertRaises(ValueError, w2n.word_to_num, 'million four million')
         self.assertRaises(ValueError, w2n.word_to_num, 'million million')
         self.assertRaises(ValueError, w2n.word_to_num, 'three million million')
-        self.assertRaises(ValueError, w2n.word_to_num, 'million four million')
-        self.assertRaises(ValueError, w2n.word_to_num, 'thousand million')
         self.assertRaises(ValueError, w2n.word_to_num, 'one billion point two million twenty three thousand and forty nine point two three six nine')
+        self.assertRaises(ValueError, w2n.word_to_num, 'one decimal niner decimal eight')
         self.assertRaises(ValueError, w2n.word_to_num, 112)
 
 if __name__ == '__main__':
