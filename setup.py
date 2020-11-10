@@ -12,7 +12,7 @@ def open_file(fname):
 setup(
   name = 'word2number',
   packages = ['word2number'],  # this must be the same as the name above
-  version = '1.1',
+  version = '2.0',
   license=open('LICENSE.txt').read(),
   description = 'Convert number words eg. three hundred and forty two to numbers (342).',
   author = 'Akshay Nagpal',
