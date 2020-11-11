@@ -99,6 +99,7 @@ class TestW2N(unittest.TestCase):
         self.assertRaises(ValueError, w2n.word_to_num, 112)
         self.assertRaises(ValueError, w2n.word_to_num, False)
         self.assertRaises(ValueError, w2n.word_to_num, 'point')
+        self.assertRaises(ValueError, w2n.word_to_num, '.')
 
 if __name__ == '__main__':
     unittest.main()
