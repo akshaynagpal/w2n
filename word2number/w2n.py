@@ -1,5 +1,6 @@
 num_names = {
     'zero': 0,
+    'naught': 0,
     'one': 1,
     'two': 2,
     'three': 3,
@@ -36,7 +37,10 @@ dec_names = {
 }
 
 place_names = {
+    'dozen':        12,
+    'score':        20,
     'hundred':      100,
+    'gross':        144,
     'thousand':     1000,
     'million':      1000000,
     'billion':      1000000000,
@@ -51,23 +55,31 @@ word_to_number = { **num_names, **place_names, **dec_names }
             
 def num_generator(phrase):
     
-    words = [ word for word in phrase.lower().replace('-',' ').replace(',','').split(' ') if word not in [ 'and', '&', '' ] ]
+    words = [ word for word in phrase.lower().replace('-',' ').replace(',','').replace(';', '').split(' ') if word not in [ 'a', 'and', '&', '' ] ]
     
     if len(words) == 0:
         raise ValueError('No valid words provided')
     
+    countDec = sum( words.count(dec) for dec in dec_names )
+    
+    # Check if there are any valid number words
+    if len(words) == countDec:
+        raise ValueError('No valid number words provided')
+    
     # Check if there are any illegal duplicates
-    if 1 < sum( words.count(dec) for dec in dec_names ):
-        raise ValueError('Duplicate number word provided: point')
+    if 1 < countDec:
+        raise ValueError('At most one of the following allowed: {}'.format(dec_names))
         
     for place in place_names:
         if place != 'hundred' and 1 < words.count(place):
             raise ValueError('Duplicate number word provided: {}'.format(place))
             return 0
     
+    # Iterate over the words, yielding them consecutively as numbers
     for word in words:
-        if word.replace('.', '').replace(',', '').replace(';', '').isalpha():
-            word = word.replace('.', '').replace(',', '').replace(';', '')
+        cleanWord = word.replace('.', '')
+        if cleanWord.isalpha():
+            word = cleanWord
             try:
                 yield word_to_number[word]
             except KeyError:
@@ -130,3 +142,11 @@ def word_to_num(phrase):
         return sum( num * 10**i for i, num in enumerate(reversed(running_total)) )
     else:
         return sum(running_total)
+        
+def num_word_indices(phrase):
+    indices = []
+    for i, word in enumerate(phrase.lower().split(' ')):
+        if word in word_to_number:
+            indices.append(i)
+    
+    return indices
