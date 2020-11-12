@@ -20,6 +20,17 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('one hundred twenty three million four hundred fifty six thousand seven hundred eighty nine'), 123456789)
         self.assertEqual(w2n.word_to_num('two million twenty three thousand and forty nine'), 2023049)
         
+        # Handling metric suffixes
+        self.assertEqual(w2n.word_to_num('$150k'), 150000)
+        self.assertEqual(w2n.word_to_num('310 M'), 310000000)
+        
+        # Minus/negative
+        self.assertEqual(w2n.word_to_num('negative ten'), -10)
+        self.assertEqual(w2n.word_to_num('-10'), -10)
+        self.assertEqual(w2n.word_to_num('minus 10'), -10)
+        self.assertEqual(w2n.word_to_num('minus ten point five'), -10.5)
+        self.assertEqual(w2n.word_to_num('minus point five'), -0.5)
+        
         # Excess spaces testing
         self.assertEqual(w2n.word_to_num('nineteen'), 19)
         self.assertEqual(w2n.word_to_num(' nineteen'), 19)
@@ -33,6 +44,10 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('19;'), 19)
         self.assertEqual(w2n.word_to_num('19,'), 19)
         self.assertEqual(w2n.word_to_num('19.'), 19)
+        self.assertEqual(w2n.word_to_num('$19'), 19)
+        self.assertEqual(w2n.word_to_num('19 ;'), 19)
+        self.assertEqual(w2n.word_to_num('19 ,'), 19)
+        self.assertEqual(w2n.word_to_num('$ 19'), 19)
         
         # Joining words/symbols
         self.assertEqual(w2n.word_to_num('nineteen billion and nineteen'), 19000000019)
@@ -53,6 +68,8 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('two million twenty three thousand and forty nine point two three six nine'), 2023049.2369)
         self.assertEqual(w2n.word_to_num('one billion two million twenty three thousand and forty nine point two three six nine'), 1002023049.2369)
         self.assertEqual(w2n.word_to_num('1 billion 2 million 23 thousand and 49.2369'), 1002023049.2369)
+        # I don't even know if this should be allowed, but it works so we'll go with it
+        self.assertEqual(w2n.word_to_num('one.one'), 1.1)
         
         # Handling decimals as multipliers
         self.assertEqual(w2n.word_to_num('four point nine million'), 4900000)
@@ -66,6 +83,7 @@ class TestW2N(unittest.TestCase):
         
         # Handling spelling out numbers by digit
         self.assertEqual(w2n.word_to_num('one niner niner'), 199)
+        self.assertEqual(w2n.word_to_num('minus one niner niner'), -199)
         self.assertEqual(w2n.word_to_num('four four eight seven eight'), 44878)
         self.assertEqual(w2n.word_to_num('four four eight seven eight point eight nine'), 44878.89)
         
@@ -83,15 +101,23 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.num_word_indices('zero one two three four five six seven'), [ 0, 1, 2, 3, 4, 5, 6, 7 ])
         self.assertEqual(w2n.num_word_indices('four'), [ 0 ])
         self.assertEqual(w2n.num_word_indices('fourteen rats and three mice'), [ 0, 3 ])
+        self.assertEqual(w2n.num_word_indices('1.5 rats (ew!) and -2 mice'), [ 0, 4 ])
+        self.assertEqual(w2n.num_word_indices('Who wants to win $150,000'), [ 4 ])
         self.assertEqual(w2n.num_word_indices('There are no numbers in this sentence'), [ ])
 
     def test_negatives(self):
         self.assertRaises(ValueError, w2n.word_to_num, 'seventh point nineteen')
         self.assertRaises(ValueError, w2n.word_to_num, '19 calculators')
         self.assertRaises(ValueError, w2n.word_to_num, '-')
+        self.assertRaises(ValueError, w2n.word_to_num, '19-')
+        self.assertRaises(ValueError, w2n.word_to_num, '19 minus')
+        self.assertRaises(ValueError, w2n.word_to_num, 'minus -10')
         self.assertRaises(ValueError, w2n.word_to_num, 'on')
         self.assertRaises(ValueError, w2n.word_to_num, 'million four million')
         self.assertRaises(ValueError, w2n.word_to_num, 'million million')
+        self.assertRaises(ValueError, w2n.word_to_num, 'million million.')
+        self.assertRaises(ValueError, w2n.word_to_num, 'million. million.')
+        self.assertRaises(ValueError, w2n.word_to_num, 'million & million')
         self.assertRaises(ValueError, w2n.word_to_num, 'three million million')
         self.assertRaises(ValueError, w2n.word_to_num, 'one billion point two million twenty three thousand and forty nine point two three six nine')
         self.assertRaises(ValueError, w2n.word_to_num, 'one decimal niner decimal eight')
