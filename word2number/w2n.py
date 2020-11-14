@@ -1,4 +1,5 @@
 from __future__ import print_function
+import re
 
 
 american_number_system = {
@@ -34,7 +35,8 @@ american_number_system = {
     'thousand': 1000,
     'million': 1000000,
     'billion': 1000000000,
-    'point': '.'
+    'point': '.',
+    'negative': '-'
 }
 
 decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
@@ -133,11 +135,25 @@ def word_to_num(number_sentence):
     if type(number_sentence) is not str:
         raise ValueError("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
 
+    result = re.search(r"[\d.]+", number_sentence)  # Checks if input is a number string
+    if result:  # return the number if user enters a number string or negative number string
+        neg_result = re.search(r"^-[\d.]+", number_sentence)    # Checks if input is a negative number string
+        if neg_result:
+            number_sentence = number_sentence
+        try:
+            answer = int(number_sentence)
+            return answer
+        except ValueError:
+            answer = float(number_sentence)
+            return answer
+
     number_sentence = number_sentence.replace('-', ' ')
     number_sentence = number_sentence.lower()  # converting input to lowercase
 
-    if(number_sentence.isdigit()):  # return the number if user enters a number string
-        return int(number_sentence)
+    is_negative_number = False  
+    if "negative" in number_sentence:   # check if negative is in input
+        is_negative_number = True   # set is_negative_number to true
+        number_sentence = number_sentence.lstrip('negative')
 
     split_words = number_sentence.strip().split()  # strip extra spaces and split sentence into words
 
@@ -154,7 +170,7 @@ def word_to_num(number_sentence):
         raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)") 
 
     # Error if user enters million,billion, thousand or decimal point twice
-    if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point')> 1:
+    if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point') > 1:
         raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
     # separate decimal part of number (if exists)
@@ -166,7 +182,7 @@ def word_to_num(number_sentence):
     million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
     thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
 
-    if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index>-1 and million_index < billion_index):
+    if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index > -1 and million_index < billion_index):
         raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
     total_sum = 0  # storing the number to be returned
@@ -174,7 +190,7 @@ def word_to_num(number_sentence):
     if len(clean_numbers) > 0:
         # hack for now, better way TODO
         if len(clean_numbers) == 1:
-                total_sum += american_number_system[clean_numbers[0]]
+            total_sum += american_number_system[clean_numbers[0]]
 
         else:
             if billion_index > -1:
@@ -213,5 +229,15 @@ def word_to_num(number_sentence):
     if len(clean_decimal_numbers) > 0:
         decimal_sum = get_decimal_sum(clean_decimal_numbers)
         total_sum += decimal_sum
+
+    if is_negative_number is True:
+        if type(total_sum) is float:    # returns a float point number
+            add_negative = str(american_number_system['negative']) + str(total_sum)
+            total_sum = float(add_negative)
+            return total_sum
+        # returns an integer number
+        add_negative = str(american_number_system['negative']) + str(total_sum)
+        total_sum = int(add_negative)
+        return total_sum
 
     return total_sum
