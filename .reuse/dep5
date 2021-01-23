@@ -3,19 +3,19 @@ Upstream-Name: word2number-i18n
 Upstream-Contact: Sebastian Ritter <bastie@users.noreply.github.com>
 Source: https://github.com/bastie/w2ni18n
 
-Files: .gitignore .travis.yml .github/*
+Files: .gitignore .travis.yml .github/* .settings/*
 Comment: project controlling files
-Copyright: 2020 Sebastian Ritter <bastie@users.noreply.github.com>
+Copyright: 2020-2021 Sebastian Ritter <bastie@users.noreply.github.com>
 License: MIT
 
 Files: LICENSE README.md CONTRIBUTING.md requeriements.txt setup.py MANIFEST.in
 Comment: project files
 Copyright: 2016 Akshay Nagpal <akshaynagpal@user.noreplay.github.com>
-Copyright: 2020 Sebastian Ritter <bastie@users.noreply.github.com>
+Copyright: 2020-2021 Sebastian Ritter <bastie@users.noreply.github.com>
 License: MIT
 
 Files: word2numberi18n/data/*.txt
 Comment: data files
-Copyright: 2020 Sebastian Ritter <bastie@users.noreply.github.com>
+Copyright: 2020-2021 Sebastian Ritter <bastie@users.noreply.github.com>
 License: MIT
 
