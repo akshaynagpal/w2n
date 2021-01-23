@@ -6,15 +6,17 @@ Below is the installation, usage and other details of this module.
 
 ## Installation
 
-Please ensure that you have **updated pip** to the latest version before installing word2number.
+Please ensure that you have **updated pip** to the latest version before installing word2number-i18n.
 
 You can install the module using Python Package Index using the below command.
 
-    pip install word2number
+    pip  install word2number-i18n
+    pip3 install word2number-i18n 
 
 Make sure you install all requirements given in requirements.txt
 ```
-pip install -r requirements.txt
+pip  install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 ## Usage
 
@@ -77,6 +79,8 @@ Do follow steps
 You want to tranfer NLP CARD to numeric value for Lower Sorbian. German (de) isn't it. 
 You do not found an ISO-639-1 code, you do not found an ISO-639-1 file for ```dsb``` extension.
 You create a new file ```number_system_dsb.txt``` with utf-8 encoding
+
+```
     null 0
     jaden 1
     dwa 2
@@ -90,6 +94,7 @@ You create a new file ```number_system_dsb.txt``` with utf-8 encoding
     źaseś 10
     [...]
     point ,
+```
 
 ## Bugs/Errors
 - german language need more specific algorithm
@@ -111,7 +116,7 @@ The MIT License (MIT)
 
 Copyright (c) 2016 Akshay Nagpal 
 
-Copyright (c) 2020 Sebastian Ritter
+Copyright (c) 2020-2021 Sebastian Ritter
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

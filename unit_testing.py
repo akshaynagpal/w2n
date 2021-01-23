@@ -36,6 +36,16 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('nine point nine nine nine'), 9.999)
         self.assertEqual(w2n.word_to_num('seventh point nineteen'), 0)
         self.assertEqual(w2n.word_to_num('seven million, eight hundred, and sixty three thousand, two hundred, and fifty four'), 7863254)
+        
+        # test cases https://github.com/akshaynagpal/w2n/issues/54
+        self.assertEqual(w2n.word_to_num('three point nine seven'), 3.97)
+        self.assertEqual(w2n.word_to_num('two point seven eight'),2.78)
+        self.assertEqual(w2n.word_to_num('one point eight six'), 1.86)
+        self.assertEqual(w2n.word_to_num('two point seven two'), 2.72)
+        self.assertEqual(w2n.word_to_num('one point eight four'), 1.84)
+        self.assertEqual(w2n.word_to_num('two point two eight'), 2.28)
+        self.assertEqual(w2n.word_to_num('two point four seven'), 2.47)
+        self.assertEqual(w2n.word_to_num('one point five nine'), 1.59)
 
     def test_negatives_en(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')

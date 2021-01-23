@@ -7,6 +7,7 @@ import locale
 import codecs
 import re
 
+# the fallback number system is using of no files can be loaded
 number_system_fallback = {
     'zero': 0,
     'one': 1,
@@ -43,6 +44,7 @@ number_system_fallback = {
     'point': '.'
 }
 
+# 
 lang = locale.getlocale()[0]
 if "w2n.lang" in os.environ :
     lang = os.environ ["w2n.lang"]
@@ -101,20 +103,21 @@ def number_formation(number_words):
 
 """
 function to convert post decimal digit words to numerial digits
+it returns a string to prevert from floating point conversation problem
 input: list of strings
-output: double
+output: string
 """
 
 
-def get_decimal_sum(decimal_digit_words):
+def get_decimal_string(decimal_digit_words):
     decimal_number_str = []
     for dec_word in decimal_digit_words:
         if(dec_word not in decimal_words):
             return 0
         else:
             decimal_number_str.append(number_system[dec_word])
-    final_decimal_string = '0.' + ''.join(map(str,decimal_number_str))
-    return float(final_decimal_string)
+    final_decimal_string = ''.join(map(str,decimal_number_str))
+    return final_decimal_string
 
 
 """
@@ -206,7 +209,8 @@ def word_to_num(number_sentence):
 
     # adding decimal part to total_sum (if exists)
     if len(clean_decimal_numbers) > 0:
-        decimal_sum = get_decimal_sum(clean_decimal_numbers)
-        total_sum += decimal_sum
+        decimal_sum = get_decimal_string(clean_decimal_numbers)
+        decimal_sum = str(total_sum)+"."+str(decimal_sum)
+        total_sum = float(decimal_sum)
 
     return total_sum
