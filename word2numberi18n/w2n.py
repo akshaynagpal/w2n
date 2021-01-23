@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2016 - Akshay Nagpal <akshaynagpal@user.noreplay.github.com>
-# SPDX-FileCopyrightText: 2020 - Sebastian Ritter <bastie@users.noreply.github.com>
+# SPDX-FileCopyrightText: 2020-2021 - Sebastian Ritter <bastie@users.noreply.github.com>
 # SPDX-License-Identifier: MIT
 
 import os
@@ -119,6 +119,23 @@ def get_decimal_string(decimal_digit_words):
     final_decimal_string = ''.join(map(str,decimal_number_str))
     return final_decimal_string
 
+""" 
+function to normalize input text
+input: string
+output: string
+""" 
+def normalize(number_sentence):
+    if lang == "fr":
+        # do not remove '-' but add minus
+        number_sentence = number_sentence.replace('vingt et un', 'vingt-et-un')
+        number_sentence = number_sentence.replace('trente et un', 'trente-et-un')
+        number_sentence = number_sentence.replace('quarante et un', 'quarante-et-un')
+        number_sentence = number_sentence.replace('cinquante et un', 'cinquante-et-un')
+        number_sentence = number_sentence.replace('soixante et un', 'soixante-et-un')
+    else:
+        number_sentence = number_sentence.replace('-', ' ')
+    number_sentence = number_sentence.lower()  # converting input to lowercase
+
 
 """
 function to return integer for an input `number_sentence` string
@@ -131,8 +148,7 @@ def word_to_num(number_sentence):
     if type(number_sentence) is not str:
         raise ValueError("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
 
-    number_sentence = number_sentence.replace('-', ' ')
-    number_sentence = number_sentence.lower()  # converting input to lowercase
+    normalize(number_sentence)
 
     if(number_sentence.isdigit()):  # return the number if user enters a number string
         return int(number_sentence)

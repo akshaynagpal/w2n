@@ -101,6 +101,7 @@ You create a new file ```number_system_dsb.txt``` with utf-8 encoding
 
 ### w2n fixed ###
 - ```Add regex to fix comma bug``` fixed by jnelson16
+- ```fixed floating point conversation bug```
 
 ## Thanks
 Thanks to word2number coder and contributors 

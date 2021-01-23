@@ -1,4 +1,5 @@
 # SPDX-FileCopyrightText: 2016 - Akshay Nagpal <akshaynagpal@user.noreplay.github.com>
+# SPDX-FileCopyrightText: 2021 - Sebastian Ritter <bastie@users.noreply.github.com>
 # SPDX-License-Identifier: MIT
 
 import unittest
@@ -46,6 +47,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('two point two eight'), 2.28)
         self.assertEqual(w2n.word_to_num('two point four seven'), 2.47)
         self.assertEqual(w2n.word_to_num('one point five nine'), 1.59)
+        
 
     def test_negatives_en(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')
