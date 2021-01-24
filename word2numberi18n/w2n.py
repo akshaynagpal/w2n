@@ -49,7 +49,7 @@ lang = locale.getlocale()[0]
 if "w2n.lang" in os.environ :
     lang = os.environ ["w2n.lang"]
 if None == lang :
-    lang = locale.getdefaultlocale()
+    lang = locale.getdefaultlocale()[0]
 if None == lang or None == lang [0] :
     lang = None
     if "LANGUAGE" in os.environ :
