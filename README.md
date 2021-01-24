@@ -10,14 +10,18 @@ Please ensure that you have **updated pip** to the latest version before install
 
 You can install the module using Python Package Index using the below command.
 
+```
     pip  install word2number-i18n
     pip3 install word2number-i18n 
+```
 
 Make sure you install all requirements given in requirements.txt
+
 ```
-pip  install -r requirements.txt
-pip3 install -r requirements.txt
+    pip  install -r requirements.txt
+    pip3 install -r requirements.txt
 ```
+
 ## Usage
 
 First you have to import the module using the below code.
@@ -25,6 +29,7 @@ First you have to import the module using the below code.
     from word2numberi18n import w2n
 
 Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.
+
 ```
 print(w2n.word_to_num("two million three thousand nine hundred and eighty four"))
 2003984
@@ -56,21 +61,22 @@ Error: No valid number words found! Please enter a valid number word (eg. two mi
 None
 ```
 
-### for word2number user
-Change your import from word2number to word2numberi18n.
-
-    from word2numberi18n import w2n
 
 ## i18n
+
 word2number looking for your specific language with
+
     1. defined environment variable w2n.lang with ISO lang code like en, hi, de and if not found
     2. over locale.getdefaultlocale() and if not found
     3. over environment variable "LANGUAGE" and if not found
     4. fallback to english 
+    
 Place in the data directory your language specific dictionary file with ISO lang code in the name.
    
 ### Request new language ###
+
 Do follow steps
+
     1. check your request (directory data), textfile name ISO-639-1 code
     2. if not found check ISO-639-3 code
     3. if not found create new file with new ISO-639-1/3 code
@@ -103,6 +109,18 @@ You create a new file ```number_system_dsb.txt``` with utf-8 encoding
 - ```Add regex to fix comma bug``` fixed by jnelson16
 - ```fixed floating point conversation bug```
 
+## Build from source
+
+On macOS
+
+```
+    # python3 -m reuse lint
+    # python3 -m flake8 | grep -v ":80: E501"
+    # python3 setup.py sdist bdist_wheel
+    # python3 -m twine check dist/*
+    # python3 -m twine upload dist/*
+```
+
 ## Thanks
 Thanks to word2number coder and contributors 
 - Akshay Nagpal [akshaynagpal](https://github.com/akshaynagpal)
@@ -111,6 +129,7 @@ Thanks to word2number coder and contributors
 - Tal Yarkoni [tyarkoni](https://github.com/tyarkoni)
 - ButteredGroove [ButteredGroove](https://github.com/ButteredGroove)
 - Jonathan Nelson [jnelsen16](https://github.com/jnelson16)
+- Daniel Junior [danieljunior](https://github.com/danieljunior)
 
 ## License
 The MIT License (MIT)

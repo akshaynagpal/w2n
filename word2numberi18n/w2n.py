@@ -44,32 +44,32 @@ number_system_fallback = {
     'point': '.'
 }
 
-# 
+#
 lang = locale.getlocale()[0]
-if "w2n.lang" in os.environ :
-    lang = os.environ ["w2n.lang"]
-if None == lang :
+if "w2n.lang" in os.environ:
+    lang = os.environ["w2n.lang"]
+if lang is None:
     lang = locale.getdefaultlocale()[0]
-if None == lang or None == lang [0] :
+if lang is None or lang[0] is None:
     lang = None
-    if "LANGUAGE" in os.environ :
+    if "LANGUAGE" in os.environ:
         lang = os.environ["LANGUAGE"]
-if None == lang :
-    lang = "en" # fallback
+if lang is None:
+    lang = "en"  # fallback
 lang = lang[:2]
 
 filebased_number_system = {}
 data_file = os.path.dirname(__file__)+os.sep+"data"+os.sep+"number_system_"+lang+".txt"
 with codecs.open(data_file, "rU", encoding="utf-8") as number_system_data:
     for line in number_system_data:
-        if line.startswith('#') :
+        if line.startswith('#'):
             pass
-        else :
+        else:
             (key, val) = line.split()
-            if "point" != key :
+            if "point" != key:
                 val = int(val)
             filebased_number_system[key] = val
-        
+
 number_system = filebased_number_system
 
 
@@ -116,14 +116,17 @@ def get_decimal_string(decimal_digit_words):
             return 0
         else:
             decimal_number_str.append(number_system[dec_word])
-    final_decimal_string = ''.join(map(str,decimal_number_str))
+    final_decimal_string = ''.join(map(str, decimal_number_str))
     return final_decimal_string
 
-""" 
+
+"""
 function to normalize input text
 input: string
 output: string
-""" 
+"""
+
+
 def normalize(number_sentence):
     if lang == "fr":
         # do not remove '-' but add minus
@@ -165,10 +168,10 @@ def word_to_num(number_sentence):
 
     # Error message if the user enters invalid input!
     if len(clean_numbers) == 0:
-        raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)") 
+        raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
     # Error if user enters million,billion, thousand or decimal point twice
-    if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point')> 1:
+    if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point') > 1:
         raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
     # separate decimal part of number (if exists)
@@ -180,7 +183,7 @@ def word_to_num(number_sentence):
     million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
     thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
 
-    if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index>-1 and million_index < billion_index):
+    if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index > -1 and million_index < billion_index):
         raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
     total_sum = 0  # storing the number to be returned
@@ -188,7 +191,7 @@ def word_to_num(number_sentence):
     if len(clean_numbers) > 0:
         # hack for now, better way TODO
         if len(clean_numbers) == 1:
-                total_sum += number_system[clean_numbers[0]]
+            total_sum += number_system[clean_numbers[0]]
 
         else:
             if billion_index > -1:

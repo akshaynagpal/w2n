@@ -1,14 +1,14 @@
 zero 0
 un 1
-une 2
 deux 2
 trois 3
 quatre 4
-sinq 5
+cinq 5
 six 6
 sept 7
 huit 8
 neuf 9
+une 1
 dix 10
 onze 11
 douze 12
