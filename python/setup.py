@@ -10,7 +10,7 @@ setuptools.setup(
     name="word2number-i18n",
     version="0.1.4",
     description="Convert i18n number words eg. three hundred and forty two to numbers (342).",
-    long_description=read_file("README.md"),
+    long_description=read_file("../README.md"),
     long_description_content_type='text/markdown',
     author='Sebastian Ritter',
     python_requires='>=3',
