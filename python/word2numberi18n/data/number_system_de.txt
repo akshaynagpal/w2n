@@ -37,4 +37,4 @@ milliarde 1000000000
 milliarden 1000000000
 billion 1000000000000
 billionen 1000000000000
-komma ,
+point komma
