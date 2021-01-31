@@ -164,7 +164,7 @@ raise: if redundant input error
 
 def check_double_input(clean_numbers):
     if lang == "de":
-        if clean_numbers.count('tausend') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('milliarde') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('punkt') > 1:
+        if clean_numbers.count('tausend') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('milliarde') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('komma') > 1:
             raise ValueError("Redundantes Nummernwort! Bitte gebe ein zulässiges Nummernwort ein (z.B. zwei Millionen Dreiundzwanzigtausend und Neunundvierzig)")
     elif lang == "fr":
         if clean_numbers.count('mille') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('milliard') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point') > 1:
