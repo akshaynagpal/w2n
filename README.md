@@ -15,12 +15,22 @@ You can install the module using Python Package Index using the below command.
     pip3 install word2number-i18n 
 ```
 
+### Install from source
+
+On macOS
+
+```
+    # git clone https://github.com/bastie/w2ni18n.git w2n
+    # python3 setup.py install
+```
+
 Make sure you install all requirements given in requirements.txt
 
 ```
     pip  install -r requirements.txt
     pip3 install -r requirements.txt
 ```
+
 
 ## Usage
 
@@ -109,17 +119,26 @@ You create a new file ```number_system_dsb.txt``` with utf-8 encoding
 - ```Add regex to fix comma bug``` fixed by jnelson16
 - ```fixed floating point conversation bug```
 
-## Build from source
 
-On macOS
+## Develop package
 
 ```
     # python3 -m reuse lint
     # python3 -m flake8 | grep -v ":80: E501"
+    #
     # python3 setup.py sdist bdist_wheel
     # python3 -m twine check dist/*
     # python3 -m twine upload dist/*
 ```
+
+Make sure you install all requirements given in development.txt
+
+```
+    pip  install -r development.txt
+    pip3 install -r development.txt
+```
+
+
 
 ## Thanks
 Thanks to word2number coder and contributors 
