@@ -88,17 +88,31 @@ def number_formation(number_words):
     numbers = []
     for number_word in number_words:
         numbers.append(number_system[number_word])
-    if len(numbers) == 4:
-        return (numbers[0] * numbers[1]) + numbers[2] + numbers[3]
-    elif len(numbers) == 3:
-        return numbers[0] * numbers[1] + numbers[2]
-    elif len(numbers) == 2:
-        if 100 in numbers:
-            return numbers[0] * numbers[1]
+    if lang == "ru":
+        if len(numbers) > 3:
+            if numbers[0] < 100:
+                numbers[0] = numbers[0] * 100
+
+        if len(numbers) == 4:
+            return (numbers[0] * numbers[1]) + numbers[2] + numbers[3]
+        elif len(numbers) == 3:
+            return numbers[0]+numbers[1]+numbers[2]
+        elif len(numbers) == 2:
+            return numbers[0]+numbers[1]
         else:
-            return numbers[0] + numbers[1]
+            return numbers[0]
     else:
-        return numbers[0]
+        if len(numbers) == 4:
+            return (numbers[0] * numbers[1]) + numbers[2] + numbers[3]
+        elif len(numbers) == 3:
+            return numbers[0] * numbers[1] + numbers[2]
+        elif len(numbers) == 2:
+            if 100 in numbers:
+                return numbers[0] * numbers[1]
+            else:
+                return numbers[0] + numbers[1]
+        else:
+            return numbers[0]
 
 
 """
@@ -141,6 +155,108 @@ def normalize(number_sentence):
 
 
 """
+function to check false redundant input
+input: string[]
+output: none
+raise: if redundant input error
+"""
+
+
+def check_double_input(clean_numbers):
+    if lang == "de":
+        if clean_numbers.count('tausend') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('milliarde') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('komma') > 1:
+            raise ValueError("Redundantes Nummernwort! Bitte gebe ein zulässiges Nummernwort ein (z.B. zwei Millionen Dreiundzwanzigtausend und Neunundvierzig)")
+    elif lang == "fr":
+        if clean_numbers.count('mille') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('milliard') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point') > 1:
+            raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+    elif lang == "hi":
+        pass
+    elif lang == "pt":
+        if clean_numbers.count('mil') > 1 or clean_numbers.count('milhão') > 1 or clean_numbers.count('bilhão') > 1 or clean_numbers.count('point') > 1:
+            raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+    elif lang == "ru":
+        if clean_numbers.count('тысяча') > 1 or clean_numbers.count('миллион') > 1 or clean_numbers.count('миллиард') > 1 or clean_numbers.count('целых') > 1 or clean_numbers.count('целая') > 1:
+            raise ValueError("Избыточное числовое слово! Введите правильное числовое слово (например, два миллиона двадцать три тысячи сорок девять)")
+    else:  # fallback
+        # Error if user enters million,billion, thousand or decimal point twice
+        if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point') > 1:
+            raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+
+
+"""
+function to get billion index
+"""
+
+
+def get_billion_index(clean_numbers):
+    if lang == "de":
+        billion_index = clean_numbers.index('milliarde') if 'milliarde' in clean_numbers else -1
+        if billion_index == -1:
+            billion_index = clean_numbers.index('milliarden') if 'milliarden' in clean_numbers else -1
+    elif lang == "fr":
+        billion_index = clean_numbers.index('milliard') if 'milliard' in clean_numbers else -1
+    elif lang == "hi":
+        pass
+    elif lang == "pt":
+        billion_index = clean_numbers.index('bilhão') if 'bilhão' in clean_numbers else -1
+    elif lang == "ru":
+        billion_index = clean_numbers.index('миллиард') if 'миллиард' in clean_numbers else -1
+        if billion_index == -1:
+            billion_index = clean_numbers.index('миллиарда') if 'миллиарда' in clean_numbers else -1
+    else:  # fallback
+        billion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
+    return billion_index
+
+
+"""
+function to get million index
+"""
+
+
+def get_million_index(clean_numbers):
+    if lang == "de":
+        million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
+        if million_index == -1:
+            million_index = clean_numbers.index('millionen') if 'millionen' in clean_numbers else -1
+    elif lang == "fr":
+        million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
+    elif lang == "hi":
+        pass
+    elif lang == "pt":
+        million_index = clean_numbers.index('milhão') if 'milhão' in clean_numbers else -1
+    elif lang == "ru":
+        million_index = clean_numbers.index('миллион') if 'миллион' in clean_numbers else -1
+        if million_index == -1:
+            million_index = clean_numbers.index('миллиона') if 'миллиона' in clean_numbers else -1
+    else:  # fallback
+        million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
+    return million_index
+
+
+"""
+function to get thousand index
+"""
+
+
+def get_thousand_index(clean_numbers):
+    if lang == "de":
+        thousand_index = clean_numbers.index('tausend') if 'tausend' in clean_numbers else -1
+    elif lang == "fr":
+        thousand_index = clean_numbers.index('mille') if 'mille' in clean_numbers else -1
+    elif lang == "hi":
+        pass
+    elif lang == "pt":
+        thousand_index = clean_numbers.index('mil') if 'mil' in clean_numbers else -1
+    elif lang == "ru":
+        thousand_index = clean_numbers.index('тысяча') if 'тысяча' in clean_numbers else -1
+        if thousand_index == -1:
+            thousand_index = clean_numbers.index('тысячи') if 'тысячи' in clean_numbers else -1
+    else:  # fallback
+        thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
+    return thousand_index
+
+
+"""
 function to return integer for an input `number_sentence` string
 input: string
 output: int or double or None
@@ -165,23 +281,25 @@ def word_to_num(number_sentence):
     for word in split_words:
         if word in number_system:
             clean_numbers.append(word)
+        elif word == number_system['point']:
+            clean_numbers.append(word)
 
     # Error message if the user enters invalid input!
     if len(clean_numbers) == 0:
         raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
-    # Error if user enters million,billion, thousand or decimal point twice
-    if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point') > 1:
-        raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+    check_double_input(clean_numbers)  # Error if user enters million,billion, thousand or decimal point twice
 
     # separate decimal part of number (if exists)
-    if clean_numbers.count('point') == 1:
-        clean_decimal_numbers = clean_numbers[clean_numbers.index('point')+1:]
-        clean_numbers = clean_numbers[:clean_numbers.index('point')]
+    point = filebased_number_system['point']
+    point_count = clean_numbers.count(point)
+    if point_count == 1:
+        clean_decimal_numbers = clean_numbers[clean_numbers.index(point)+1:]
+        clean_numbers = clean_numbers[:clean_numbers.index(point)]
 
-    billion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
-    million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
-    thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
+    billion_index = get_billion_index(clean_numbers)  # clean_numbers.index('billion') if 'billion' in clean_numbers else -1
+    million_index = get_million_index(clean_numbers)  # clean_numbers.index('million') if 'million' in clean_numbers else -1
+    thousand_index = get_thousand_index(clean_numbers)  # clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
 
     if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index > -1 and million_index < billion_index):
         raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")

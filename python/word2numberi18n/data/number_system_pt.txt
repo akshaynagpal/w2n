@@ -38,4 +38,4 @@ novecentos 900
 mil 1000
 milhão 1000000
 bilhão 1000000000
-point ,
+point point

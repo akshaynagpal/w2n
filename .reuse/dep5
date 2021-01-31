@@ -19,3 +19,8 @@ Comment: data files
 Copyright: 2020-2021 Sebastian Ritter <bastie@users.noreply.github.com>
 License: MIT
 
+Files: index.md _config.yml
+Comment: website files
+Copyright: 2021 Sebastian Ritter <bastie@users.noreply.github.com>
+License: MIT
+
