@@ -16,3 +16,7 @@ dist/
 .idlerc/
 .pypirc
 *.pyc
+
+# Java
+/java/bin/**
+
