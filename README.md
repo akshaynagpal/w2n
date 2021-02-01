@@ -116,8 +116,9 @@ You create a new file ```number_system_dsb.txt``` with utf-8 encoding
 - german language need more specific algorithm
 
 ### w2n fixed ###
-- ```Add regex to fix comma bug``` fixed by jnelson16
-- ```fixed floating point conversation bug```
+- ``Add regex to fix comma bug`` fixed by jnelson16
+- ``fixed floating point conversation bug``
+- ``accept also number values`` because it is more understandable to handle str:112 as same as int:112
 
 
 ## Develop package
