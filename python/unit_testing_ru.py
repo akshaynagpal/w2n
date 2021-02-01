@@ -16,13 +16,13 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num("два миллиона три тысячи девятьсот восемьдесят четыре"), 2003984)
         self.assertEqual(w2n.word_to_num('сто двенадцать'), 112)
         self.assertEqual(w2n.word_to_num('сто тридцать-пять'), 135)
+        self.assertEqual(w2n.word_to_num(112),112)
 
     def test_negatives_ru(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')
         self.assertRaises(ValueError, w2n.word_to_num, '-')
         self.assertRaises(ValueError, w2n.word_to_num, 'бля')
         self.assertRaises(ValueError, w2n.word_to_num, 'миллион миллион')
-        self.assertRaises(ValueError, w2n.word_to_num, 112)
 
 
 if __name__ == '__main__':

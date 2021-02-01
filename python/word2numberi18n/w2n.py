@@ -152,6 +152,7 @@ def normalize(number_sentence):
     else:
         number_sentence = number_sentence.replace('-', ' ')
     number_sentence = number_sentence.lower()  # converting input to lowercase
+    return number_sentence
 
 
 """
@@ -267,7 +268,7 @@ def word_to_num(number_sentence):
     if type(number_sentence) is not str:
         raise ValueError("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
 
-    normalize(number_sentence)
+    number_sentence = normalize(number_sentence) 
 
     if(number_sentence.isdigit()):  # return the number if user enters a number string
         return int(number_sentence)

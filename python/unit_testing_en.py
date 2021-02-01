@@ -46,6 +46,11 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('two point two eight'), 2.28)
         self.assertEqual(w2n.word_to_num('two point four seven'), 2.47)
         self.assertEqual(w2n.word_to_num('one point five nine'), 1.59)
+        
+        # in different to w2n it is ok, in result of str:112 is not different to int:112
+        self.assertEqual(w2n.word_to_num('112'), 112)
+        self.assertEqual(w2n.word_to_num(112),112)
+        
 
     def test_negatives_en(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')
@@ -56,7 +61,6 @@ class TestW2N(unittest.TestCase):
         self.assertRaises(ValueError, w2n.word_to_num, 'million four million')
         self.assertRaises(ValueError, w2n.word_to_num, 'thousand million')
         self.assertRaises(ValueError, w2n.word_to_num, 'one billion point two million twenty three thousand and forty nine point two three six nine')
-        self.assertRaises(ValueError, w2n.word_to_num, 112)
 
 
 if __name__ == '__main__':
