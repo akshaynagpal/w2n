@@ -1,21 +1,21 @@
 # Word to Number i18n
 
-This is the i18n extension Python module to convert number words (eg. twenty one) to numeric digits (21).
-It works for positive numbers upto the range of 999,999,999,999 (i.e. billions)
+Convert number words from different languages with Python or Java API eg. three hundred and forty two to numbers (342) or vingt-et-un (21) or две целых три десятых (2.3).Word2Number-i18n convert number words (eg. twenty one) to numeric digits (21).
 Below is the installation, usage and other details of this module.
 
-## Installation
+## Python
+
+### Installation
 
 Please ensure that you have **updated pip** to the latest version before installing word2number-i18n.
 
 You can install the module using Python Package Index using the below command.
 
 ```
-    pip  install word2number-i18n
     pip3 install word2number-i18n 
 ```
 
-### Install from source
+### Installation from source
 
 On macOS
 
@@ -27,13 +27,13 @@ On macOS
 Make sure you install all requirements given in requirements.txt
 
 ```
-    pip  install -r requirements.txt
     pip3 install -r requirements.txt
 ```
 
 
-## Usage
+### Usage
 
+Add the word2number-i18n to requirements.txt in your project.
 First you have to import the module using the below code.
 
     from word2numberi18n import w2n
@@ -72,7 +72,7 @@ None
 ```
 
 
-## i18n
+### i18n
 
 word2number looking for your specific language with
 
@@ -83,7 +83,7 @@ word2number looking for your specific language with
     
 Place in the data directory your language specific dictionary file with ISO lang code in the name.
    
-### Request new language ###
+#### Request new language
 
 Do follow steps
 
@@ -91,7 +91,7 @@ Do follow steps
     2. if not found check ISO-639-3 code
     3. if not found create new file with new ISO-639-1/3 code
 
-#### Example ####
+##### Example
 You want to tranfer NLP CARD to numeric value for Lower Sorbian. German (de) isn't it. 
 You do not found an ISO-639-1 code, you do not found an ISO-639-1 file for ```dsb``` extension.
 You create a new file ```number_system_dsb.txt``` with utf-8 encoding
@@ -112,16 +112,8 @@ You create a new file ```number_system_dsb.txt``` with utf-8 encoding
     point ,
 ```
 
-## Bugs/Errors
-- german language need more specific algorithm
 
-### w2n fixed ###
-- ``Add regex to fix comma bug`` fixed by jnelson16
-- ``fixed floating point conversation bug``
-- ``accept also number values`` because it is more understandable to handle str:112 as same as int:112
-
-
-## Develop package
+### Develop package
 
 ```
     # python3 -m reuse lint
@@ -135,9 +127,109 @@ You create a new file ```number_system_dsb.txt``` with utf-8 encoding
 Make sure you install all requirements given in development.txt
 
 ```
-    pip  install -r development.txt
     pip3 install -r development.txt
 ```
+
+## Java
+
+Please note that these Java implementation is similar to Python.
+
+### Installation
+
+Download the latest version of word2number from GitHub.
+
+### Installation from source
+
+On macOS
+
+```
+    # git clone https://github.com/bastie/w2ni18n.git w2n
+    # ./w2n/src/build.sh
+```
+
+### i18n
+
+word2number looking for your specific language with
+
+    1. defined environment variable (not property) w2n.lang with ISO lang code like en, hi, de and if not found
+    2. over java.util.Locale.getDefault() and if null
+    3. over environment variable "LANGUAGE" and if not found
+    4. fallback to english
+    
+Place in the data directory your language specific dictionary file with ISO lang code in the name.
+   
+### Usage
+
+Add the word2number-i18n to module-info.java in your project.
+
+    requires word2number;
+
+Then import the class using the below code.
+
+    import word2number.W2N;
+
+Then you can use the **wordToNum** method to convert a number-word to numeric digits, as shown below.
+
+```
+    Locale.setDefault(Locale.CANADA);
+    W2N english = new W2N();
+    System.out.println(english.wordToNum("three hundred fifty"));
+
+    Locale.setDefault(Locale.CANADA_FRENCH);
+    W2N french = new W2N();
+    System.out.println(french.wordToNum("vingt et un"));
+    
+    System.out.println(english.wordToNum("three point one four"));
+```
+
+In result it prints
+
+```
+350
+21
+3.14
+```
+
+
+#### Request new language
+
+Do follow steps
+
+    1. check your request (directory data), textfile name ISO-639-1 code
+    2. if not found check ISO-639-3 code
+    3. if not found create new file with new ISO-639-1/3 code
+
+##### Example
+You want to tranfer NLP CARD to numeric value for Lower Sorbian. German (de) isn't it. 
+You do not found an ISO-639-1 code, you do not found an ISO-639-1 file for ```dsb``` extension.
+You create a new file ```number_system_dsb.txt``` with utf-8 encoding
+
+```
+    null 0
+    jaden 1
+    dwa 2
+    tśi 3
+    styri 4
+    pěś 5
+    šesć 6
+    sedym 7
+    wósym 8
+    źewjeś 9
+    źaseś 10
+    [...]
+    point ,
+```
+
+Call the build.sh script and use the new w2ni18n-VERSION-.jar file
+
+
+## Bugs/Errors
+- german language need more specific algorithm
+
+### w2n fixed
+- ``Add regex to fix comma bug`` fixed by jnelson16
+- ``fixed floating point conversation bug``
+- ``accept also number values`` because it is more understandable to handle str:112 as same as int:112
 
 
 
