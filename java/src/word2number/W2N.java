@@ -64,7 +64,7 @@ public class W2N {
           String key = keyValue[0];
           Object val = keyValue[1];
           if (!"point".equals(key)) {
-            val = Integer.valueOf(val.toString());
+            val = Long.valueOf(val.toString());
           }
           this.filebasedNumberSystem.put(key, val);
           if (zeroToNine<10) {
