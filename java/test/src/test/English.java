@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import word2number.W2N;
 
@@ -68,6 +69,25 @@ class English {
       Assertions.assertEquals(new W2N().wordToNum("112"), 112);
       Assertions.assertEquals(new W2N().wordToNum(112),112);
     
+  }
+  
+  @Test
+  final void testNull_en() {
+    Assertions.assertThrows(NumberFormatException.class, new Executable() {
+      public void execute() throws Throwable {
+        new W2N().wordToNum((String)null);
+      }
+    });
+    Assertions.assertThrows(NumberFormatException.class, new Executable() {
+      public void execute() throws Throwable {
+        new W2N().wordToNum((Number)null);
+      }
+    });
+    Assertions.assertThrows(NumberFormatException.class, new Executable() {
+      public void execute() throws Throwable {
+        new W2N().wordToNum("");
+      }
+    });
   }
 
   @Test
