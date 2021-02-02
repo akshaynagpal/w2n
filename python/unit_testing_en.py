@@ -61,6 +61,12 @@ class TestW2N(unittest.TestCase):
         self.assertRaises(ValueError, w2n.word_to_num, 'million four million')
         self.assertRaises(ValueError, w2n.word_to_num, 'thousand million')
         self.assertRaises(ValueError, w2n.word_to_num, 'one billion point two million twenty three thousand and forty nine point two three six nine')
+        
+    def test_null_en(self):
+        noneValue :str = None 
+        self.assertRaises(ValueError, w2n.word_to_num, noneValue)
+        noneValue = ""
+        self.assertRaises(ValueError, w2n.word_to_num, noneValue)
 
 
 if __name__ == '__main__':
