@@ -141,9 +141,6 @@ public class W2N {
   }
   
   public Number wordToNum (Number newNumberValue) {
-    if (null == newNumberValue) // same as python
-      throw new NumberFormatException("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')");
-
     return newNumberValue;
   }
   
@@ -154,9 +151,6 @@ public class W2N {
    */
   public Number wordToNum (CharSequence newNumberSentence) {
     Number result = null;
-
-    if (null == newNumberSentence) // same as python
-      throw new NumberFormatException("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')");
 
     // return the number if user enters a number string
     try { 
@@ -169,6 +163,7 @@ public class W2N {
       catch (NumberFormatException okMoreSpecificAlgorithmNeeded) {}
     }
     
+    if (null == newNumberSentence) return null; // TODO: check Python needed same
     String numberSentence = newNumberSentence.toString();
     
     numberSentence = this.normalize(numberSentence);
