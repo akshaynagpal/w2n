@@ -20,3 +20,7 @@ dist/
 # Java
 /java/bin/**
 
+# CSharp
+/csharp/obj/**
+/csharp/bin/**
+
