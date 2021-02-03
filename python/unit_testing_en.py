@@ -33,6 +33,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('thousand'), 1000)
         self.assertEqual(w2n.word_to_num('million'), 1000000)
         self.assertEqual(w2n.word_to_num('billion'), 1000000000)
+        self.assertEqual(w2n.word_to_num('trillion'), 1000000000000)
         self.assertEqual(w2n.word_to_num('nine point nine nine nine'), 9.999)
         self.assertEqual(w2n.word_to_num('seventh point nineteen'), 0)
         self.assertEqual(w2n.word_to_num('seven million, eight hundred, and sixty three thousand, two hundred, and fifty four'), 7863254)

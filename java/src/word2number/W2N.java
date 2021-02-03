@@ -205,9 +205,10 @@ public class W2N {
     // special case "point" without pre or post number   // TODO check it really a number, bit for python compatibility it need to
     if (cleanDecimalNumbers.size() == 0 && cleanNumbers.size() == 0) return Integer.valueOf(0);
 
-    int billionIndex = getBillionIndex(cleanNumbers);  // clean_numbers.index('billion') if 'billion' in clean_numbers else -1
-    int millionIndex = getMillionIndex(cleanNumbers);  // clean_numbers.index('million') if 'million' in clean_numbers else -1
-    int thousandIndex = getThousandIndex(cleanNumbers);  // clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
+    int trillionIndex = getTrillionIndex(cleanNumbers);
+    int billionIndex = getBillionIndex(cleanNumbers);
+    int millionIndex = getMillionIndex(cleanNumbers);
+    int thousandIndex = getThousandIndex(cleanNumbers);
 
     if ((thousandIndex > -1 && (thousandIndex < millionIndex || thousandIndex < billionIndex)) || (millionIndex > -1 && millionIndex < billionIndex))
       throw new NumberFormatException("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
@@ -220,8 +221,19 @@ public class W2N {
         totalSum += Long.valueOf(this.filebasedNumberSystem.get(cleanNumbers.get(0)).toString()); // TODO: oh no hack
       }
       else {
+        if (trillionIndex > -1) {
+          int trillionMultiplier = numberFormation(cleanNumbers.subList(0,trillionIndex));
+          totalSum += trillionMultiplier * 1000000000000L;
+        }
+
         if (billionIndex > -1) {
-          int billionMultiplier = numberFormation(cleanNumbers.subList(0,billionIndex));
+          int billionMultiplier = 0;
+          if (trillionIndex > -1) {
+            billionMultiplier = numberFormation(cleanNumbers.subList(trillionIndex+1,billionIndex));
+          }
+          else {
+            billionMultiplier = numberFormation(cleanNumbers.subList(0,billionIndex));
+          }
           totalSum += billionMultiplier * 1000000000L;
         }
 
@@ -229,6 +241,9 @@ public class W2N {
           int millionMultiplier = 0;
           if (billionIndex > -1) {
             millionMultiplier = numberFormation(cleanNumbers.subList(billionIndex+1,millionIndex));
+          }
+          else if (trillionIndex > -1 && billionIndex == -1) {
+            millionMultiplier = numberFormation(cleanNumbers.subList(trillionIndex+1,millionIndex));
           }
           else {
             millionMultiplier = numberFormation(cleanNumbers.subList(0,millionIndex));
@@ -243,6 +258,9 @@ public class W2N {
           }
           else if (billionIndex > -1 && millionIndex == -1) {
               thousandMultiplier = numberFormation(cleanNumbers.subList(billionIndex+1,thousandIndex));
+          }
+          else if (trillionIndex > -1 && billionIndex > -1 && millionIndex == -1) {
+            thousandMultiplier = numberFormation(cleanNumbers.subList(trillionIndex+1,thousandIndex));
           }
           else {
               thousandMultiplier = numberFormation(cleanNumbers.subList(0,thousandIndex));
@@ -397,6 +415,37 @@ public class W2N {
       case "en":
       default:
         index = cleanNumbers.indexOf("billion");
+        break;
+    }
+      return index;
+  }
+  /**
+   * function to get billion index
+   * @param cleanNumbers number array
+   * @return index or -1 if not found
+   * @see NOT_FOUND
+   */
+  protected int getTrillionIndex(List<String> cleanNumbers) {
+    int index = NOT_FOUND;
+    switch (this.lang) {
+      case "de":
+        index = cleanNumbers.indexOf("billion");
+        if (index == NOT_FOUND) index = cleanNumbers.indexOf("billionen");
+        break;
+      case "fr":
+        index = cleanNumbers.indexOf("billion");
+        break;
+      case "hi":
+        break;
+      case "pt":
+        index = cleanNumbers.indexOf("trilhão");
+        break;
+      case "ru":
+        index = cleanNumbers.indexOf("триллион");
+        break;
+      case "en":
+      default:
+        index = cleanNumbers.indexOf("trillion");
         break;
     }
       return index;

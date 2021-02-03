@@ -7,43 +7,6 @@ import locale
 import codecs
 import re
 
-# the fallback number system is using of no files can be loaded
-number_system_fallback = {
-    'zero': 0,
-    'one': 1,
-    'two': 2,
-    'three': 3,
-    'four': 4,
-    'five': 5,
-    'six': 6,
-    'seven': 7,
-    'eight': 8,
-    'nine': 9,
-    'ten': 10,
-    'eleven': 11,
-    'twelve': 12,
-    'thirteen': 13,
-    'fourteen': 14,
-    'fifteen': 15,
-    'sixteen': 16,
-    'seventeen': 17,
-    'eighteen': 18,
-    'nineteen': 19,
-    'twenty': 20,
-    'thirty': 30,
-    'forty': 40,
-    'fifty': 50,
-    'sixty': 60,
-    'seventy': 70,
-    'eighty': 80,
-    'ninety': 90,
-    'hundred': 100,
-    'thousand': 1000,
-    'million': 1000000,
-    'billion': 1000000000,
-    'point': '.'
-}
-
 #
 lang = locale.getlocale()[0]
 if "w2n.lang" in os.environ:
@@ -179,9 +142,32 @@ def check_double_input(clean_numbers):
         if clean_numbers.count('тысяча') > 1 or clean_numbers.count('миллион') > 1 or clean_numbers.count('миллиард') > 1 or clean_numbers.count('целых') > 1 or clean_numbers.count('целая') > 1:
             raise ValueError("Избыточное числовое слово! Введите правильное числовое слово (например, два миллиона двадцать три тысячи сорок девять)")
     else:  # fallback
-        # Error if user enters million,billion, thousand or decimal point twice
-        if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point') > 1:
+        # Error if user enters trillion, million, billion, thousand or decimal point twice
+        if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1  or clean_numbers.count('trillion') > 1 or clean_numbers.count('point') > 1:
             raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+
+
+"""
+function to get trillion index
+"""
+
+
+def get_trillion_index(clean_numbers):
+    if lang == "de":
+        trillion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
+        if trillion_index == -1:
+            trillion_index = clean_numbers.index('billionen') if 'billionen' in clean_numbers else -1
+    elif lang == "fr":
+        trillion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
+    elif lang == "hi":
+        pass
+    elif lang == "pt":
+        billion_index = clean_numbers.index('trilhão') if 'trilhão' in clean_numbers else -1
+    elif lang == "ru":
+        billion_index = clean_numbers.index('триллион') if 'триллион' in clean_numbers else -1
+    else:  # fallback
+        trillion_index = clean_numbers.index('trillion') if 'trillion' in clean_numbers else -1
+    return trillion_index
 
 
 """
@@ -265,6 +251,11 @@ output: int or double or None
 
 
 def word_to_num(number_sentence):
+    if type(number_sentence) is float:
+        return number_sentence
+    if type(number_sentence) is int:
+        return number_sentence
+    
     if type(number_sentence) is not str:
         raise ValueError("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
 
@@ -298,9 +289,10 @@ def word_to_num(number_sentence):
         clean_decimal_numbers = clean_numbers[clean_numbers.index(point)+1:]
         clean_numbers = clean_numbers[:clean_numbers.index(point)]
 
-    billion_index = get_billion_index(clean_numbers)  # clean_numbers.index('billion') if 'billion' in clean_numbers else -1
-    million_index = get_million_index(clean_numbers)  # clean_numbers.index('million') if 'million' in clean_numbers else -1
-    thousand_index = get_thousand_index(clean_numbers)  # clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
+    trillion_index = get_trillion_index(clean_numbers)
+    billion_index = get_billion_index(clean_numbers)
+    million_index = get_million_index(clean_numbers)
+    thousand_index = get_thousand_index(clean_numbers)
 
     if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index > -1 and million_index < billion_index):
         raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
@@ -313,13 +305,22 @@ def word_to_num(number_sentence):
             total_sum += number_system[clean_numbers[0]]
 
         else:
+            if trillion_index > -1:
+                trillion_multiplier = number_formation(clean_numbers[0:trillion_index])
+                total_sum += trillion_multiplier * 1000000000000
+
             if billion_index > -1:
-                billion_multiplier = number_formation(clean_numbers[0:billion_index])
+                if trillion_index > -1:
+                    billion_multiplier = number_formation(clean_numbers[trillion_index+1:billion_index])
+                else:
+                    billion_multiplier = number_formation(clean_numbers[0:billion_index])
                 total_sum += billion_multiplier * 1000000000
 
             if million_index > -1:
                 if billion_index > -1:
                     million_multiplier = number_formation(clean_numbers[billion_index+1:million_index])
+                elif trillion_index > -1 and billion_index == -1:
+                    million_multiplier = number_formation(clean_numbers[trillion_index+1:million_index])
                 else:
                     million_multiplier = number_formation(clean_numbers[0:million_index])
                 total_sum += million_multiplier * 1000000
@@ -329,6 +330,8 @@ def word_to_num(number_sentence):
                     thousand_multiplier = number_formation(clean_numbers[million_index+1:thousand_index])
                 elif billion_index > -1 and million_index == -1:
                     thousand_multiplier = number_formation(clean_numbers[billion_index+1:thousand_index])
+                elif trillion_index > -1 and billion_index > -1 and million_index == -1:
+                    thousand_multiplier = number_formation(clean_numbers[trillion_index+1:thousand_index])
                 else:
                     thousand_multiplier = number_formation(clean_numbers[0:thousand_index])
                 total_sum += thousand_multiplier * 1000
