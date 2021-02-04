@@ -7,6 +7,7 @@ function upgradeAllLocalBranchesFromMaster {
       git merge origin/master
       git pull
     done
+  git switch master
 }
 function showHelp {
   echo '   -h   show this help'
