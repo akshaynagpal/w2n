@@ -272,10 +272,10 @@ public class W2N {
         if (thousandIndex > -1 && thousandIndex != cleanNumbers.size()-1) {
           hundreds = numberFormation(cleanNumbers.subList(thousandIndex+1, cleanNumbers.size()));
         }
-        else if (millionIndex > -1 && millionIndex != cleanNumbers.size()-1) {
+        else if (millionIndex > -1 && millionIndex != cleanNumbers.size()-1 && thousandIndex != cleanNumbers.size()-1) {
           hundreds = numberFormation(cleanNumbers.subList(millionIndex+1,cleanNumbers.size()));
         }
-        else if (billionIndex > -1 && billionIndex != cleanNumbers.size()-1) {
+        else if (billionIndex > -1 && billionIndex != cleanNumbers.size()-1 && thousandIndex != cleanNumbers.size()-1) {
           hundreds = numberFormation(cleanNumbers.subList(billionIndex+1,cleanNumbers.size()));
         }
         else if (thousandIndex == -1 && millionIndex == -1 && billionIndex == -1) {

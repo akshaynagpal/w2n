@@ -65,6 +65,9 @@ class English {
       Assertions.assertEquals(new W2N().wordToNum("two point four seven"), 2.47);
       Assertions.assertEquals(new W2N().wordToNum("one point five nine"), 1.59);
       
+      // test for kylosnite repository
+      Assertions.assertEquals(new W2N().wordToNum("nine million nine thousand"), 9009000);
+
       // in different to w2n it is ok, in result of str:112 is not different to int:112
       Assertions.assertEquals(new W2N().wordToNum("112"), 112);
       Assertions.assertEquals(new W2N().wordToNum(112),112);

@@ -48,6 +48,9 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('two point four seven'), 2.47)
         self.assertEqual(w2n.word_to_num('one point five nine'), 1.59)
         
+        # test for kylosnite repository
+        self.assertEqual(w2n.word_to_num("nine million nine thousand"), 9009000)
+        
         # in different to w2n it is ok, in result of str:112 is not different to int:112
         self.assertEqual(w2n.word_to_num('112'), 112)
         self.assertEqual(w2n.word_to_num(112),112)
