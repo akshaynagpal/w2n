@@ -33,6 +33,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('thousand'), 1000)
         self.assertEqual(w2n.word_to_num('million'), 1000000)
         self.assertEqual(w2n.word_to_num('billion'), 1000000000)
+        self.assertEqual(w2n.word_to_num('trillion'), 1000000000000)
         self.assertEqual(w2n.word_to_num('nine point nine nine nine'), 9.999)
         self.assertEqual(w2n.word_to_num('seventh point nineteen'), 0)
         self.assertEqual(w2n.word_to_num('seven million, eight hundred, and sixty three thousand, two hundred, and fifty four'), 7863254)
@@ -46,6 +47,9 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('two point two eight'), 2.28)
         self.assertEqual(w2n.word_to_num('two point four seven'), 2.47)
         self.assertEqual(w2n.word_to_num('one point five nine'), 1.59)
+        
+        # test for kylosnite repository
+        self.assertEqual(w2n.word_to_num("nine million nine thousand"), 9009000)
         
         # in different to w2n it is ok, in result of str:112 is not different to int:112
         self.assertEqual(w2n.word_to_num('112'), 112)
@@ -61,6 +65,12 @@ class TestW2N(unittest.TestCase):
         self.assertRaises(ValueError, w2n.word_to_num, 'million four million')
         self.assertRaises(ValueError, w2n.word_to_num, 'thousand million')
         self.assertRaises(ValueError, w2n.word_to_num, 'one billion point two million twenty three thousand and forty nine point two three six nine')
+        
+    def test_null_en(self):
+        noneValue :str = None 
+        self.assertRaises(ValueError, w2n.word_to_num, noneValue)
+        noneValue = ""
+        self.assertRaises(ValueError, w2n.word_to_num, noneValue)
 
 
 if __name__ == '__main__':

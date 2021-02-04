@@ -9,6 +9,7 @@ sieben 7
 acht 8
 neun 9
 zehn 10
+eine 1
 elf 11
 zwölf 12
 duzend 12

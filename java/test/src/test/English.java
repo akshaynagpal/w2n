@@ -9,6 +9,7 @@ import java.util.Locale;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 
 import word2number.W2N;
 
@@ -64,10 +65,32 @@ class English {
       Assertions.assertEquals(new W2N().wordToNum("two point four seven"), 2.47);
       Assertions.assertEquals(new W2N().wordToNum("one point five nine"), 1.59);
       
+      // test for kylosnite repository
+      Assertions.assertEquals(new W2N().wordToNum("nine million nine thousand"), 9009000);
+
       // in different to w2n it is ok, in result of str:112 is not different to int:112
       Assertions.assertEquals(new W2N().wordToNum("112"), 112);
       Assertions.assertEquals(new W2N().wordToNum(112),112);
     
+  }
+  
+  @Test
+  final void testNull_en() {
+    Assertions.assertThrows(NumberFormatException.class, new Executable() {
+      public void execute() throws Throwable {
+        new W2N().wordToNum((String)null);
+      }
+    });
+    Assertions.assertThrows(NumberFormatException.class, new Executable() {
+      public void execute() throws Throwable {
+        new W2N().wordToNum((Number)null);
+      }
+    });
+    Assertions.assertThrows(NumberFormatException.class, new Executable() {
+      public void execute() throws Throwable {
+        new W2N().wordToNum("");
+      }
+    });
   }
 
   @Test
