@@ -5,6 +5,7 @@ function upgradeAllLocalBranchesFromMaster {
     do
       git switch $BRANCH
       git merge origin/master
+      git pull
     done
 }
 function showHelp {
