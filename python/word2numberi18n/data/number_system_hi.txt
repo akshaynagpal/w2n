@@ -29,6 +29,6 @@ ninety 90
 hundred 100
 thousand 1000
 lac 100000
-lakh 100000
 crore 10000000
 point point
+replace:lakh lac

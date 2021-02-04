@@ -8,7 +8,6 @@ six 6
 sept 7
 huit 8
 neuf 9
-une 1
 dix 10
 onze 11
 douze 12
@@ -105,3 +104,5 @@ million 1000000
 milliard 1000000000
 billion 1000000000000
 point point
+# lemma
+replace:une un

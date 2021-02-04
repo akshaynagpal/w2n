@@ -21,7 +21,8 @@ if lang is None:
     lang = "en"  # fallback
 lang = lang[:2]
 
-filebased_number_system = {}
+number_system = {}
+normalize_data = {}
 data_file = os.path.dirname(__file__)+os.sep+"data"+os.sep+"number_system_"+lang+".txt"
 with codecs.open(data_file, "rU", encoding="utf-8") as number_system_data:
     for line in number_system_data:
@@ -29,12 +30,13 @@ with codecs.open(data_file, "rU", encoding="utf-8") as number_system_data:
             pass
         else:
             (key, val) = line.split()
-            if "point" != key:
-                val = int(val)
-            filebased_number_system[key] = val
-
-number_system = filebased_number_system
-
+            if key.startswith("replace:"):
+                key =key[len("replace:"):]
+                normalize_data[key] = val
+            else:
+                if "point" != key:
+                    val = int(val)
+                number_system[key] = val
 
 decimal_words = list(number_system.keys())[:10]
 
@@ -147,104 +149,33 @@ def check_double_input(clean_numbers):
             raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
 
-"""
-function to get trillion index
-"""
-
-
-def get_trillion_index(clean_numbers):
-    if lang == "de":
-        trillion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
-        if trillion_index == -1:
-            trillion_index = clean_numbers.index('billionen') if 'billionen' in clean_numbers else -1
-    elif lang == "fr":
-        trillion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
-    elif lang == "hi":
-        pass
-    elif lang == "pt":
-        billion_index = clean_numbers.index('trilhão') if 'trilhão' in clean_numbers else -1
-    elif lang == "ru":
-        billion_index = clean_numbers.index('триллион') if 'триллион' in clean_numbers else -1
-    else:  # fallback
-        trillion_index = clean_numbers.index('trillion') if 'trillion' in clean_numbers else -1
-    return trillion_index
+def get_name_by_number_value (new_number):
+    for number_name, number_value in number_system.items():
+        if new_number == number_value:
+            return number_name
+    return -1
 
 
 """
-function to get billion index
+internal function get index for name
+
+
+note: call first lemma function
+
+input: int number
+output: index or -1 if not found
 """
 
 
-def get_billion_index(clean_numbers):
-    if lang == "de":
-        billion_index = clean_numbers.index('milliarde') if 'milliarde' in clean_numbers else -1
-        if billion_index == -1:
-            billion_index = clean_numbers.index('milliarden') if 'milliarden' in clean_numbers else -1
-    elif lang == "fr":
-        billion_index = clean_numbers.index('milliard') if 'milliard' in clean_numbers else -1
-    elif lang == "hi":
-        pass
-    elif lang == "pt":
-        billion_index = clean_numbers.index('bilhão') if 'bilhão' in clean_numbers else -1
-    elif lang == "ru":
-        billion_index = clean_numbers.index('миллиард') if 'миллиард' in clean_numbers else -1
-        if billion_index == -1:
-            billion_index = clean_numbers.index('миллиарда') if 'миллиарда' in clean_numbers else -1
-    else:  # fallback
-        billion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
-    return billion_index
+def get_index_for_number(new_number, clean_numbers):
+    # in result of get name by numeric value, the localized name came from dictionary
+    # and we need no language specific code
+    localized_name = get_name_by_number_value(new_number)
+    return clean_numbers.index(localized_name) if localized_name in clean_numbers else -1
 
 
 """
-function to get million index
-"""
-
-
-def get_million_index(clean_numbers):
-    if lang == "de":
-        million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
-        if million_index == -1:
-            million_index = clean_numbers.index('millionen') if 'millionen' in clean_numbers else -1
-    elif lang == "fr":
-        million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
-    elif lang == "hi":
-        pass
-    elif lang == "pt":
-        million_index = clean_numbers.index('milhão') if 'milhão' in clean_numbers else -1
-    elif lang == "ru":
-        million_index = clean_numbers.index('миллион') if 'миллион' in clean_numbers else -1
-        if million_index == -1:
-            million_index = clean_numbers.index('миллиона') if 'миллиона' in clean_numbers else -1
-    else:  # fallback
-        million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
-    return million_index
-
-
-"""
-function to get thousand index
-"""
-
-
-def get_thousand_index(clean_numbers):
-    if lang == "de":
-        thousand_index = clean_numbers.index('tausend') if 'tausend' in clean_numbers else -1
-    elif lang == "fr":
-        thousand_index = clean_numbers.index('mille') if 'mille' in clean_numbers else -1
-    elif lang == "hi":
-        pass
-    elif lang == "pt":
-        thousand_index = clean_numbers.index('mil') if 'mil' in clean_numbers else -1
-    elif lang == "ru":
-        thousand_index = clean_numbers.index('тысяча') if 'тысяча' in clean_numbers else -1
-        if thousand_index == -1:
-            thousand_index = clean_numbers.index('тысячи') if 'тысячи' in clean_numbers else -1
-    else:  # fallback
-        thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
-    return thousand_index
-
-
-"""
-function to return integer for an input `number_sentence` string
+public function to return integer for an input `number_sentence` string
 input: string
 output: int or double or None
 """
@@ -271,6 +202,7 @@ def word_to_num(number_sentence):
 
     # removing and, & etc.
     for word in split_words:
+        word = normalize_data.get(word,word)
         if word in number_system:
             clean_numbers.append(word)
         elif word == number_system['point']:
@@ -283,16 +215,16 @@ def word_to_num(number_sentence):
     check_double_input(clean_numbers)  # Error if user enters million,billion, thousand or decimal point twice
 
     # separate decimal part of number (if exists)
-    point = filebased_number_system['point']
+    point = number_system['point']
     point_count = clean_numbers.count(point)
     if point_count == 1:
         clean_decimal_numbers = clean_numbers[clean_numbers.index(point)+1:]
         clean_numbers = clean_numbers[:clean_numbers.index(point)]
 
-    trillion_index = get_trillion_index(clean_numbers)
-    billion_index = get_billion_index(clean_numbers)
-    million_index = get_million_index(clean_numbers)
-    thousand_index = get_thousand_index(clean_numbers)
+    thousand_index = get_index_for_number(1000, clean_numbers)
+    million_index  = get_index_for_number(1000000, clean_numbers)
+    billion_index  = get_index_for_number(1000000000, clean_numbers)
+    trillion_index = get_index_for_number(1000000000000, clean_numbers)
 
     if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index > -1 and million_index < billion_index):
         raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
