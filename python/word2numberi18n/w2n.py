@@ -149,16 +149,21 @@ def check_double_input(clean_numbers):
             raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
 
+"""
+internal function to get the localized name form value
+
+input: numeric value
+output: name from number_system map or None if not found 
+"""
 def get_name_by_number_value (new_number):
     for number_name, number_value in number_system.items():
         if new_number == number_value:
             return number_name
-    return -1
+    return None
 
 
 """
 internal function get index for name
-
 
 note: call first lemma function
 
