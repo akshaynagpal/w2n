@@ -32,3 +32,8 @@ million 1000000
 billion 1000000000
 trillion 1000000000000
 point point
+# lemmas
+replace:a one
+replace:an one
+replace:couple two
+replace:dozen twelve
