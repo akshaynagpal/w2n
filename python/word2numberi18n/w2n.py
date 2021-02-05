@@ -1,4 +1,3 @@
-# SPDX-FileCopyrightText: 2016 - Akshay Nagpal <akshaynagpal@user.noreplay.github.com>
 # SPDX-FileCopyrightText: 2020-2021 - Sebastian Ritter <bastie@users.noreply.github.com>
 # SPDX-License-Identifier: MIT
 
@@ -6,7 +5,6 @@ import os
 import locale
 import codecs
 import re
-from _hashlib import new
 
 number_system = {}
 normalize_data = {}
@@ -110,12 +108,6 @@ def normalize(number_sentence):
 
     # ...but if it is a string we need normalizing
     number_sentence = number_sentence.lower()  # converting input to lowercase
-    
-    # change in result of externalize localizing information
-    #number_sentence = number_sentence.replace('- ', ' ')
-    #number_sentence = number_sentence.replace(' -', ' ')
-    #number_sentence = number_sentence.removeprefix('-')
-    #number_sentence = number_sentence.removesuffix('-')
 
     # for examples: both is right "vingt et un" and "vingt-et-un"
     # we change this to composed value "vingt-et-un" over the localized data file "replace:" entry
