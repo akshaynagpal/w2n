@@ -36,6 +36,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('two point three'), 2.3)
         self.assertEqual(w2n.word_to_num('two million twenty three thousand and forty nine point two three six nine'), 2023049.2369)
         self.assertEqual(w2n.word_to_num('one billion two million twenty three thousand and forty nine point two three six nine'), 1002023049.2369)
+        self.assertEqual(w2n.word_to_num('nine trillion one billion two million twenty three thousand and forty nine point two three six nine'), 9001002023049.2369)
         self.assertEqual(w2n.word_to_num('point one'), 0.1)
         self.assertEqual(w2n.word_to_num('point'), 0)
         self.assertEqual(w2n.word_to_num('point nineteen'), 0)

@@ -26,6 +26,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('trente-et-un'), 31)
         self.assertEqual(w2n.word_to_num('quatre-vingt-dix-neuf'), 99)
         self.assertEqual(w2n.word_to_num('cent'), 100)
+        self.assertEqual(w2n.word_to_num('trois cent quatre-vingt sept mille cinq cent soixante-quatorze'),387574)
         self.assertEqual(w2n.word_to_num('six mille deux cent'), 6200)
         self.assertEqual(w2n.word_to_num(' un million six mille cent'), 1006100)
         self.assertEqual(w2n.word_to_num(' cinq milliard un million six mille cent'), 5001006100)
