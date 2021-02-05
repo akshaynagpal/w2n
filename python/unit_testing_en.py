@@ -69,6 +69,16 @@ class TestW2N(unittest.TestCase):
         
         # special name
         self.assertEqual(w2n.word_to_num('dozen'), 12)
+        
+        # https://github.com/akshaynagpal/w2n/issues/38
+        self.assertEqual(w2n.word_to_num("hundred and twenty"),120)
+
+        # https://github.com/akshaynagpal/w2n/issues/44
+        self.assertEqual(w2n.word_to_num('two million one thousand'),2_001_000)
+        
+        #https://github.com/akshaynagpal/w2n/issues/27
+        self.assertEqual(w2n.word_to_num("one million one hundred and eighty two thousand"),1_182_000)
+        self.assertEqual(w2n.word_to_num("one million eighty two thousand"),1_082_000)
 
     def test_negatives_en(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')
