@@ -29,13 +29,15 @@ with codecs.open(data_file, "rU", encoding="utf-8") as number_system_data:
         if line.startswith('#'):
             pass
         else:
-            (key, val) = line.split()
+            (key, val) = line.split("=")
             if key.startswith("replace:"):
                 key =key[len("replace:"):]
-                normalize_data[key] = val
+                normalize_data[key] = val.strip()
             else:
                 if "point" != key:
                     val = int(val)
+                else:
+                    val = val.strip()
                 number_system[key] = val
 
 decimal_words = list(number_system.keys())[:10]
@@ -83,6 +85,7 @@ def number_formation(number_words):
 """
 function to convert post decimal digit words to numerial digits
 it returns a string to prevert from floating point conversation problem
+
 input: list of strings
 output: string
 """
@@ -100,53 +103,58 @@ def get_decimal_string(decimal_digit_words):
 
 
 """
-function to normalize input text
+function to normalize the whole(!) input text
+
 input: string
 output: string
 """
 
 
 def normalize(number_sentence):
-    if lang == "fr":
-        # do not remove '-' but add minus
-        number_sentence = number_sentence.replace('vingt et un', 'vingt-et-un')
-        number_sentence = number_sentence.replace('trente et un', 'trente-et-un')
-        number_sentence = number_sentence.replace('quarante et un', 'quarante-et-un')
-        number_sentence = number_sentence.replace('cinquante et un', 'cinquante-et-un')
-        number_sentence = number_sentence.replace('soixante et un', 'soixante-et-un')
-    else:
-        number_sentence = number_sentence.replace('-', ' ')
+    # we need no check for numbers...
+    if type(number_sentence) is float:
+        return number_sentence
+    if type(number_sentence) is int:
+        return number_sentence
+
+    # ...but if it is a string we need normalizing
     number_sentence = number_sentence.lower()  # converting input to lowercase
+    
+    # change in result of externalize localizing information
+    #number_sentence = number_sentence.replace('- ', ' ')
+    #number_sentence = number_sentence.replace(' -', ' ')
+    #number_sentence = number_sentence.removeprefix('-')
+    #number_sentence = number_sentence.removesuffix('-')
+
+    # for examples: both is right "vingt et un" and "vingt-et-un"
+    # we change this to composed value "vingt-et-un" over the localized data file "replace:" entry
+    for non_composed_number_value, composed_number_value in normalize_data.items():
+        if non_composed_number_value.count(' ') >1:
+            number_sentence = number_sentence.replace(non_composed_number_value, composed_number_value)
+
     return number_sentence
 
 
 """
-function to check false redundant input
-input: string[]
+internal function to check false redundant input
+
+note: call this after lemma text
+
+input: int new_number, string[] words - looking for count of localized name of new_numerb in words     
 output: none
 raise: if redundant input error
 """
 
 
-def check_double_input(clean_numbers):
-    if lang == "de":
-        if clean_numbers.count('tausend') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('milliarde') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('komma') > 1:
-            raise ValueError("Redundantes Nummernwort! Bitte gebe ein zulässiges Nummernwort ein (z.B. zwei Millionen Dreiundzwanzigtausend und Neunundvierzig)")
-    elif lang == "fr":
-        if clean_numbers.count('mille') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('milliard') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point') > 1:
-            raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
-    elif lang == "hi":
-        pass
-    elif lang == "pt":
-        if clean_numbers.count('mil') > 1 or clean_numbers.count('milhão') > 1 or clean_numbers.count('bilhão') > 1 or clean_numbers.count('point') > 1:
-            raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
-    elif lang == "ru":
-        if clean_numbers.count('тысяча') > 1 or clean_numbers.count('миллион') > 1 or clean_numbers.count('миллиард') > 1 or clean_numbers.count('целых') > 1 or clean_numbers.count('целая') > 1:
-            raise ValueError("Избыточное числовое слово! Введите правильное числовое слово (например, два миллиона двадцать три тысячи сорок девять)")
-    else:  # fallback
-        # Error if user enters trillion, million, billion, thousand or decimal point twice
-        if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1  or clean_numbers.count('trillion') > 1 or clean_numbers.count('point') > 1:
-            raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+def check_double_input (new_number, clean_numbers):
+    # in result of work with numeric values and remove point 
+    # we need not longer language specific code
+    localized_name = get_name_by_number_value(new_number)
+    if clean_numbers.count(localized_name) > 1:
+        raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+        # i18n save für later:
+        # de: "Redundantes Nummernwort! Bitte gebe ein zulässiges Nummernwort ein (z.B. zwei Millionen Dreiundzwanzigtausend und Neunundvierzig)"
+        # ru: "Избыточное числовое слово! Введите правильное числовое слово (например, два миллиона двадцать три тысячи сорок девять)" 
 
 
 """
@@ -165,7 +173,7 @@ def get_name_by_number_value (new_number):
 """
 internal function get index for name
 
-note: call first lemma function
+note: call this after lemma text
 
 input: int number
 output: index or -1 if not found
@@ -207,7 +215,7 @@ def word_to_num(number_sentence):
 
     # removing and, & etc.
     for word in split_words:
-        word = normalize_data.get(word,word)
+        word = normalize_data.get(word,word) # replacing words and lemma text
         if word in number_system:
             clean_numbers.append(word)
         elif word == number_system['point']:
@@ -217,8 +225,14 @@ def word_to_num(number_sentence):
     if len(clean_numbers) == 0:
         raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
-    check_double_input(clean_numbers)  # Error if user enters million,billion, thousand or decimal point twice
+    check_double_input(1000, clean_numbers)
+    check_double_input(1000000, clean_numbers)
+    check_double_input(1000000000, clean_numbers)
+    check_double_input(1000000000000, clean_numbers)
 
+    # something about point
+    if clean_numbers.count(number_system['point'])>1:
+         raise ValueError("Redundant point word "+number_system['point']+"! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")         
     # separate decimal part of number (if exists)
     point = number_system['point']
     point_count = clean_numbers.count(point)

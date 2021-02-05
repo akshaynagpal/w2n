@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: MIT
 
 import unittest
+import sys
+import logging
 import os
 
 os.environ['w2n.lang'] = 'ru'
@@ -11,6 +13,15 @@ from word2numberi18n import w2n
 
 
 class TestW2N(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls):
+        super(TestW2N, cls).setUpClass()
+        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+        log = logging.getLogger("SYSTEM")
+        log.info(f"Testsystem is {sys.implementation.name} v{sys.version_info.major}.{sys.version_info.minor}@{sys.platform}")
+
+    
     def test_positives_ru(self):
         self.assertEqual(w2n.word_to_num('две целых три десятых'), 2.3)
         self.assertEqual(w2n.word_to_num("два миллиона три тысячи девятьсот восемьдесят четыре"), 2003984)
