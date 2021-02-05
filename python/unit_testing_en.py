@@ -3,10 +3,21 @@
 # SPDX-License-Identifier: MIT
 
 import unittest
+import sys
+import logging
 from word2numberi18n import w2n
 
 
 class TestW2N(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls):
+        super(TestW2N, cls).setUpClass()
+        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+        log = logging.getLogger("SYSTEM")
+        log.info(f"Testsystem is {sys.implementation.name} v{sys.version_info.major}.{sys.version_info.minor}@{sys.platform}")
+    
+    
     def test_positives_en(self):
         self.assertEqual(w2n.word_to_num("two million three thousand nine hundred and eighty four"), 2003984)
         self.assertEqual(w2n.word_to_num("nineteen"), 19)
