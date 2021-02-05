@@ -6,6 +6,7 @@ import os
 import locale
 import codecs
 import re
+from _hashlib import new
 
 number_system = {}
 normalize_data = {}
@@ -52,34 +53,28 @@ def number_formation(number_words):
     input: list of strings
     return value: integer
     """
-    numbers = []
-    for number_word in number_words:
-        numbers.append(number_system[number_word])
-    if lang == "ru":
-        if len(numbers) > 3:
-            if numbers[0] < 100:
-                numbers[0] = numbers[0] * 100
-
-        if len(numbers) == 4:
-            return (numbers[0] * numbers[1]) + numbers[2] + numbers[3]
-        elif len(numbers) == 3:
-            return numbers[0]+numbers[1]+numbers[2]
-        elif len(numbers) == 2:
-            return numbers[0]+numbers[1]
-        else:
-            return numbers[0]
-    else:
-        if len(numbers) == 4:
-            return (numbers[0] * numbers[1]) + numbers[2] + numbers[3]
-        elif len(numbers) == 3:
-            return numbers[0] * numbers[1] + numbers[2]
-        elif len(numbers) == 2:
-            if 100 in numbers:
-                return numbers[0] * numbers[1]
-            else:
-                return numbers[0] + numbers[1]
-        else:
-            return numbers[0]
+    digit_values = []
+    # calculate the three digit values (max)
+    for word in number_words:
+        next_number_candidat = number_system[word]
+        digit_values.append(next_number_candidat)
+    hundred_index = digit_values.count(100)
+    hundred_index = digit_values.index(100) if 100 in digit_values else -1
+    if hundred_index == 1:
+        digit_values[0] = digit_values[0] * digit_values[1]
+        del digit_values[1]
+    if len(digit_values) > 3 and digit_values[0] < 100:
+        digit_values[0] *= digit_values[1]
+        del digit_values[1]
+    elif len(digit_values) > 3 and digit_values[0] > 100:
+        digit_values[1] *= digit_values[2]
+        del digit_values[2]
+    # add the three digits
+    while len(digit_values) > 1:
+        digit_values[0] += digit_values[1]
+        del digit_values[1]
+    # return the result
+    return digit_values[0]
 
 
 def get_decimal_string(decimal_digit_words):
