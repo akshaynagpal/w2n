@@ -52,7 +52,7 @@ public class W2N {
   
       this.filebasedNumberSystem = new HashMap<>();
       this.decimalWords = new ArrayList<>(10);
-      InputStream dataFile = this.getClass().getResourceAsStream("data/number_system_"+this.lang+".txt");
+      InputStream dataFile = this.getClass().getResourceAsStream("data/config_"+this.lang+".properties");
       BufferedReader numberSystemData = new BufferedReader( new InputStreamReader(new BufferedInputStream(dataFile,40960),"utf-8"));
       String line = null;
       int zeroToNine = 0;
@@ -60,10 +60,16 @@ public class W2N {
         if (line.startsWith("#")) {
         }
         else {
-          String[] keyValue = line.split(" ",2);
+          String[] keyValue = line.split("=",2);
           String key = keyValue[0];
           Object val = keyValue[1];
-          if (!"point".equals(key)) {
+          if (key.startsWith("replace:")) {
+            
+          }
+          else if (key.startsWith("measure:")) {
+            
+          }
+          else if (!"point".equals(key)) {
             val = Long.valueOf(val.toString());
           }
           this.filebasedNumberSystem.put(key, val);

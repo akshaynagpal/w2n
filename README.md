@@ -97,20 +97,59 @@ You do not found an ISO-639-1 code, you do not found an ISO-639-1 file for ```ds
 You create a new file ```number_system_dsb.txt``` with utf-8 encoding
 
 ```
-    null 0
-    jaden 1
-    dwa 2
-    tśi 3
-    styri 4
-    pěś 5
-    šesć 6
-    sedym 7
-    wósym 8
-    źewjeś 9
-    źaseś 10
-    [...]
-    point ,
+null=0
+jaden=1
+dwa=2
+tśi=3
+styri=4
+pěś=5
+šesć=6
+sedym=7
+wósym=8
+źewjeś=9
+źaseś=10
 ```
+
+**Every** config file need the values from zero to nine and **every** supported language 
+need a config file.
+
+And add all single words with values. In extensions you need also value for point and
+additional replacement words and measure words in the **same** configuration file.
+Its different to value names where the key is localized now the key is internal used and
+parts or full predefined. Feel free to copy a existing language config.
+
+*Examples:*
+
+```
+# 0-9
+# much more
+twenty=20
+thousand=1000
+# special
+point=komma
+replace:what=with
+replace:две=два
+replace:dozen=twelfe
+replace:gran=thousand
+measure:aLotOf=1000
+measure:namesAreLikeIceOnMadeira=1000000
+```
+
+The **point** is elementary to work with decimal values and this value is the word in
+your language. The measure are the multiplier for the numbers. It extends the numeric
+value with an label or like NLP with an tag. So the name ``thousand`` is the name for
+the numeric value and a ``gran`` are a synonym for ``thousand`` and ``thousand`` is
+a measure word.
+
+So giving ``twenty nice gran`` do the follow:
+
+1. ``word2number-i18n`` register initial value ``1000`` as measure. The name ``aLotOf`` is your comment.
+2. ``word2number-i18n`` looking for replace and change text to ``twenty nice thousand``
+3. ``word2number-i18n`` filter none number words to trash and your text is ``twenty thousand``
+4. ``word2number-i18n`` find out ``1000`` is a measure and the localized name is ``thousand``. In result of this ``thousand`` is here a multiplier for the numeric value before.
+5. ``word2number-i18n`` take the numeric value ``20`` instead of ``twenty`` and the multiplier after to give your the result ``20000``
+
+Internal much more especially checks inside working.
 
 
 ### Develop package
