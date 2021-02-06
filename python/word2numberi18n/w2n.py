@@ -1,6 +1,10 @@
 # SPDX-FileCopyrightText: 2020-2021 - Sebastian Ritter <bastie@users.noreply.github.com>
 # SPDX-License-Identifier: MIT
 
+"""
+"""
+
+
 import os
 import locale
 import codecs
@@ -46,7 +50,7 @@ decimal_words = list(number_system.keys())[:10]
 
 def number_formation(number_words):
     """
-    function to form numeric multipliers for million, billion, thousand etc.
+    function to form numeric multipliers
     
     input: list of strings
     return value: integer
@@ -207,46 +211,16 @@ def get_number_value (clean_numbers):
     # make it free from other measure part in the number.
     # Also it is no different to calculate a trillion or a million or other
     #
-    trillion_index = get_index_for_number(1_000_000_000_000, clean_numbers)    
-    if trillion_index > -1:
-        param = clean_numbers[0:trillion_index]
-        param = param if len(param)>0 else {get_name_by_number_value(1)}
-        multiplier = number_formation(param)
-        result +=  multiplier * 1_000_000_000_000
-        clean_numbers = clean_numbers[trillion_index+1:]
-        pass
-    billion_index  = get_index_for_number(1_000_000_000, clean_numbers)
-    if billion_index > -1:
-        param = clean_numbers[0:billion_index]
-        param = param if len(param)>0 else {get_name_by_number_value(1)}
-        multiplier = number_formation(param)
-        result +=  multiplier * 1_000_000_000
-        clean_numbers = clean_numbers[billion_index+1:]
-        pass
-    million_index  = get_index_for_number(1_000_000, clean_numbers)
-    if million_index > -1:
-        param = clean_numbers[0:million_index]
-        param = param if len(param)>0 else {get_name_by_number_value(1)}
-        multiplier = number_formation(param)
-        result +=  multiplier * 1_000_000
-        clean_numbers = clean_numbers[million_index+1:]
-        pass
-    thousand_index = get_index_for_number(1_000, clean_numbers)
-    if thousand_index > -1:
-        param = clean_numbers[0:thousand_index]
-        param = param if len(param)>0 else {get_name_by_number_value(1)}
-        multiplier = number_formation(param)
-        result +=  multiplier * 1_000
-        clean_numbers = clean_numbers[thousand_index+1:]
-        pass
-    hundred_index  = get_index_for_number(  100, clean_numbers)
-    if hundred_index > -1:
-        param = clean_numbers[0:hundred_index]
-        param = param if len(param)>0 else {get_name_by_number_value(1)}
-        multiplier = number_formation(param)
-        result +=  multiplier * 100
-        clean_numbers = clean_numbers[hundred_index+1:]
-        pass
+    sorted_measure_values = [1_000_000_000_000,1_000_000_000,1_000_000,1_000,100]
+    
+    for measure_value in sorted_measure_values:
+        measure_value_index = get_index_for_number(measure_value, clean_numbers)
+        if measure_value_index > -1:
+            result +=  get_measure_multiplier(measure_value_index, clean_numbers) * measure_value
+            clean_numbers = clean_numbers[measure_value_index+1:]
+        # fi
+    # rof
+    # Now we add the value of less then hundred
     if len(clean_numbers) > 0:
         multiplier = number_formation(clean_numbers)
         result +=  multiplier * 1
@@ -256,9 +230,20 @@ def get_number_value (clean_numbers):
     return result
 
 
-def word_to_num(number_sentence):
+def get_measure_multiplier (measure_index :int, clean_numbers):
+    """ internal function to get the value for the measure aka 1000, 1_000_000 ...
+    
+    input: index of measure
+    output: multiplier for measure
     """
-    public function to return integer for an input `number_sentence` string
+    param = clean_numbers[0:measure_index]
+    param = param if len(param)>0 else {get_name_by_number_value(1)}
+    multiplier = number_formation(param)
+    return multiplier
+
+
+def word_to_num(number_sentence):
+    """ public function to return integer for an input `number_sentence` string
     
     input: string
     output: int or double or None
@@ -308,6 +293,7 @@ def word_to_num(number_sentence):
         clean_decimal_numbers = clean_numbers[clean_numbers.index(point)+1:]
         clean_numbers = clean_numbers[:clean_numbers.index(point)]
 
+    # Now we calculate the pre-decimal value
     total_sum = get_number_value(clean_numbers)
     
     # adding decimal part to result (if exists)
