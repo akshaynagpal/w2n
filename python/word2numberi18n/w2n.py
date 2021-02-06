@@ -12,6 +12,8 @@ import re
 
 number_system = {}
 normalize_data = {}
+sorted_measure_values = [1_000_000_000_000,1_000_000_000,1_000_000,1_000,100]
+
 lang = "en"
 
 #
@@ -49,8 +51,7 @@ decimal_words = list(number_system.keys())[:10]
 
 
 def number_formation(number_words):
-    """
-    function to form numeric multipliers
+    """ [internal] function to form numeric multipliers
     
     input: list of strings
     return value: integer
@@ -80,8 +81,7 @@ def number_formation(number_words):
 
 
 def get_decimal_string(decimal_digit_words):
-    """
-    function to convert post decimal digit words to numerial digits
+    """ [internal] function to convert post decimal digit words to numerial digits
     it returns a string to prevert from floating point conversation problem
     
     input: list of strings
@@ -98,7 +98,7 @@ def get_decimal_string(decimal_digit_words):
 
 
 def normalize(number_sentence):
-    """ function to normalize the whole(!) input text
+    """ [internal] function to normalize the whole(!) input text
     note: float or int parameters are allowed 
     
     input: string the fill text
@@ -119,11 +119,11 @@ def normalize(number_sentence):
         if non_composed_number_value.count(' ') >1:
             number_sentence = number_sentence.replace(non_composed_number_value, composed_number_value)
 
-    return number_sentence
+    return number_sentence.strip()
 
 
 def check_double_input (new_number, clean_numbers):
-    """ internal function to check false redundant input
+    """ [internal] function to check false redundant input
     note: this method has language configuration dependency
     
     note: call this after lemma text
@@ -139,15 +139,14 @@ def check_double_input (new_number, clean_numbers):
     # we need not longer language specific code
     localized_name = get_name_by_number_value(new_number)
     if clean_numbers.count(localized_name) > 1:
-        raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+        raise ValueError(f"Redundant number word {localized_name} in! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
         # i18n save für later:
         # de: "Redundantes Nummernwort! Bitte gebe ein zulässiges Nummernwort ein (z.B. zwei Millionen Dreiundzwanzigtausend und Neunundvierzig)"
         # ru: "Избыточное числовое слово! Введите правильное числовое слово (например, два миллиона двадцать три тысячи сорок девять)" 
 
 
 def get_name_by_number_value (new_number):
-    """
-    internal function to get the localized name form value
+    """ [internal] function to get the localized name form value
     
     input: numeric value
     output: name from number_system map or None if not found 
@@ -173,21 +172,13 @@ def get_index_for_number(new_number, clean_numbers):
 
 
 def get_number_value (clean_numbers):
-    """ get the pre-decimal number from clean_number
+    """ [internal] function to get the pre-decimal number from clean_number
     
         input: sorted array with number words
         output: int number
         raise: ValueError 
     """
     result = 0
-
-    thousand_index = get_index_for_number(1_000, clean_numbers)
-    million_index  = get_index_for_number(1_000_000, clean_numbers)
-    billion_index  = get_index_for_number(1_000_000_000, clean_numbers)
-    trillion_index = get_index_for_number(1_000_000_000_000, clean_numbers)
-
-    if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index > -1 and million_index < billion_index):
-        raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
     #
     # The simple algorithm based on the idea from NLP to work with tagging (key)words
@@ -211,7 +202,6 @@ def get_number_value (clean_numbers):
     # make it free from other measure part in the number.
     # Also it is no different to calculate a trillion or a million or other
     #
-    sorted_measure_values = [1_000_000_000_000,1_000_000_000,1_000_000,1_000,100]
     
     for measure_value in sorted_measure_values:
         measure_value_index = get_index_for_number(measure_value, clean_numbers)
@@ -231,7 +221,7 @@ def get_number_value (clean_numbers):
 
 
 def get_measure_multiplier (measure_index :int, clean_numbers):
-    """ internal function to get the value for the measure aka 1000, 1_000_000 ...
+    """ [internal] function to get the value for the measure aka 1000, 1_000_000 ...
     
     input: index of measure
     output: multiplier for measure
@@ -244,10 +234,23 @@ def get_measure_multiplier (measure_index :int, clean_numbers):
 
 def word_to_num(number_sentence):
     """ public function to return integer for an input `number_sentence` string
-    
+    This function return as result
+    - the same float if float is input
+    - the same int if int is given
+    - None if no number can be extracted
+    - ValueError if extracted number is formal incorrect
+
+    preconditions: number_sentence is type of float, int or str
     input: string
-    output: int or double or None
+    output: int or float or None
+    raise: given number is formal incorrect
     """
+    result = None
+    clean_numbers = []
+    clean_decimal_numbers = []
+
+    # check preconditions
+
     if type(number_sentence) is float:
         return number_sentence
     if type(number_sentence) is int:
@@ -259,49 +262,66 @@ def word_to_num(number_sentence):
     number_sentence = normalize(number_sentence) 
 
     if(number_sentence.isdigit()):  # return the number if user enters a number string
-        return int(number_sentence)
-
-    split_words = re.findall(r'\w+', number_sentence)  # strip extra spaces and comma and than split sentence into words
-
-    clean_numbers = []
-    clean_decimal_numbers = []
-
-    # removing and, & etc.
-    for word in split_words:
-        word = normalize_data.get(word,word) # replacing words and lemma text
-        if word in number_system:
-            clean_numbers.append(word)
-        elif word == number_system['point']:
-            clean_numbers.append(word)
-
-    # Error message if the user enters invalid input!
-    if len(clean_numbers) == 0:
-        raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
-
-    check_double_input(1_000, clean_numbers)
-    check_double_input(1_000_000, clean_numbers)
-    check_double_input(1_000_000_000, clean_numbers)
-    check_double_input(1_000_000_000_000, clean_numbers)
-
-    # something about point
-    if clean_numbers.count(number_system['point'])>1:
-         raise ValueError("Redundant point word "+number_system['point']+"! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")         
-    # separate decimal part of number (if exists)
-    point = number_system['point']
-    point_count = clean_numbers.count(point)
-    if point_count == 1:
-        clean_decimal_numbers = clean_numbers[clean_numbers.index(point)+1:]
-        clean_numbers = clean_numbers[:clean_numbers.index(point)]
-
-    # Now we calculate the pre-decimal value
-    total_sum = get_number_value(clean_numbers)
+        result = int(number_sentence)
+    else:
+        split_words = re.findall(r'\w+', number_sentence)  # strip extra spaces and comma and than split sentence into words
     
-    # adding decimal part to result (if exists)
-    if len(clean_decimal_numbers) > 0:
-        total_sum_as_string = str(total_sum)+"."+str(get_decimal_string(clean_decimal_numbers))
-        total_sum = float(total_sum_as_string)
+        # removing unknown words form text
+        for word in split_words:
+            word = normalize_data.get(word,word) # replacing words and lemma text
+            if word in number_system:
+                clean_numbers.append(word)
+            elif word == number_system['point']:
+                clean_numbers.append(word)
+    
+        # Error message if the user enters invalid input!
+        if len(clean_numbers) == 0:
+            raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+    
+        # check point count
+        if clean_numbers.count(number_system['point'])>1:
+             raise ValueError("Redundant point word "+number_system['point']+"! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+                  
+        # split in pre-decimal and post-decimal part
+        point = number_system['point']
+        point_count = clean_numbers.count(point)
+        if point_count == 1:
+            clean_decimal_numbers = clean_numbers[clean_numbers.index(point)+1:]
+            clean_numbers = clean_numbers[:clean_numbers.index(point)]
 
-    return total_sum
+        # check measure word errors
+        measure_words_sequence = []
+        # check for to much measure words like "million million"
+        for measure_value_double_check in sorted_measure_values:
+            if measure_value_double_check >= 1000: # measure values under 1000 can be more than one in text
+                check_double_input(measure_value_double_check, clean_numbers)
+                # save index for next check
+                if -1 != get_index_for_number(measure_value_double_check,clean_numbers):
+                    measure_words_sequence.append(get_index_for_number(measure_value_double_check,clean_numbers))
+
+        # check generic measure words are in right sequence
+        if measure_words_sequence != sorted(measure_words_sequence):
+            print(number_sentence)
+            raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+        
+        thousand_index = get_index_for_number(1_000, clean_numbers)
+        million_index  = get_index_for_number(1_000_000, clean_numbers)
+        billion_index  = get_index_for_number(1_000_000_000, clean_numbers)
+        trillion_index = get_index_for_number(1_000_000_000_000, clean_numbers)
+
+        if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index > -1 and million_index < billion_index):
+            print(number_sentence)
+            raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+
+        # Now we calculate the pre-decimal value
+        result = get_number_value(clean_numbers)
+        
+        # And add the post-decimal value
+        if len(clean_decimal_numbers) > 0:
+            total_sum_as_string = str(result)+"."+str(get_decimal_string(clean_decimal_numbers))
+            result = float(total_sum_as_string)
+
+    return result
 
 #EOF
 
