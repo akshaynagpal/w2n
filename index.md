@@ -231,6 +231,11 @@ Call the build.sh script and use the new w2ni18n-VERSION-.jar file
 - ``fixed floating point conversation bug``
 - ``accept also number values`` because it is more understandable to handle str:112 as same as int:112
 
+## Test system
+
+### Local test system
+- CPython 3.9 @ Darwin
+- Java AdoptOpenJDK 15
 
 
 ## Thanks

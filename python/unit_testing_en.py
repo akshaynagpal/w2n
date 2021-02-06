@@ -3,10 +3,21 @@
 # SPDX-License-Identifier: MIT
 
 import unittest
+import sys
+import logging
 from word2numberi18n import w2n
 
 
 class TestW2N(unittest.TestCase):
+    
+    @classmethod
+    def setUpClass(cls):
+        super(TestW2N, cls).setUpClass()
+        logging.basicConfig(stream=sys.stderr, level=logging.INFO)
+        log = logging.getLogger("SYSTEM")
+        log.info(f"Testsystem is {sys.implementation.name} v{sys.version_info.major}.{sys.version_info.minor}@{sys.platform}")
+    
+    
     def test_positives_en(self):
         self.assertEqual(w2n.word_to_num("two million three thousand nine hundred and eighty four"), 2003984)
         self.assertEqual(w2n.word_to_num("nineteen"), 19)
@@ -25,6 +36,7 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('two point three'), 2.3)
         self.assertEqual(w2n.word_to_num('two million twenty three thousand and forty nine point two three six nine'), 2023049.2369)
         self.assertEqual(w2n.word_to_num('one billion two million twenty three thousand and forty nine point two three six nine'), 1002023049.2369)
+        self.assertEqual(w2n.word_to_num('nine trillion one billion two million twenty three thousand and forty nine point two three six nine'), 9001002023049.2369)
         self.assertEqual(w2n.word_to_num('point one'), 0.1)
         self.assertEqual(w2n.word_to_num('point'), 0)
         self.assertEqual(w2n.word_to_num('point nineteen'), 0)
@@ -55,6 +67,18 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('112'), 112)
         self.assertEqual(w2n.word_to_num(112),112)
         
+        # special name
+        self.assertEqual(w2n.word_to_num('dozen'), 12)
+        
+        # https://github.com/akshaynagpal/w2n/issues/38
+        self.assertEqual(w2n.word_to_num("hundred and twenty"),120)
+
+        # https://github.com/akshaynagpal/w2n/issues/44
+        self.assertEqual(w2n.word_to_num('two million one thousand'),2_001_000)
+        
+        #https://github.com/akshaynagpal/w2n/issues/27
+        self.assertEqual(w2n.word_to_num("one million one hundred and eighty two thousand"),1_182_000)
+        self.assertEqual(w2n.word_to_num("one million eighty two thousand"),1_082_000)
 
     def test_negatives_en(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')
