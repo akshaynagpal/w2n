@@ -12,7 +12,7 @@ import re
 
 number_system = {}
 normalize_data = {}
-sorted_measure_values = [1_000_000_000_000,1_000_000_000,1_000_000,1_000,100]
+sorted_measure_values = []# = [1_000_000_000_000,1_000_000_000,1_000_000,1_000,100]
 
 lang = "en"
 
@@ -40,6 +40,8 @@ with codecs.open(data_file, "rU", encoding="utf-8") as number_system_data:
             if key.startswith("replace:"):
                 key =key[len("replace:"):]
                 normalize_data[key] = val.strip()
+            elif key.startswith("measure:"):
+                sorted_measure_values.append(int(val.strip()))
             else:
                 if "point" != key:
                     val = int(val)
@@ -47,6 +49,7 @@ with codecs.open(data_file, "rU", encoding="utf-8") as number_system_data:
                     val = val.strip()
                 number_system[key] = val
 
+sorted_measure_values = sorted(sorted_measure_values,reverse=True)
 decimal_words = list(number_system.keys())[:10]
 
 
