@@ -30,7 +30,7 @@ if lang is None:
     lang = "en"  # fallback
 lang = lang[:2]
 
-data_file = os.path.dirname(__file__)+os.sep+"data"+os.sep+"number_system_"+lang+".txt"
+data_file = os.path.dirname(__file__)+os.sep+"data"+os.sep+"config_"+lang+".properties"
 with codecs.open(data_file, "rU", encoding="utf-8") as number_system_data:
     for line in number_system_data:
         if line.startswith('#'):
