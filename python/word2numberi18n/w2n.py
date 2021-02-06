@@ -301,17 +301,13 @@ def word_to_num(number_sentence):
 
         # check generic measure words are in right sequence
         if measure_words_sequence != sorted(measure_words_sequence):
-            print(number_sentence)
-            raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
-        
-        thousand_index = get_index_for_number(1_000, clean_numbers)
-        million_index  = get_index_for_number(1_000_000, clean_numbers)
-        billion_index  = get_index_for_number(1_000_000_000, clean_numbers)
-        trillion_index = get_index_for_number(1_000_000_000_000, clean_numbers)
+            raise ValueError("Malformed number in result of false measure word sequence eg. trillion after thousand! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
-        if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index > -1 and million_index < billion_index):
-            print(number_sentence)
-            raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+        # check no measure words in decimal numbers
+        for measure_value in sorted_measure_values:
+            measure_name = get_name_by_number_value(measure_value)
+            if measure_name in clean_decimal_numbers:
+                raise ValueError("Malformed number in result of false measure word after point eg. trillion after thousand! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
 
         # Now we calculate the pre-decimal value
         result = get_number_value(clean_numbers)
