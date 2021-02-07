@@ -9,13 +9,11 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 
@@ -25,6 +23,7 @@ import java.util.stream.Stream;
  * It takes an <code>CharSequence</code> like <code>String</code>, <code>StringBuilder</code> or 
  * <code>StringBuffer</code> instances and returns as result <code>null</code> or an 
  * <code>Number</code> instance.
+ * On other Objects the <code>toString</code> method is using to create a CharSequence on-the-fly.
  * 
  * @author Sͬeͥbͭaͭsͤtͬian
  *
@@ -32,7 +31,9 @@ import java.util.stream.Stream;
 public class W2N {
   
   private final HashMap<String, Object> filebasedNumberSystem;
+  private final HashMap<String, String> normalizeData;
   private final ArrayList<String> decimalWords;
+  private final ArrayList<Long> sortedMeasureValues;
   
   private final String lang;
   
@@ -52,8 +53,10 @@ public class W2N {
   
       this.filebasedNumberSystem = new HashMap<>();
       this.decimalWords = new ArrayList<>(10);
-      InputStream dataFile = this.getClass().getResourceAsStream("data/config_"+this.lang+".properties");
-      BufferedReader numberSystemData = new BufferedReader( new InputStreamReader(new BufferedInputStream(dataFile,40960),"utf-8"));
+      this.normalizeData = new HashMap<>();
+      this.sortedMeasureValues = new ArrayList<>();
+      final InputStream dataFile = this.getClass().getResourceAsStream("data/config_"+this.lang+".properties");
+      final BufferedReader numberSystemData = new BufferedReader( new InputStreamReader(new BufferedInputStream(dataFile,40960),"utf-8"));
       String line = null;
       int zeroToNine = 0;
       while ((line = numberSystemData.readLine()) != null) {
@@ -64,10 +67,11 @@ public class W2N {
           String key = keyValue[0];
           Object val = keyValue[1];
           if (key.startsWith("replace:")) {
-            
+            key = key.substring("replace:".length());
+            normalizeData.put(key,val.toString().trim());
           }
           else if (key.startsWith("measure:")) {
-            
+            sortedMeasureValues.add(Long.valueOf(val.toString().trim()));
           }
           else if (!"point".equals(key)) {
             val = Long.valueOf(val.toString());
@@ -79,6 +83,7 @@ public class W2N {
           }
         }
       }
+      Collections.sort(sortedMeasureValues,Collections.reverseOrder());
     }
     catch (Throwable t) {
       throw new RuntimeException(t);
@@ -146,6 +151,11 @@ public class W2N {
     return finalDecimalString;
   }
   
+  /**
+   * function to return integer for an input `newNumberValue` string
+   * @param newNumberValue numberValue
+   * @return Number or null
+   */
   public Number wordToNum (Number newNumberValue) {
     if (null == newNumberValue) // same as python
       throw new NumberFormatException("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')");
@@ -154,159 +164,132 @@ public class W2N {
   }
   
   /**
-   * function to return integer for an input `number_sentence` string
-   * @param numberSentence text
+   * Method to return integer for an input `newObjectToStringIsNumeric` string
+   * @param newObjectToStringIsNumeric
    * @return Number or null
+   */
+  protected Number wordToNum (Object newObjectToStringIsNumeric) {
+    if (null == newObjectToStringIsNumeric)
+      throw new NumberFormatException("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')");
+    else 
+      return this.wordToNum(newObjectToStringIsNumeric.toString());
+  }
+  /**
+   * Method to return integer for an input `newNumberSentence` string
+   * @param numberSentence text
+   * @return Number, prefered Long and Double, or null
    */
   public Number wordToNum (CharSequence newNumberSentence) {
     Number result = null;
-
-    if (null == newNumberSentence) // same as python
-      throw new NumberFormatException("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')");
-
-    // return the number if user enters a number string
-    try { 
-      return Integer.valueOf(newNumberSentence.toString()); // TODO: working with Long - now in same range as Python
-    }
-    catch (NumberFormatException noIntMaybeFloat) {
-      try {
-        return Double.valueOf(newNumberSentence.toString());
-      }
-      catch (NumberFormatException okMoreSpecificAlgorithmNeeded) {}
-    }
-    
-    String numberSentence = newNumberSentence.toString();
-    
-    numberSentence = this.normalize(numberSentence);
-    
-
-    String [] splitWords = numberSentence.split("[\\s,]+"); // strip extra spaces and comma and than split sentence into words
-    
     LinkedList<String> cleanNumbers = new LinkedList<>();
     LinkedList<String> cleanDecimalNumbers = new LinkedList<>();
 
-    // removing and, & etc.
-    for (String word : splitWords) {
-      if (this.filebasedNumberSystem.containsKey(word)) {
-        cleanNumbers.add(word);
+    if (null == newNumberSentence)
+      throw new NumberFormatException("Type of input is null! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')");
+
+    String numberSentence = this.normalize(newNumberSentence.toString());
+
+    // return the number if user enters a number string
+    try { 
+      result = Long.valueOf(newNumberSentence.toString()); 
+    }
+    catch (NumberFormatException noIntMaybeFloat) {
+      try {
+        result = Double.valueOf(newNumberSentence.toString());
       }
-      else if (word.equals(this.filebasedNumberSystem.get("point"))){
-        cleanNumbers.add(word);
-      }
+      catch (NumberFormatException okMoreSpecificAlgorithmNeeded) {}
     }
 
-    // Error message if the user enters invalid input!
-    if (cleanNumbers.size()== 0) // TODO check what python do with None String
-        throw new NumberFormatException("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
-
-    this.checkDoubleInput(cleanNumbers.stream().toArray(String[]::new));// Error if user enters million,billion, thousand or decimal point twice
-
-    // separate decimal part of number (if exists)
-    String point = this.filebasedNumberSystem.get("point").toString();
-    boolean pointCount = cleanNumbers.indexOf(point)>-1;
-    if (pointCount) {
-      cleanDecimalNumbers = new LinkedList<>(cleanNumbers.subList(cleanNumbers.indexOf(point)+1, cleanNumbers.size()));
-      cleanNumbers = new LinkedList<>(cleanNumbers.subList(0,cleanNumbers.indexOf(point)));
-    }
-    // special case "point" without pre or post number   // TODO check it really a number, bit for python compatibility it need to
-    if (cleanDecimalNumbers.size() == 0 && cleanNumbers.size() == 0) return Integer.valueOf(0);
-
-    int trillionIndex = getTrillionIndex(cleanNumbers);
-    int billionIndex = getBillionIndex(cleanNumbers);
-    int millionIndex = getMillionIndex(cleanNumbers);
-    int thousandIndex = getThousandIndex(cleanNumbers);
-
-    if ((thousandIndex > -1 && (thousandIndex < millionIndex || thousandIndex < billionIndex)) || (millionIndex > -1 && millionIndex < billionIndex))
-      throw new NumberFormatException("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
-
-    long totalSum = 0;  //# storing the number to be returned
-
-    if (cleanNumbers.size() > 0) {
-      // hack for now, better way todo
-      if (cleanNumbers.size() == 1) {
-        totalSum += Long.valueOf(this.filebasedNumberSystem.get(cleanNumbers.get(0)).toString()); // TODO: oh no hack
+    final boolean isDigit = result != null; // maybe to optimize by compiler but to similar code to python 
+    if (!isDigit) {
+      String [] splitWords = numberSentence.split("[\\s,]+"); // strip extra spaces and comma and than split sentence into words
+      String localizedPointName = this.filebasedNumberSystem.get("point").toString();
+      
+      // removing and, & etc.
+      for (String word : splitWords) {
+        if (this.filebasedNumberSystem.containsKey(word)) {
+          cleanNumbers.add(word);
+        }
+        else if (word.equals(localizedPointName)){
+          cleanNumbers.add(word);
+        }
       }
-      else {
-        if (trillionIndex > -1) {
-          int trillionMultiplier = numberFormation(cleanNumbers.subList(0,trillionIndex));
-          totalSum += trillionMultiplier * 1000000000000L;
-        }
+  
+      // Error message if the user enters invalid input!
+      if (cleanNumbers.size()== 0) 
+          throw new NumberFormatException("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
 
-        if (billionIndex > -1) {
-          int billionMultiplier = 0;
-          if (trillionIndex > -1) {
-            billionMultiplier = numberFormation(cleanNumbers.subList(trillionIndex+1,billionIndex));
-          }
-          else {
-            billionMultiplier = numberFormation(cleanNumbers.subList(0,billionIndex));
-          }
-          totalSum += billionMultiplier * 1000000000L;
-        }
+      final boolean toMuchPoints = cleanNumbers.indexOf(localizedPointName) != cleanNumbers.lastIndexOf(localizedPointName);
+      if (toMuchPoints)
+        throw new NumberFormatException(String.format("Redundant point word %s! Please enter a valid number word (eg. two million twenty three thousand and forty nine)",localizedPointName));
+  
+      // separate decimal part of number (if exists)
+      boolean pointCount = cleanNumbers.indexOf(localizedPointName)>-1;
+      if (pointCount) {
+        cleanDecimalNumbers = new LinkedList<>(cleanNumbers.subList(cleanNumbers.indexOf(localizedPointName)+1, cleanNumbers.size()));
+        cleanNumbers = new LinkedList<>(cleanNumbers.subList(0,cleanNumbers.indexOf(localizedPointName)));
+      }
+      // special case "point" without pre or post number   
+      if (cleanDecimalNumbers.size() == 0 && cleanNumbers.size() == 0) return Integer.valueOf(0);
 
-        if (millionIndex > -1) {
-          int millionMultiplier = 0;
-          if (billionIndex > -1) {
-            millionMultiplier = numberFormation(cleanNumbers.subList(billionIndex+1,millionIndex));
+      // check measure word errors
+      List<Integer>measureWordsSequence = new LinkedList<>();
+      // check for to much measure words like "million million"
+      for (Long measureValueDoubleCheck : sortedMeasureValues) {
+        if (measureValueDoubleCheck >= 1000) { // measure values under 1000 can be more than one in text
+          checkDoubleInput(measureValueDoubleCheck, cleanNumbers);
+          // save index for next check
+          if (-1 != getIndexForNumber(measureValueDoubleCheck,cleanNumbers)){
+            measureWordsSequence.add(getIndexForNumber(measureValueDoubleCheck,cleanNumbers));
           }
-          else if (trillionIndex > -1 && billionIndex == -1) {
-            millionMultiplier = numberFormation(cleanNumbers.subList(trillionIndex+1,millionIndex));
-          }
-          else {
-            millionMultiplier = numberFormation(cleanNumbers.subList(0,millionIndex));
-          }
-          totalSum += millionMultiplier * 1000000;
         }
-
-        if (thousandIndex > -1) {
-          int thousandMultiplier = 0;
-          if (millionIndex > -1) {
-              thousandMultiplier = numberFormation(cleanNumbers.subList(millionIndex+1,thousandIndex));
-          }
-          else if (billionIndex > -1 && millionIndex == -1) {
-              thousandMultiplier = numberFormation(cleanNumbers.subList(billionIndex+1,thousandIndex));
-          }
-          else if (trillionIndex > -1 && billionIndex > -1 && millionIndex == -1) {
-            thousandMultiplier = numberFormation(cleanNumbers.subList(trillionIndex+1,thousandIndex));
-          }
-          else {
-              thousandMultiplier = numberFormation(cleanNumbers.subList(0,thousandIndex));
-          }
-          totalSum += thousandMultiplier * 1000;
+      }
+      
+      List<Integer> sortedMeasureWordsSequence = new LinkedList<>(measureWordsSequence);
+      Collections.sort(sortedMeasureWordsSequence);
+      for (int i = 0; i <measureWordsSequence.size();i++) {
+        if (!measureWordsSequence.get(i).equals(sortedMeasureWordsSequence.get(i))) {
+          throw new NumberFormatException ("Malformed number in result of false measure word sequence eg. trillion after thousand! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
         }
-
-        int hundreds = 0;
-        if (thousandIndex > -1 && thousandIndex != cleanNumbers.size()-1) {
-          hundreds = numberFormation(cleanNumbers.subList(thousandIndex+1, cleanNumbers.size()));
-        }
-        else if (millionIndex > -1 && millionIndex != cleanNumbers.size()-1 && thousandIndex != cleanNumbers.size()-1) {
-          hundreds = numberFormation(cleanNumbers.subList(millionIndex+1,cleanNumbers.size()));
-        }
-        else if (billionIndex > -1 && billionIndex != cleanNumbers.size()-1 && thousandIndex != cleanNumbers.size()-1) {
-          hundreds = numberFormation(cleanNumbers.subList(billionIndex+1,cleanNumbers.size()));
-        }
-        else if (thousandIndex == -1 && millionIndex == -1 && billionIndex == -1) {
-          hundreds = numberFormation(cleanNumbers);
+      }
+      
+      // normalize measure words with add localized value for 1 before than empty
+      boolean lastWasMeasureWord = true;
+      LinkedList<String> normalizedCleanNumbers = new LinkedList<>(); 
+      LinkedList<String> measureNames = new LinkedList<>();
+      for (Long value : sortedMeasureValues) {
+        measureNames.add(getNameByNumberValue(value));
+      }
+      for (String nextPart : cleanNumbers) {
+        if (measureNames.contains(nextPart) && lastWasMeasureWord) {
+          normalizedCleanNumbers.add(this.getNameByNumberValue(1L));
+          lastWasMeasureWord = true;
         }
         else {
-          hundreds = 0;
+          lastWasMeasureWord = measureNames.contains(nextPart); 
         }
-        totalSum += hundreds;
+        normalizedCleanNumbers.add(nextPart);
       }
-      Long value = Long.valueOf(totalSum);
-      result = value;
-      if (value.longValue() < Long.valueOf(Integer.MAX_VALUE).longValue() &&
-          value.longValue() > Long.valueOf(Integer.MIN_VALUE).longValue()) {
-        result = Integer.valueOf(value.intValue());
-      }
-    }
+      cleanNumbers = normalizedCleanNumbers;
 
-    // adding decimal part to total_sum (if exists)
-    if (cleanDecimalNumbers.size() > 0){
-        String decimalSum = getDecimalString(cleanDecimalNumbers);
-        decimalSum = ""+totalSum+"."+decimalSum;
-        if (decimalSum.substring(decimalSum.indexOf(".")).equals(".0")) {
-          decimalSum = decimalSum.substring(0, decimalSum.indexOf("."));
-          Long value = Long.valueOf(decimalSum);
+
+      // check no measure words in decimal numbers
+      for (Long measureValue : sortedMeasureValues) {
+          String measure_name = getNameByNumberValue(measureValue);
+          if (cleanDecimalNumbers.contains(measure_name))
+            throw new NumberFormatException ("Malformed number in result of false measure word after point eg. trillion after thousand! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
+      }
+      
+      // Now we calculate the pre-decimal value
+      result = getNumberValue(cleanNumbers);
+      
+      // And add the post-decimal value
+      if (cleanDecimalNumbers.size() > 0){
+        String decimalValue = getDecimalString(cleanDecimalNumbers);
+        decimalValue = ""+result+"."+decimalValue;
+        if (decimalValue.substring(decimalValue.indexOf(".")).equals(".0")) {
+          decimalValue = decimalValue.substring(0, decimalValue.indexOf("."));
+          Long value = Long.valueOf(decimalValue);
           result = value;
           if (value.longValue() < Long.valueOf(Integer.MAX_VALUE).longValue() &&
               value.longValue() > Long.valueOf(Integer.MIN_VALUE).longValue()) {
@@ -314,209 +297,151 @@ public class W2N {
           }
         }
         else {
-          result = Double.valueOf(decimalSum);
+          result = Double.valueOf(decimalValue);
         }
+      }
     }
-    
+    if (result instanceof Long) {
+      if (result.longValue() < Long.valueOf(Integer.MAX_VALUE).longValue() &&
+          result.longValue() > Long.valueOf(Integer.MIN_VALUE).longValue()) {
+        result = Integer.valueOf(result.intValue());
+      }
+    }
     return result;
+  
   }
   
 
   /**
-   * function to normalize input text
+   * Method to normalize the whole(!) input text
    * @param numberSentence input string
    * @return normalized input
    */
   protected String normalize(String numberSentence) {
-    if (new Locale(this.lang).getLanguage().equals(new Locale("fr").getLanguage())){
-      // do not remove '-' but add minus
-      numberSentence = numberSentence.replace("vingt et un", "vingt-et-un");
-      numberSentence = numberSentence.replace("trente et un", "trente-et-un");
-      numberSentence = numberSentence.replace("quarante et un", "quarante-et-un");
-      numberSentence = numberSentence.replace("cinquante et un", "cinquante-et-un");
-      numberSentence = numberSentence.replace("soixante et un", "soixante-et-un");
-    }
-    else{
-      numberSentence = numberSentence.replace("-", " ");
-    }
     numberSentence = numberSentence.toLowerCase(new Locale(this.lang));  // converting input to lowercase
+    numberSentence = numberSentence.replace ("-"," ");
+
+    // for examples: both is right "vingt et un" and "vingt-et-un"
+    // we change this to composed value "vingt-et-un" over the localized data file "replace:" entry
+    for (String nonComposedNumberValue : this.normalizeData.keySet()) {
+      if (nonComposedNumberValue.contains(" ")) {
+        String composedNumberValue = this.normalizeData.get(nonComposedNumberValue);
+        numberSentence = numberSentence.replace(nonComposedNumberValue, composedNumberValue);
+      }
+    }
+    
     return numberSentence.trim();
   }
   
   
   /**
-   * function to check false redundant input 
-   * @param cleanNumbers array of number words
+   * Method to check false redundant input
+   *
+   * <br/> Note: call this after normalize (lemma,replace,...) text
+   * 
+   * @param int new_number, string[] words - looking for count of localized name of new_numerb in words
    * @throws NumberFormatException if redundant input error
+   * @implNote this method has language configuration dependency
+   * <br/> example 1: check_double_input (1000, "thousand thousand") with lang="en" throws a NumberFormatException
+   * <br/> example 2: check_double_input (1000, "thousand thousand") with lang="de" its ok
+   * <br/> example 3: check_double_input (1000, "tausend tausend") with lang="de" throws a NumberFormatException
    */
-  protected void checkDoubleInput(String ... cleanNumbers) throws NumberFormatException {
-    // special map returns zero if key isn't included
-    HashMap<String,Long> howMuch = new HashMap<>(Stream.of(cleanNumbers).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))) {
-      private static final long serialVersionUID = 1L;
-      @Override
-      public Long get(Object key) {
-        return null == super.get(key) ? Long.valueOf(0) : super.get(key);
-      }
-    };
+  protected void checkDoubleInput(Long newNumber, List<String> cleanNumbers) throws NumberFormatException {
+    String localizedName =  this.getNameByNumberValue(newNumber);
     
-    if (new Locale(this.lang).getLanguage().equals(new Locale("de").getLanguage())) {
-      if (howMuch.get("tausend") > 1 || howMuch.get("million") > 1 || howMuch.get("milliarde") > 1 || howMuch.get("billion") > 1 || howMuch.get("komma") > 1)
-        throw new NumberFormatException ("Redundantes Nummernwort! Bitte gebe ein zulässiges Nummernwort ein (z.B. zwei Millionen Dreiundzwanzigtausend und Neunundvierzig)");
+    final boolean countGreaterOne = cleanNumbers.indexOf(localizedName) != cleanNumbers.lastIndexOf(localizedName);
+    if (countGreaterOne)
+        throw new NumberFormatException (String.format("Redundant number word %s in! Please enter a valid number word (eg. two million twenty three thousand and forty nine)",localizedName));
+  }
+  
+
+  /**
+   * Method to get the value for the measure aka 1000, 1_000_000 ...
+   * @param measureIndex index of measure
+   * @param cleanNumbers
+   * @return multiplier for measure
+   */
+  protected long getMeasureMultiplier (int measureIndex, List<String> cleanNumbers) {
+    List<String> param = cleanNumbers.subList(0,measureIndex);
+    if (param.isEmpty()) {
+      param.add(this.getNameByNumberValue(1L));
     }
-    else if (new Locale(this.lang).getLanguage().equals(new Locale("fr").getLanguage())) {
-      if (howMuch.get("mille") > 1 || howMuch.get("million") > 1 || howMuch.get("milliard") > 1 || howMuch.get("billion") > 1 || howMuch.get("point") > 1)
-        throw new NumberFormatException ("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
+    long multiplier = this.numberFormation(param);
+    return multiplier;
+  }
+
+  /**
+   * Method to get the localized name form value
+   * @param newNumber numeric value
+   * @return name from language configuration or <code>null</code> if not found 
+   */
+  protected String getNameByNumberValue (Long newNumber) {
+    for (String key : this.filebasedNumberSystem.keySet()) {
+      if (newNumber.equals(this.filebasedNumberSystem.get(key))) {
+        return key;
+      }
     }
-    else if (new Locale(this.lang).getLanguage().equals(new Locale("hi").getLanguage())){
-    }
-    else if (new Locale(this.lang).getLanguage().equals(new Locale("pt").getLanguage())) {
-      if (howMuch.get("mil") > 1 || howMuch.get("milhão") > 1 || howMuch.get("bilhão") > 1 || howMuch.get("point") > 1)
-        throw new NumberFormatException ("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
-    }
-    else if (new Locale(this.lang).getLanguage().equals(new Locale("ru").getLanguage())) {
-      if (howMuch.get("тысяча") > 1 || howMuch.get("миллион") > 1 || howMuch.get("миллиард") > 1 || howMuch.get("целых") > 1 || howMuch.get("целая") > 1)
-        throw new NumberFormatException ("Избыточное числовое слово! Введите правильное числовое слово (например, два миллиона двадцать три тысячи сорок девять)");
-    }
-    else if (new Locale(this.lang).getLanguage().equals(new Locale("en").getLanguage())) {
-      // Error if user enters million,billion, thousand or decimal point twice
-      if (howMuch.get("thousand") > 1 || howMuch.get("million") > 1 || howMuch.get("billion") > 1 || howMuch.get("point") > 1)
-          throw new NumberFormatException ("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
-    }
-    else { // fallback => en
-      // Error if user enters million,billion, thousand or decimal point twice
-      if (howMuch.get("thousand") > 1 || howMuch.get("million") > 1 || howMuch.get("billion") > 1 || howMuch.get("point") > 1)
-          throw new NumberFormatException ("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)");
-    }
+    return null;
   }
   
   /**
-   * Constant to descripe a looking for has no result
-   */
-  protected final int NOT_FOUND = -1;
-  /**
-   * function to get billion index
-   * @param cleanNumbers number array
-   * @return index or -1 if not found
-   * @see NOT_FOUND
-   */
-  protected int getBillionIndex(List<String> cleanNumbers) {
-    int index = NOT_FOUND;
-    switch (this.lang) {
-      case "de":
-        index = cleanNumbers.indexOf("milliarde");
-        if (index == NOT_FOUND) index = cleanNumbers.indexOf("milliarden");
-        break;
-      case "fr":
-        index = cleanNumbers.indexOf("milliard");
-        break;
-      case "hi":
-        break;
-      case "pt":
-        index = cleanNumbers.indexOf("bilhão");
-        break;
-      case "ru":
-        index = cleanNumbers.indexOf("миллиард");
-        if (index == NOT_FOUND) index = cleanNumbers.indexOf("миллиарда");
-        break;
-      case "en":
-      default:
-        index = cleanNumbers.indexOf("billion");
-        break;
-    }
-      return index;
-  }
-  /**
-   * function to get billion index
-   * @param cleanNumbers number array
-   * @return index or -1 if not found
-   * @see NOT_FOUND
-   */
-  protected int getTrillionIndex(List<String> cleanNumbers) {
-    int index = NOT_FOUND;
-    switch (this.lang) {
-      case "de":
-        index = cleanNumbers.indexOf("billion");
-        if (index == NOT_FOUND) index = cleanNumbers.indexOf("billionen");
-        break;
-      case "fr":
-        index = cleanNumbers.indexOf("billion");
-        break;
-      case "hi":
-        break;
-      case "pt":
-        index = cleanNumbers.indexOf("trilhão");
-        break;
-      case "ru":
-        index = cleanNumbers.indexOf("триллион");
-        break;
-      case "en":
-      default:
-        index = cleanNumbers.indexOf("trillion");
-        break;
-    }
-      return index;
-  }
-
-  /**
-   * function to get million index
-   * @param cleanNumbers number array
+   * Method to get the index of name for given number
+   * 
+   * <br/> note: call this after normalize (lemma,replace,...) text
+   * 
+   * @param newNumber number to looking for
+   * @param cleanNumbers
    * @return index or -1 if not found
    */
-  protected int getMillionIndex(List<String> cleanNumbers) {
-    int index = NOT_FOUND;
-    switch (this.lang) {
-      case "de":
-        index = cleanNumbers.indexOf("million");
-        if (index == NOT_FOUND) index = cleanNumbers.indexOf("millionen");
-        break;
-      case "hi":
-        break;
-      case "pt":
-        index = cleanNumbers.indexOf("milhão");
-        break;
-      case "ru":
-        index = cleanNumbers.indexOf("миллион");
-        if (index == NOT_FOUND) index = cleanNumbers.indexOf("миллиона");
-        break;
-      case "fr":
-      case "en":
-      default:
-        index = cleanNumbers.indexOf("million");
-        break;
-    }
-    return index;
+  protected int getIndexForNumber (Long newNumber, List<String> cleanNumbers) {
+    String localizedName = getNameByNumberValue(newNumber);
+    return cleanNumbers.indexOf(localizedName);
   }
-
+  
   /**
-   * function to get thousand index
-   * @param cleanNumbers number array
-   * @return index or -1 if not found
+   * Method to get the pre-decimal number from clean_number
+   * @param sorted list with number words
+   * @return number
    */
-  protected int getThousandIndex(List<String> cleanNumbers) {
-    int index = NOT_FOUND;
-    switch (this.lang) {
-      case "de":
-        index = cleanNumbers.indexOf("tausend");
-        break;
-      case "fr":
-        index = cleanNumbers.indexOf("mille");
-        break;
-      case "hi":
-        break;
-      case "pt":
-        index = cleanNumbers.indexOf("mil");
-        break;
-      case "ru":
-        index = cleanNumbers.indexOf("тысяча");
-        if (index == NOT_FOUND) index = cleanNumbers.indexOf("тысячи");
-        break;
-      case "en":
-      default:
-        index = cleanNumbers.indexOf("thousand");
-        break;
+  protected Long getNumberValue (List<String> cleanNumbers) {
+    long result = 0L;
+
+    /*
+    * The simple algorithm based on the idea from NLP to work with tagging (key)words
+    * but yes it is handmade implemented today.
+    *
+    * -- 2021-02-05 --
+    * The tagging can be tested on for example https://parts-of-speech.info and tell for
+    * nine trillion one billion two million twenty three thousand and forty nine point two three six nine
+    * - "and" is a conjunction
+    * - "point" is a none
+    * - all other are numbers
+    * But also contains this line these "measure words" for numbers:
+    * - trillion
+    * - billion
+    * - million
+    * - thousand
+    * - hundred
+    * This new algorithm split the word array from highest value to lowest 
+    * (because hundred can be a measure and also a number). Then it work
+    * only with number for this measure, simplify so the algorithm and
+    * make it free from other measure part in the number.
+    * Also it is no different to calculate a trillion or a million or other
+    */
+    
+    for (Long measureValue : sortedMeasureValues){
+      int measureValueIndex = getIndexForNumber(measureValue, cleanNumbers);
+      if (measureValueIndex > -1){
+        result +=  getMeasureMultiplier(measureValueIndex, cleanNumbers) * measureValue;
+        cleanNumbers = cleanNumbers.subList(measureValueIndex+1,cleanNumbers.size());
+      }
     }
-    return index;
+    // Now we add the value of less then hundred
+    if (cleanNumbers.size() > 0){
+      int multiplier = numberFormation(cleanNumbers);
+      result +=  multiplier * 1;
+    }
+
+    return result;
   }
-
-
 }

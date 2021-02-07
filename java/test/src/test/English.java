@@ -51,6 +51,7 @@ class English {
       Assertions.assertEquals(new W2N().wordToNum("thousand"), 1000);
       Assertions.assertEquals(new W2N().wordToNum("million"), 1000000);
       Assertions.assertEquals(new W2N().wordToNum("billion"), 1000000000);
+      Assertions.assertEquals(new W2N().wordToNum("one million and thousand"), 1_001_000);
       Assertions.assertEquals(new W2N().wordToNum("nine point nine nine nine"), 9.999);
       Assertions.assertEquals(new W2N().wordToNum("seventh point nineteen"), 0);
       Assertions.assertEquals(new W2N().wordToNum("seven million, eight hundred, and sixty three thousand, two hundred, and fifty four"), 7863254);

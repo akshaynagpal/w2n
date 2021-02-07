@@ -16,7 +16,7 @@ sorted_measure_values = []# = [1_000_000_000_000,1_000_000_000,1_000_000,1_000,1
 
 lang = "en"
 
-#
+# first get programming language specific local spoken language
 lang = locale.getlocale()[0]
 if "w2n.lang" in os.environ:
     lang = os.environ["w2n.lang"]
@@ -30,6 +30,7 @@ if lang is None:
     lang = "en"  # fallback
 lang = lang[:2]
 
+# Now analyse the configuration file for the local spoken language
 data_file = os.path.dirname(__file__)+os.sep+"data"+os.sep+"config_"+lang+".properties"
 with codecs.open(data_file, "rU", encoding="utf-8") as number_system_data:
     for line in number_system_data:
@@ -104,7 +105,7 @@ def normalize(number_sentence):
     """ [internal] function to normalize the whole(!) input text
     note: float or int parameters are allowed 
     
-    input: string the fill text
+    input: string the full text
     output: string
     """
     # we need no check for numbers...
@@ -138,10 +139,9 @@ def check_double_input (new_number, clean_numbers):
     input: int new_number, string[] words - looking for count of localized name of new_numerb in words     
     raise: if redundant input error
     """
-    # in result of work with numeric values and remove point 
-    # we need not longer language specific code
     localized_name = get_name_by_number_value(new_number)
-    if clean_numbers.count(localized_name) > 1:
+    countGreaterOne = clean_numbers.count(localized_name) > 1  # in result of same logic like Java extra step insert
+    if countGreaterOne:
         raise ValueError(f"Redundant number word {localized_name} in! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
         # i18n save für later:
         # de: "Redundantes Nummernwort! Bitte gebe ein zulässiges Nummernwort ein (z.B. zwei Millionen Dreiundzwanzigtausend und Neunundvierzig)"
@@ -152,7 +152,7 @@ def get_name_by_number_value (new_number):
     """ [internal] function to get the localized name form value
     
     input: numeric value
-    output: name from number_system map or None if not found 
+    output: name from language configuration or None if not found 
     """
     for number_name, number_value in number_system.items():
         if new_number == number_value:
@@ -217,8 +217,6 @@ def get_number_value (clean_numbers):
     if len(clean_numbers) > 0:
         multiplier = number_formation(clean_numbers)
         result +=  multiplier * 1
-        clean_numbers_new = {}
-        pass
     
     return result
 
@@ -269,12 +267,13 @@ def word_to_num(number_sentence):
     else:
         split_words = re.findall(r'\w+', number_sentence)  # strip extra spaces and comma and than split sentence into words
     
+        localizedPointName = number_system['point']
         # removing unknown words form text
         for word in split_words:
             word = normalize_data.get(word,word) # replacing words and lemma text
             if word in number_system:
                 clean_numbers.append(word)
-            elif word == number_system['point']:
+            elif word == localizedPointName:
                 clean_numbers.append(word)
     
         # Error message if the user enters invalid input!
@@ -282,15 +281,14 @@ def word_to_num(number_sentence):
             raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
     
         # check point count
-        if clean_numbers.count(number_system['point'])>1:
-             raise ValueError("Redundant point word "+number_system['point']+"! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+        if clean_numbers.count(localizedPointName)>1:
+             raise ValueError("Redundant point word "+localizedPointName+"! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
                   
         # split in pre-decimal and post-decimal part
-        point = number_system['point']
-        point_count = clean_numbers.count(point)
+        point_count = clean_numbers.count(localizedPointName)
         if point_count == 1:
-            clean_decimal_numbers = clean_numbers[clean_numbers.index(point)+1:]
-            clean_numbers = clean_numbers[:clean_numbers.index(point)]
+            clean_decimal_numbers = clean_numbers[clean_numbers.index(localizedPointName)+1:]
+            clean_numbers = clean_numbers[:clean_numbers.index(localizedPointName)]
 
         # check measure word errors
         measure_words_sequence = []
