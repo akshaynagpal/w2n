@@ -7,7 +7,6 @@ import sys
 import logging
 from word2numberi18n import w2n
 
-
 class TestW2N(unittest.TestCase):
     
     @classmethod
@@ -46,9 +45,11 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('million'), 1000000)
         self.assertEqual(w2n.word_to_num('billion'), 1000000000)
         self.assertEqual(w2n.word_to_num('trillion'), 1000000000000)
+        self.assertEqual(w2n.word_to_num("one million and thousand"), 1_001_000)
         self.assertEqual(w2n.word_to_num('nine point nine nine nine'), 9.999)
         self.assertEqual(w2n.word_to_num('seventh point nineteen'), 0)
         self.assertEqual(w2n.word_to_num('seven million, eight hundred, and sixty three thousand, two hundred, and fifty four'), 7863254)
+        self.assertEqual(w2n.word_to_num('two hundreds'), 200)
 
         # test cases https://github.com/akshaynagpal/w2n/issues/54
         self.assertEqual(w2n.word_to_num('three point nine seven'), 3.97)
@@ -79,6 +80,10 @@ class TestW2N(unittest.TestCase):
         #https://github.com/akshaynagpal/w2n/issues/27
         self.assertEqual(w2n.word_to_num("one million one hundred and eighty two thousand"),1_182_000)
         self.assertEqual(w2n.word_to_num("one million eighty two thousand"),1_082_000)
+        
+        #https://github.com/akshaynagpal/w2n/issues/58
+        self.assertEqual(w2n.word_to_num("Example title - Chapter One Hundred Fifteen"), 115)
+        self.assertEqual(w2n.word_to_num("Example title - Ninety-Eight"), 98)
 
     def test_negatives_en(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')
@@ -92,6 +97,8 @@ class TestW2N(unittest.TestCase):
         self.assertRaises(ValueError, w2n.word_to_num, 'one billion point two million twenty three thousand and forty nine point two three six nine')
         self.assertRaises(ValueError, w2n.word_to_num, 'one thousand five million')
         self.assertRaises(ValueError, w2n.word_to_num, 'three million point two million')
+        self.assertRaises(ValueError, w2n.word_to_num, 'three million point two hundred and five')
+        
         
     def test_null_en(self):
         noneValue :str = None 
