@@ -68,7 +68,7 @@ def number_formation(number_words):
     hundred_index = digit_values.count(100)
     hundred_index = digit_values.index(100) if 100 in digit_values else -1
     if hundred_index == 1:
-        digit_values[0] = digit_values[0] * digit_values[1]
+        digit_values[0] = digit_values[0] * digit_values[1] # this is like other languages need to do it
         del digit_values[1]
     if len(digit_values) > 3 and digit_values[0] < 100:
         digit_values[0] *= digit_values[1]

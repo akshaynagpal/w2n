@@ -22,7 +22,7 @@ namespace word2number
     /// <br/>Author: Sͬeͥbͭaͭsͤtͬian
     /// </summary>
     public class W2N {
-        private readonly Dictionary<String, Object> filebasedNumberSystem;
+        private readonly Dictionary<String, Object> numberSystem;
         private readonly Dictionary<String, String> normalizeData;
         private readonly List<String> decimalWords;
         private readonly List<long> sortedMeasureValues;
@@ -42,7 +42,7 @@ namespace word2number
         newLang = "en";  // fallback
     this.lang = newLang.Substring(0,2);
 
-    this.filebasedNumberSystem = new Dictionary<string, object>();
+    this.numberSystem = new Dictionary<string, object>();
     this.decimalWords = new List<String>(10);
     this.normalizeData = new Dictionary<string, string>();
     this.sortedMeasureValues = new List<long>();
@@ -72,7 +72,7 @@ namespace word2number
               val = value;
             }
             if (!key.StartsWith("replace:") && !key.StartsWith("measure:")) {
-              this.filebasedNumberSystem.Add(key, val);
+              this.numberSystem.Add(key, val);
             }
             if (zeroToNine<10) {
               this.decimalWords.Add(key);
@@ -87,49 +87,44 @@ namespace word2number
   
 
   /**
-   * function to form numeric multipliers for million, billion, thousand etc.
+   * Method to form numeric multipliers for million, billion, thousand etc.
    * @param numberWords list of strings
    * @return value: integer
    */
   protected int numberFormation (List<String> numberWords) {
-    int[] numbers = new int [numberWords.Count];
-    for (int i = 0; i < numberWords.Count; i++) {
-        int.TryParse(filebasedNumberSystem.GetValueOrDefault(numberWords[i],null).ToString(),out numbers[i]);
-    }
-    if (lang.Equals("ru")){
-      if (numbers.Length > 3) {
-        if (numbers[0] < 100) {
-          numbers[0] = numbers[0] * 100;
-        }
-      }
 
-      if (numbers.Length == 4)
-        return (numbers[0] * numbers[1]) + numbers[2] + numbers[3];
-      else if (numbers.Length == 3) // TODO: why are else here?
-        return numbers[0]+numbers[1]+numbers[2];
-      else if (numbers.Length == 2) // TODO: why are else here?
-        return numbers[0]+numbers[1];
-      else // TODO: why are else here?
-        return numbers[0];
+    List<int> digitValues = new List<int>();
+    // calculate the three digit values (max)
+    foreach (String word in numberWords) {
+        int nextNumberCandidat = 0;
+        int.TryParse(this.numberSystem[word].ToString(), out nextNumberCandidat);
+        digitValues.Add(nextNumberCandidat);
     }
-    else{
-      if (numbers.Length == 4)
-        return (numbers[0] * numbers[1]) + numbers[2] + numbers[3];
-      else if (numbers.Length == 3) // TODO: why are else here?
-        return numbers[0] * numbers[1] + numbers[2];
-      else if (numbers.Length == 2)
-        if (100 == numbers [0] || 100 == numbers [1])
-          return numbers[0] * numbers[1];
-        else
-          return numbers[0] + numbers[1];
-      else
-        return numbers[0];
+    int hundredIndex = digitValues.Contains(100) ? digitValues.IndexOf(100) : -1;
+    if (hundredIndex == 1){
+        digitValues[0] =  digitValues[0] * digitValues [1]; // this is equals to Python
+        digitValues.Remove(digitValues[1]);
     }
+    if ((digitValues.Count > 3) && (digitValues[0] < 100)) {
+      digitValues[0] *= digitValues[1];
+      digitValues.Remove(digitValues[1]);
+    }
+    else if ((digitValues.Count > 3) && (digitValues[0] > 100)) {
+        digitValues[1] *= digitValues[2];
+        digitValues.Remove(digitValues[2]);
+    }
+    // add the three digits
+    while (digitValues.Count > 1) {
+        digitValues[0] += digitValues[1];
+        digitValues.Remove(digitValues[1]);
+    }
+    // return the result
+
+    return digitValues[0];
   }
 
-
   /**
-   * function to convert post decimal digit words to numerial digits
+   * Method to convert post decimal digit words to numerial digits
    * it returns a string to prevert from floating point conversation problem
    * @param decimalDigitWords list of strings
    * @return string
@@ -140,7 +135,7 @@ namespace word2number
       if(!decimalWords.Contains(decWord))
         return "0";
       else
-        decimalNumberStr += filebasedNumberSystem[decWord];
+        decimalNumberStr += this.numberSystem[decWord];
     }
     String finalDecimalString = decimalNumberStr; // TODO remove line
     return finalDecimalString;
@@ -196,11 +191,11 @@ namespace word2number
     bool isDigit = result != null; // maybe to optimize by compiler but to similar code to python 
     if (!isDigit) {
       String [] splitWords = Regex.Split(numberSentence,"[\\s,]+"); // strip extra spaces and comma and than split sentence into words
-      String localizedPointName = this.filebasedNumberSystem["point"].ToString();
+      String localizedPointName = this.numberSystem["point"].ToString();
       
       // removing and, & etc.
       foreach (String word in splitWords) {
-        if (this.filebasedNumberSystem.ContainsKey(word)) {
+        if (this.numberSystem.ContainsKey(word)) {
           cleanNumbers.Add(word);
         }
         else if (word.Equals(localizedPointName)){
@@ -277,7 +272,7 @@ namespace word2number
       
       // Now we calculate the pre-decimal value
       result = getNumberValue(cleanNumbers);
-      
+ 
       // And add the post-decimal value
       if (cleanDecimalNumbers.Count > 0){
         String decimalValue = getDecimalString(cleanDecimalNumbers);
@@ -304,7 +299,8 @@ namespace word2number
             tempLong > int.MinValue) {
             result = (int)tempLong;
         }
-    }
+    }    
+
     return result;
   }
   
@@ -372,7 +368,7 @@ namespace word2number
    * @return name from language configuration or <code>null</code> if not found 
    */
   protected String getNameByNumberValue (long newNumber) {
-    foreach (KeyValuePair<string, object> pair in this.filebasedNumberSystem) {
+    foreach (KeyValuePair<string, object> pair in this.numberSystem) {
       String numberString = ""+newNumber;
       if (numberString.Equals(pair.Value.ToString())) {
         return pair.Key;
@@ -400,45 +396,45 @@ namespace word2number
    * @param sorted list with number words
    * @return number
    */
-  protected long getNumberValue (List<String> cleanNumbers) {
-    long result = 0L;
+      protected long getNumberValue (List<String> cleanNumbers) {
+        long result = 0L;
 
-    /*
-    * The simple algorithm based on the idea from NLP to work with tagging (key)words
-    * but yes it is handmade implemented today.
-    *
-    * -- 2021-02-05 --
-    * The tagging can be tested on for example https://parts-of-speech.info and tell for
-    * nine trillion one billion two million twenty three thousand and forty nine point two three six nine
-    * - "and" is a conjunction
-    * - "point" is a none
-    * - all other are numbers
-    * But also contains this line these "measure words" for numbers:
-    * - trillion
-    * - billion
-    * - million
-    * - thousand
-    * - hundred
-    * This new algorithm split the word array from highest value to lowest 
-    * (because hundred can be a measure and also a number). Then it work
-    * only with number for this measure, simplify so the algorithm and
-    * make it free from other measure part in the number.
-    * Also it is no different to calculate a trillion or a million or other
-    */
-    foreach (long measureValue in sortedMeasureValues){
-      int measureValueIndex = getIndexForNumber(measureValue, cleanNumbers);
-      if (measureValueIndex > -1){
-        result +=  getMeasureMultiplier(measureValueIndex, cleanNumbers) * measureValue;
-        cleanNumbers = cleanNumbers.GetRange(measureValueIndex+1,cleanNumbers.Count-(measureValueIndex+1)); //#1
+        /*
+        * The simple algorithm based on the idea from NLP to work with tagging (key)words
+        * but yes it is handmade implemented today.
+        *
+        * -- 2021-02-05 --
+        * The tagging can be tested on for example https://parts-of-speech.info and tell for
+        * nine trillion one billion two million twenty three thousand and forty nine point two three six nine
+        * - "and" is a conjunction
+        * - "point" is a none
+        * - all other are numbers
+        * But also contains this line these "measure words" for numbers:
+        * - trillion
+        * - billion
+        * - million
+        * - thousand
+        * - hundred
+        * This new algorithm split the word array from highest value to lowest 
+        * (because hundred can be a measure and also a number). Then it work
+        * only with number for this measure, simplify so the algorithm and
+        * make it free from other measure part in the number.
+        * Also it is no different to calculate a trillion or a million or other
+        */
+        foreach (long measureValue in sortedMeasureValues){
+          int measureValueIndex = getIndexForNumber(measureValue, cleanNumbers);
+          if (measureValueIndex > -1){
+            result +=  getMeasureMultiplier(measureValueIndex, cleanNumbers) * measureValue;
+            cleanNumbers = cleanNumbers.GetRange(measureValueIndex+1,cleanNumbers.Count-(measureValueIndex+1)); //#1
+          }
+        }
+        // Now we add the value of less then hundred
+        if (cleanNumbers.Count > 0){
+          int multiplier = this.numberFormation(cleanNumbers);
+          result +=  multiplier * 1;
+        }
+
+        return result;
       }
-    }
-    // Now we add the value of less then hundred
-    if (cleanNumbers.Count > 0){
-      int multiplier = numberFormation(cleanNumbers);
-      result +=  multiplier * 1;
-    }
-
-    return result;
   }
-}
 }
