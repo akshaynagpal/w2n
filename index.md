@@ -6,7 +6,9 @@
 - provide the business logic as
     - Java Archiv
     - Python Module
+    - .net DLL
 - exclude some bugs from word2number
+- *include some own bugs in result of it is a program not god*
 
 The implementation want to be that
 - more readable than using high-end programming language features
@@ -23,16 +25,25 @@ The implementation want to be that
 
 ## Programming language features
 
+This is a part-feature-list of some features you would be see in result of compare the similar languages implementations. It does not mean these features are bad or good.
+
 ### Python
+- Dynamic arrays inside language can use this instead of an Collection framework.
+- ...
+
 ### Java
 - To convert a ``String`` to ``double`` localization information is ignored (``Locale``) and the **dot** is needed.
 <br>``double doubleValue = Double.valueOf(decimalValueWithPoint);``
+- ...
 
 ### CSharp
 - Unlike Java it is important at converting a ``string`` to ``double`` the right localization information in the background exists (``CultureInfo``).
 <br>``double doubleValue; double.TryParse (pointDelimitedDecimalValue, NumberStyles.Any,CultureInfo.InvariantCulture, out doubleValue);``
+    - but I need to declare variable ``doubleValue`` before(?).
 - Semantic sugar is to get KEY and VALUE from dictionary at same time.
-<br>`` foreach (KeyValuePair<keyType, valueType> pair in this.filebasedNumberSystem){}``
+<br>``foreach (KeyValuePair<keyType, valueType> pair in this.filebasedNumberSystem){}``
+- Working with Dictionary like Array with non-numeric index.
+<br>``object value = this.dictionaryInstance[key];``
 - ...
 
 
@@ -57,8 +68,6 @@ Thanks to word2number coder and contributors
 
 ## License
 The MIT License (MIT)
-
-Copyright (c) 2016 Akshay Nagpal 
 
 Copyright (c) 2020-2021 Sebastian Ritter
 

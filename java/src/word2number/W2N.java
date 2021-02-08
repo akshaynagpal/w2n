@@ -90,48 +90,40 @@ public class W2N {
     }
   }
   
-
   /**
-   * function to form numeric multipliers for million, billion, thousand etc.
+   * Method to form numeric multipliers for million, billion, thousand etc.
    * @param numberWords list of strings
    * @return value: integer
    */
   protected int numberFormation (List<String> numberWords) {
-    int[] numbers = new int [numberWords.size()];
-    for (int i = 0; i < numberWords.size(); i++) {
-      numbers[i] = Integer.valueOf(filebasedNumberSystem.get(numberWords.get(i)).toString());
+    List<Integer> digitValues = new LinkedList<>();
+    // calculate the three digit values (max)
+    for (String word : numberWords) {
+        Integer nextNumberCandidat = Integer.valueOf(this.filebasedNumberSystem.get(word).toString());
+        digitValues.add(nextNumberCandidat);
     }
-    if (lang.equals("ru")){
-      if (numbers.length > 3) {
-        if (numbers[0] < 100) {
-          numbers[0] = numbers[0] * 100;
-        }
-      }
-
-      if (numbers.length == 4)
-        return (numbers[0] * numbers[1]) + numbers[2] + numbers[3];
-      else if (numbers.length == 3) // TODO: why are else here?
-        return numbers[0]+numbers[1]+numbers[2];
-      else if (numbers.length == 2) // TODO: why are else here?
-        return numbers[0]+numbers[1];
-      else // TODO: why are else here?
-        return numbers[0];
+    
+    final int hundredIndex = digitValues.contains(100) ? digitValues.indexOf(100) : -1;
+    if (hundredIndex == 1){
+        digitValues.set(0, digitValues.get(0) * digitValues.get(1));
+        digitValues.remove(1);
     }
-    else{
-      if (numbers.length == 4)
-        return (numbers[0] * numbers[1]) + numbers[2] + numbers[3];
-      else if (numbers.length == 3) // TODO: why are else here?
-        return numbers[0] * numbers[1] + numbers[2];
-      else if (numbers.length == 2)
-        if (100 == numbers [0] || 100 == numbers [1])
-          return numbers[0] * numbers[1];
-        else
-          return numbers[0] + numbers[1];
-      else
-        return numbers[0];
+    if ((digitValues.size() > 3) && (digitValues.get(0) < 100)) {
+      digitValues.set(0, digitValues.get(0) * digitValues.get(1));
+      digitValues.remove(1);
     }
+    else if ((digitValues.size() > 3) && (digitValues.get(0) > 100)) {
+        digitValues.set(1,digitValues.get(1) * digitValues.get(2));
+        digitValues.remove(2);
+    }
+    // add the three digits
+    while (digitValues.size() > 1) {
+        digitValues.set(0, digitValues.get(0) + digitValues.get(1));
+        digitValues.remove(1);
+    }
+    // return the result
+    return digitValues.get(0);
   }
-
 
   /**
    * function to convert post decimal digit words to numerial digits

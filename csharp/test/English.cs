@@ -4,7 +4,7 @@ using System;
 
 using word2number;
 
-namespace vampire.test.dotnet
+namespace test.word2number
 {
 
     /// <summary>
@@ -66,7 +66,7 @@ namespace vampire.test.dotnet
 
             // in different to w2n it is ok, in result of str:112 is not different to int:112
             Assert.AreEqual(new W2N().wordToNum("112"), 112);
-            Assert.AreEqual(new W2N().wordToNum(112),112);        
+            Assert.AreEqual(new W2N().wordToNum(112),112);  
         }
     }
 }
