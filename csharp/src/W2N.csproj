@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup>
+      <Version>0.0.0</Version>
+      <PackageId>w2ni18n</PackageId>
+      <Title>word2number-i18n</Title>
+      <Authors>Sebastian Ritter</Authors>
+      <Description>
+        Convert number words from different languages with Python or Java API eg. three hundred and forty two to numbers (342) or vingt-et-un (21) or две целых три десятых (2.3).Word2Number-i18n convert number words (eg. twenty one) to numeric digits (21). 
+      </Description>  
+      <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+
+      <PackageIcon></PackageIcon>
+            
+      <PackageTags>Java;Python;CSharp;API;developer</PackageTags>
+      <PackageReleaseNotes>palceholder</PackageReleaseNotes>
+      <IncludeSource>true</IncludeSource>
+
+      <RepositoryUrl>https://github.com/bastie/w2ni18n.git</RepositoryUrl>
+      <PackageSummary>Convert number words to numeric values.</PackageSummary>
+      <copyright>Copyright 2021 Sebastian Ritter</copyright>
+
+    </PropertyGroup>
+  
+  <PropertyGroup>
+    <TargetFrameworks>net5.0</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="data/**" />
+  </ItemGroup>
+
+</Project>

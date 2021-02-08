@@ -18,7 +18,23 @@ The implementation want to be that
 ## Download
 
 - Python:   pip3
-- Java:    GitHub repository
+- Java:     GitHub repository
+- CSharp:	nuget
+
+## Programming language features
+
+### Python
+### Java
+- To convert a ``String`` to ``double`` localization information is ignored (``Locale``) and the **dot** is needed.
+<br>``double doubleValue = Double.valueOf(decimalValueWithPoint);``
+
+### CSharp
+- Unlike Java it is important at converting a ``string`` to ``double`` the right localization information in the background exists (``CultureInfo``).
+<br>``double doubleValue; double.TryParse (pointDelimitedDecimalValue, NumberStyles.Any,CultureInfo.InvariantCulture, out doubleValue);``
+- Semantic sugar is to get KEY and VALUE from dictionary at same time.
+<br>`` foreach (KeyValuePair<keyType, valueType> pair in this.filebasedNumberSystem){}``
+- ...
+
 
 ## Test system
 
@@ -26,6 +42,7 @@ Local test system is
 
 - CPython 3.9 @ Darwin
 - Java AdoptOpenJDK 15 @ Darwin
+- CSharp net5.0 @ Darwin
 
 
 ## Thanks

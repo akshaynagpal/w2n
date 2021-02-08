@@ -1,9 +1,11 @@
 # Word to Number i18n
 
-Convert number words from different languages with Python or Java API eg. three hundred and forty two to numbers (342) or vingt-et-un (21) or две целых три десятых (2.3).Word2Number-i18n convert number words (eg. twenty one) to numeric digits (21).
+Convert number words from different languages with Python, CSharp or Java API eg. three hundred and forty two to numbers (342) or vingt-et-un (21) or две целых три десятых (2.3).Word2Number-i18n convert number words (eg. twenty one) to numeric digits (21).
 Below is the installation, usage and other details of this module.
 
 ## Python
+
+Please note that these Python implementation is similar to Java and CSharp.
 
 ### Installation
 
@@ -171,7 +173,7 @@ Make sure you install all requirements given in development.txt
 
 ## Java
 
-Please note that these Java implementation is similar to Python.
+Please note that these Java implementation is similar to Python and CSharp.
 
 ### Installation
 
@@ -183,7 +185,7 @@ On macOS
 
 ```
     # git clone https://github.com/bastie/w2ni18n.git w2n
-    # ./w2n/src/build.sh
+    # ./w2n/java/src/build.sh
 ```
 
 ### i18n
@@ -259,7 +261,93 @@ You create a new file ```number_system_dsb.txt``` with utf-8 encoding
     point ,
 ```
 
-Call the build.sh script and use the new w2ni18n-VERSION-.jar file
+Call the ``build.sh`` script and use the new ``w2ni18n-VERSION-.jar`` file
+
+
+## CSharp
+
+Please note that these CSharp implementation is similar to Java and Python.
+
+### Installation
+
+Download the latest version of word2number from nuget called w2ni18n.
+
+### Installation from source
+
+On macOS
+
+```
+    # git clone https://github.com/bastie/w2ni18n.git w2n
+    # cd ./w2n/csharp
+    # ./build.sh
+```
+
+### i18n
+
+word2number looking for your specific language with
+
+    1. defined environment variable (not property) w2n.lang with ISO lang code like en, hi, de and if not found
+    2. over java.util.Locale.getDefault() and if null
+    3. over environment variable "LANGUAGE" and if not found
+    4. fallback to english
+    
+Place in the data directory your language specific dictionary file with ISO lang code in the name.
+   
+### Usage
+
+Add the word2number-i18n to module-info.java in your project.
+
+    dotnet add MyNextProject.csproj package w2ni18n
+
+Then import the namespace using the below code.
+
+    using word2number;
+
+Then you can use the **wordToNum** method to convert a number-word to numeric digits, as shown below.
+
+```
+Environment.SetEnvironmentVariable ("w2n.lang","en");
+    W2N english = new W2N();
+    Console.WriteLine(english.wordToNum("one billion two million twenty three thousand and forty nine point two three six nine"));
+```
+
+In result it prints
+
+```
+1002023049.2369
+```
+
+
+#### Request new language
+
+Do follow steps
+
+    1. check your request (directory data), textfile name ISO-639-1 code
+    2. if not found check ISO-639-3 code
+    3. if not found create new file with new ISO-639-1/3 code
+
+##### Example
+You want to tranfer NLP CARD to numeric value for Lower Sorbian. German (de) isn't it. 
+You do not found an ISO-639-1 code, you do not found an ISO-639-1 file for ```dsb``` extension.
+You create a new file ```number_system_dsb.txt``` with utf-8 encoding
+
+```
+    null 0
+    jaden 1
+    dwa 2
+    tśi 3
+    styri 4
+    pěś 5
+    šesć 6
+    sedym 7
+    wósym 8
+    źewjeś 9
+    źaseś 10
+    [...]
+    point ,
+```
+
+Call the ``build.sh`` script and use the new ``W2N.dll`` file
 
 
 ## Bugs/Errors
