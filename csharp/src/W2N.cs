@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace word2number
 {
@@ -70,7 +71,9 @@ namespace word2number
               long.TryParse(val.ToString().Trim(), out long value);
               val = value;
             }
-            this.filebasedNumberSystem.Add(key, val);
+            if (!key.StartsWith("replace:") && !key.StartsWith("measure:")) {
+              this.filebasedNumberSystem.Add(key, val);
+            }
             if (zeroToNine<10) {
               this.decimalWords.Add(key);
               zeroToNine++;
@@ -180,19 +183,19 @@ namespace word2number
 
     // return the number if user enters a number string
     long tempLong;
-    if (long.TryParse(newNumberSentence, out tempLong)) {
+    if (long.TryParse(numberSentence, out tempLong)) {
         result = tempLong;
     }
     else {
         double tempDouble;
-        if (double.TryParse(newNumberSentence, out tempDouble)) {
+        if (double.TryParse(numberSentence, out tempDouble)) {
             result = tempDouble;
         }
     }
 
     bool isDigit = result != null; // maybe to optimize by compiler but to similar code to python 
     if (!isDigit) {
-      String [] splitWords = numberSentence.Split("[\\s,]+"); // strip extra spaces and comma and than split sentence into words
+      String [] splitWords = Regex.Split(numberSentence,"[\\s,]+"); // strip extra spaces and comma and than split sentence into words
       String localizedPointName = this.filebasedNumberSystem["point"].ToString();
       
       // removing and, & etc.
@@ -204,6 +207,7 @@ namespace word2number
           cleanNumbers.Add(word);
         }
       }
+
   
       // Error message if the user enters invalid input!
       if (cleanNumbers.Count== 0) 
@@ -216,9 +220,10 @@ namespace word2number
       // separate decimal part of number (if exists)
       bool pointCount = cleanNumbers.IndexOf(localizedPointName)>-1;
       if (pointCount) {
-        cleanDecimalNumbers = new List<String>(cleanNumbers.GetRange(cleanNumbers.IndexOf(localizedPointName)+1, cleanNumbers.Count));
+        cleanDecimalNumbers = new List<String>(cleanNumbers.GetRange(cleanNumbers.IndexOf(localizedPointName)+1, cleanNumbers.Count-(cleanNumbers.IndexOf(localizedPointName)+1))); //#1
         cleanNumbers = new List<String>(cleanNumbers.GetRange(0,cleanNumbers.IndexOf(localizedPointName)));
       }
+
       // special case "point" without pre or post number   
       if (cleanDecimalNumbers.Count == 0 && cleanNumbers.Count == 0) return (int) 0;
 
@@ -288,7 +293,7 @@ namespace word2number
         }
         else {
             double tempDouble;
-            double.TryParse (decimalValue, out tempDouble);
+            double.TryParse (decimalValue, NumberStyles.Any,CultureInfo.InvariantCulture, out tempDouble);
             result = tempDouble;
         }
       }
@@ -368,7 +373,8 @@ namespace word2number
    */
   protected String getNameByNumberValue (long newNumber) {
     foreach (KeyValuePair<string, object> pair in this.filebasedNumberSystem) {
-      if (newNumber.Equals(pair.Key)) {
+      String numberString = ""+newNumber;
+      if (numberString.Equals(pair.Value.ToString())) {
         return pair.Key;
       }
     }
@@ -419,12 +425,11 @@ namespace word2number
     * make it free from other measure part in the number.
     * Also it is no different to calculate a trillion or a million or other
     */
-    
     foreach (long measureValue in sortedMeasureValues){
       int measureValueIndex = getIndexForNumber(measureValue, cleanNumbers);
       if (measureValueIndex > -1){
         result +=  getMeasureMultiplier(measureValueIndex, cleanNumbers) * measureValue;
-        cleanNumbers = cleanNumbers.GetRange(measureValueIndex+1,cleanNumbers.Count);
+        cleanNumbers = cleanNumbers.GetRange(measureValueIndex+1,cleanNumbers.Count-(measureValueIndex+1)); //#1
       }
     }
     // Now we add the value of less then hundred

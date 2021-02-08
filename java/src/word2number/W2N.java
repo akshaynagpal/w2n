@@ -20,7 +20,7 @@ import java.util.Locale;
  * Word2Number implementation
  * 
  * This class implements an easy algorithm to translate number words to numbers from sentences.
- * It takes an <code>CharSequence</code> like <code>String</code>, <code>StringBuilder</code> or 
+ * It takes a <code>CharSequence</code> like <code>String</code>, <code>StringBuilder</code> or 
  * <code>StringBuffer</code> instances and returns as result <code>null</code> or an 
  * <code>Number</code> instance.
  * On other Objects the <code>toString</code> method is using to create a CharSequence on-the-fly.

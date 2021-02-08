@@ -21,6 +21,6 @@ dist/
 /java/bin/**
 
 # CSharp
-/csharp/obj/**
-/csharp/bin/**
+/csharp/**/obj/**
+/csharp/**/bin/**
 
