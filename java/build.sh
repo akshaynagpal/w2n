@@ -5,7 +5,7 @@
 #
 
 # Informations
-W2N_VERSION='0.2.1'
+W2N_VERSION='1.0.0'
 
 # save start location
 LOCATION_START=`pwd`
