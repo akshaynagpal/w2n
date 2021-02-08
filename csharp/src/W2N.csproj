@@ -21,16 +21,15 @@
       <PackageSummary>Convert number words to numeric values.</PackageSummary>
       <copyright>Copyright 2021 Sebastian Ritter</copyright>
 
-
-    
     </PropertyGroup>
-  
-  
   
   <PropertyGroup>
     <TargetFrameworks>net5.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="data/**" />
+  </ItemGroup>
 
 </Project>

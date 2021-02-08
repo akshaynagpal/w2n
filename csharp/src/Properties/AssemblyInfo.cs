@@ -4,11 +4,11 @@
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("word2number-i18n")]
-[assembly: AssemblyDescription("Convert number words from different languages with Python or Java API eg. three hundred and forty two to numbers (342) or vingt-et-un (21) or две целых три десятых (2.3).")]
+[assembly: AssemblyDescription("Convert number words from different languages with Python, CSharp or Java API eg. three hundred and forty two to numbers (342) or vingt-et-un (21) or две целых три десятых (2.3).")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Sebastian Ritter")]
 [assembly: AssemblyProduct("w2ni18n")]
-[assembly: AssemblyCopyright("Copyright © Sebastian Ritter 2021")]
+[assembly: AssemblyCopyright("Copyright © 2021 Sebastian Ritter")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
