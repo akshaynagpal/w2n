@@ -1,7 +1,7 @@
 # Word to Number ![Build Status](https://travis-ci.org/akshaynagpal/w2n.svg?branch=master)  ![codecov](https://codecov.io/gh/akshaynagpal/w2n/branch/master/graph/badge.svg) ![rtdbadge](https://readthedocs.org/projects/w2n/badge/)
 
 This is a Python module to convert number words (eg. twenty one) to numeric digits (21).
-It works for positive numbers upto the range of 999,999,999,999 (i.e. billions)
+It works for positive and negative rational numbers up to arbitrary ranges, but only understands number names up to a septillion.
 Below is the installation, usage and other details of this module.
 
 ## Installation
@@ -12,10 +12,6 @@ You can install the module using Python Package Index using the below command.
 
     pip install word2number
 
-Make sure you install all requirements given in requirements.txt
-```
-pip install -r requirements.txt
-```
 ## Usage
 
 First you have to import the module using the below code.

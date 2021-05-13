@@ -1,8 +1,7 @@
-from __future__ import print_function
-
-
-american_number_system = {
+num_names = {
     'zero': 0,
+    'naught': 0,
+    'nil': 0,
     'one': 1,
     'two': 2,
     'three': 3,
@@ -12,6 +11,7 @@ american_number_system = {
     'seven': 7,
     'eight': 8,
     'nine': 9,
+    'niner': 9,
     'ten': 10,
     'eleven': 11,
     'twelve': 12,
@@ -30,188 +30,173 @@ american_number_system = {
     'seventy': 70,
     'eighty': 80,
     'ninety': 90,
-    'hundred': 100,
-    'thousand': 1000,
-    'million': 1000000,
-    'billion': 1000000000,
-    'point': '.'
 }
 
-decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
-
-"""
-#TODO
-indian_number_system = {
-    'zero': 0,
-    'one': 1,
-    'two': 2,
-    'three': 3,
-    'four': 4,
-    'five': 5,
-    'six': 6,
-    'seven': 7,
-    'eight': 8,
-    'nine': 9,
-    'ten': 10,
-    'eleven': 11,
-    'twelve': 12,
-    'thirteen': 13,
-    'fourteen': 14,
-    'fifteen': 15,
-    'sixteen': 16,
-    'seventeen': 17,
-    'eighteen': 18,
-    'nineteen': 19,
-    'twenty': 20,
-    'thirty': 30,
-    'forty': 40,
-    'fifty': 50,
-    'sixty': 60,
-    'seventy': 70,
-    'eighty': 80,
-    'ninety': 90,
-    'hundred': 100,
-    'thousand': 1000,
-    'lac': 100000,
-    'lakh': 100000,
-    'crore': 10000000
+place_abbrev = {
+    'k':            1000,
+    'm':            1000000,
+    'b':            1000000000,
 }
-"""
 
+place_names = {
+    'dozen':        12,
+    'score':        20,
+    'hundred':      100,
+    'gross':        144,
+    'thousand':     1000,
+    'million':      1000000,
+    'billion':      1000000000,
+    'trillion':     1000000000000,
+    'quadrillion':  1000000000000000,
+    'quintillion':  1000000000000000000,
+    'sextillion':   1000000000000000000000,
+    'septillion':   1000000000000000000000000,
+    **place_abbrev
+}
 
-"""
-function to form numeric multipliers for million, billion, thousand etc.
+dec_names = {
+    'point': '.',
+    'decimal': '.',
+    '.': '.',
+}
 
-input: list of strings
-return value: integer
-"""
+neg_names = {
+    'minus': '-',
+    'negative': '-',
+    '-': '-',
+}
 
+ignore_chars = [ '$', ';', ',' ]
+ignore_words = [ 'a', 'and', '&', '' ]
 
-def number_formation(number_words):
-    numbers = []
-    for number_word in number_words:
-        numbers.append(american_number_system[number_word])
-    if len(numbers) == 4:
-        return (numbers[0] * numbers[1]) + numbers[2] + numbers[3]
-    elif len(numbers) == 3:
-        return numbers[0] * numbers[1] + numbers[2]
-    elif len(numbers) == 2:
-        if 100 in numbers:
-            return numbers[0] * numbers[1]
-        else:
-            return numbers[0] + numbers[1]
-    else:
-        return numbers[0]
-
-
-"""
-function to convert post decimal digit words to numerial digits
-input: list of strings
-output: double
-"""
-
-
-def get_decimal_sum(decimal_digit_words):
-    decimal_number_str = []
-    for dec_word in decimal_digit_words:
-        if(dec_word not in decimal_words):
-            return 0
-        else:
-            decimal_number_str.append(american_number_system[dec_word])
-    final_decimal_string = '0.' + ''.join(map(str,decimal_number_str))
-    return float(final_decimal_string)
-
-
-"""
-function to return integer for an input `number_sentence` string
-input: string
-output: int or double or None
-"""
-
-
-def word_to_num(number_sentence):
-    if type(number_sentence) is not str:
-        raise ValueError("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
-
-    number_sentence = number_sentence.replace('-', ' ')
-    number_sentence = number_sentence.lower()  # converting input to lowercase
-
-    if(number_sentence.isdigit()):  # return the number if user enters a number string
-        return int(number_sentence)
-
-    split_words = number_sentence.strip().split()  # strip extra spaces and split sentence into words
-
-    clean_numbers = []
-    clean_decimal_numbers = []
-
-    # removing and, & etc.
-    for word in split_words:
-        if word in american_number_system:
-            clean_numbers.append(word)
-
-    # Error message if the user enters invalid input!
-    if len(clean_numbers) == 0:
-        raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)") 
-
-    # Error if user enters million,billion, thousand or decimal point twice
-    if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point')> 1:
-        raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
-
-    # separate decimal part of number (if exists)
-    if clean_numbers.count('point') == 1:
-        clean_decimal_numbers = clean_numbers[clean_numbers.index('point')+1:]
-        clean_numbers = clean_numbers[:clean_numbers.index('point')]
-
-    billion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
-    million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
-    thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
-
-    if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index>-1 and million_index < billion_index):
-        raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
-
-    total_sum = 0  # storing the number to be returned
-
-    if len(clean_numbers) > 0:
-        # hack for now, better way TODO
-        if len(clean_numbers) == 1:
-                total_sum += american_number_system[clean_numbers[0]]
-
-        else:
-            if billion_index > -1:
-                billion_multiplier = number_formation(clean_numbers[0:billion_index])
-                total_sum += billion_multiplier * 1000000000
-
-            if million_index > -1:
-                if billion_index > -1:
-                    million_multiplier = number_formation(clean_numbers[billion_index+1:million_index])
-                else:
-                    million_multiplier = number_formation(clean_numbers[0:million_index])
-                total_sum += million_multiplier * 1000000
-
-            if thousand_index > -1:
-                if million_index > -1:
-                    thousand_multiplier = number_formation(clean_numbers[million_index+1:thousand_index])
-                elif billion_index > -1 and million_index == -1:
-                    thousand_multiplier = number_formation(clean_numbers[billion_index+1:thousand_index])
-                else:
-                    thousand_multiplier = number_formation(clean_numbers[0:thousand_index])
-                total_sum += thousand_multiplier * 1000
-
-            if thousand_index > -1 and thousand_index != len(clean_numbers)-1:
-                hundreds = number_formation(clean_numbers[thousand_index+1:])
-            elif million_index > -1 and million_index != len(clean_numbers)-1:
-                hundreds = number_formation(clean_numbers[million_index+1:])
-            elif billion_index > -1 and billion_index != len(clean_numbers)-1:
-                hundreds = number_formation(clean_numbers[billion_index+1:])
-            elif thousand_index == -1 and million_index == -1 and billion_index == -1:
-                hundreds = number_formation(clean_numbers)
+word_to_number = { **num_names, **place_names, **dec_names, **neg_names }
+            
+def num_generator(phrase):
+    # remove dirty characters - commonly put in numbers but not "part of" the number
+    cleanphrase = ''.join(char for char in phrase if char not in ignore_chars)
+    # make . its own word so we can treat it like the other decimal words
+    splitphrase = cleanphrase.replace('.', ' . ').lower()
+    
+    words = [ ]
+    # remove dirty words - commonly put in number words but not "part of" the number
+    for word in (word for word in splitphrase.split(' ') if word not in ignore_words):
+        # separate suffixes (e.g. 150k -> 150 k)
+        if word[:-1].isdigit() and word[-1] in place_abbrev:
+            words.append(word[:-1])
+            words.append(word[-1])
+        # - is confusing, since it can be a separator (sixty-six) or a negative (-10)
+        # fortunately, to be a negative it must be at the start of a word
+        elif '-' in word:
+            i = word.index('-')
+            if i == 0:
+                words.append('-')
+                words.append(word[1:])
             else:
-                hundreds = 0
-            total_sum += hundreds
-
-    # adding decimal part to total_sum (if exists)
-    if len(clean_decimal_numbers) > 0:
-        decimal_sum = get_decimal_sum(clean_decimal_numbers)
-        total_sum += decimal_sum
-
-    return total_sum
+                words.append(word[:i])
+                words.append(word[i+1:])
+        else:
+            words.append(word)
+    
+    if len(words) == 0:
+        raise ValueError('No valid words provided')
+    
+    countDec = sum( words.count(dec) for dec in dec_names )
+    countNeg = sum( words.count(neg) for neg in neg_names )
+    
+    # Check if there are any valid number words
+    if len(words) == countDec + countNeg:
+        raise ValueError('No valid number words provided')
+    
+    # Check if there are any illegal duplicates
+    if 1 < countDec:
+        raise ValueError('At most one of the following allowed: {}'.format(dec_names))
+        
+    if 1 < countNeg:
+        raise ValueError('At most one of the following allowed: {}'.format(countNeg))
+        
+    for place in place_names:
+        # Hundred is a special case, since "one hundred thousand one hundred" is a valid number
+        if place != 'hundred' and 1 < words.count(place):
+            raise ValueError('Duplicate number word provided: {}'.format(place))
+            return 0
+    
+    # Iterate over the words, yielding them consecutively as numbers
+    for word in words:
+        if word in word_to_number:
+            yield word_to_number[word]
+        else:
+            try:
+                yield int(word)
+            except ValueError:
+                try:
+                    yield float(word)
+                except:
+                    raise ValueError('Non-number words provided: {}'.format(word))
+                    return 0
+    
+def word_to_num(phrase):
+    if type(phrase) is not str:
+        raise ValueError('Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')')
+    
+    running_total = [ 0 ]
+    postDecimalCount = 0
+    sign = 1
+    
+    for num in num_generator(phrase):
+        if num == '.':
+            postDecimalCount = -1
+            
+        elif num == '-':
+            if running_total[0] != 0:
+                raise ValueError('Negating word must be first word')
+            sign = -1
+            
+        elif num in place_names.values():
+            # Get the next index which is smaller than the current item
+            index = next((i for i, x in enumerate(running_total) if x < num), -1)
+            
+            # Sum all the smaller parts
+            # e.g. if we are parsing 'one million four hundred thirty six thousand', we'll have
+            # [ 1000000, 400, 36 ] when handling 1000; since 400 and 36 are both smaller than 
+            # 1000 but 1000000 is not, we'll sum the smaller stuff to give [ 1000000, 436 ].
+            # We'll later multiply the last item by this place name
+            running_total = running_total[:index] + [ sum(running_total[index:]) ]
+            
+            # Special case if someone starts with a place name, e.g. 'hundred twenty' rather than
+            # 'one hundred twenty'
+            if running_total[-1] == 0:
+                running_total[-1] = 1
+            
+            running_total[-1] *= num
+            
+            # Append a new item after this - we've just handled a place name, and need to separate
+            # the remaining content in case we have another place name coming
+            running_total.append(0)
+            postDecimalCount = 0
+            
+        elif len(str(num)) != len(str(running_total[-1])) or postDecimalCount:
+            # Special case to pre-adjust the decimal value, in case someone puts something like 
+            # 'point nineteen'
+            if postDecimalCount:
+                postDecimalCount -= len(str(num)) - 1
+            running_total[-1] += num * 10**postDecimalCount
+            if postDecimalCount:
+                postDecimalCount -= 1
+                
+        else:
+            running_total.append(0)
+            running_total[-1] = num
+        
+    if all( num < 10 for num in running_total ):
+        return sign * sum( num * 10**i for i, num in enumerate(reversed(running_total)) )
+    else:
+        return sign * sum(running_total)
+        
+def num_word_indices(phrase):
+    indices = []
+    for i, word in enumerate(phrase.lower().split(' ')):
+        cleanWord = ''.join(char for char in word if char not in ignore_chars + [ '.', '-' ])
+        if cleanWord.isdigit() or cleanWord in word_to_number:
+            indices.append(i)
+    
+    return indices
