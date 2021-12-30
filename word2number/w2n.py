@@ -1,7 +1,4 @@
-from __future__ import print_function
-
-
-american_number_system = {
+NUMBERS_ENGLISH = {
     'zero': 0,
     'one': 1,
     'two': 2,
@@ -30,188 +27,158 @@ american_number_system = {
     'seventy': 70,
     'eighty': 80,
     'ninety': 90,
-    'hundred': 100,
-    'thousand': 1000,
-    'million': 1000000,
-    'billion': 1000000000,
     'point': '.'
 }
 
-decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
-
-"""
-#TODO
-indian_number_system = {
-    'zero': 0,
-    'one': 1,
-    'two': 2,
-    'three': 3,
-    'four': 4,
-    'five': 5,
-    'six': 6,
-    'seven': 7,
-    'eight': 8,
-    'nine': 9,
-    'ten': 10,
-    'eleven': 11,
-    'twelve': 12,
-    'thirteen': 13,
-    'fourteen': 14,
-    'fifteen': 15,
-    'sixteen': 16,
-    'seventeen': 17,
-    'eighteen': 18,
-    'nineteen': 19,
-    'twenty': 20,
-    'thirty': 30,
-    'forty': 40,
-    'fifty': 50,
-    'sixty': 60,
-    'seventy': 70,
-    'eighty': 80,
-    'ninety': 90,
-    'hundred': 100,
-    'thousand': 1000,
-    'lac': 100000,
-    'lakh': 100000,
-    'crore': 10000000
-}
-"""
+SECTION_WORDS = ['quintillion', 'quadrillion', 'trillion', 'billion', 'million', 'thousand']
+ALL_SEPARATORS = SECTION_WORDS + ['point']
+NUMBER_WORDS = list(NUMBERS_ENGLISH.keys()) + SECTION_WORDS + ['hundred']
+NUMBER_SAFE_WORDS = NUMBER_WORDS + ['and', '&']
+DECIMAL_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
 
 
-"""
-function to form numeric multipliers for million, billion, thousand etc.
-
-input: list of strings
-return value: integer
-"""
-
-
-def number_formation(number_words):
-    numbers = []
-    for number_word in number_words:
-        numbers.append(american_number_system[number_word])
-    if len(numbers) == 4:
-        return (numbers[0] * numbers[1]) + numbers[2] + numbers[3]
-    elif len(numbers) == 3:
-        return numbers[0] * numbers[1] + numbers[2]
-    elif len(numbers) == 2:
-        if 100 in numbers:
-            return numbers[0] * numbers[1]
-        else:
-            return numbers[0] + numbers[1]
-    else:
-        return numbers[0]
+def _number_formation(number_strings):
+    """
+    function to form numeric multipliers for million, billion, thousand etc.
+    input: list of strings
+    return value: integer
+    """
+    if not number_strings:
+        return 1  # to correctly handle "a hundred and twelve", "thousand", etc
+    hundred_index = number_strings.index('hundred') if 'hundred' in number_strings else -1
+    number = 0
+    if hundred_index >= 0:
+        number = 100 * _number_formation(number_strings[0:hundred_index])
+        number_strings = number_strings[hundred_index + 1:]
+    number += sum([NUMBERS_ENGLISH[word] for word in number_strings])
+    return number
 
 
-"""
-function to convert post decimal digit words to numerial digits
-input: list of strings
-output: double
-"""
-
-
-def get_decimal_sum(decimal_digit_words):
+def _get_decimal_sum(decimal_digit_words):
+    """
+    function to convert post decimal digit words to numerial digits
+    input: list of strings
+    output: double
+    """
     decimal_number_str = []
     for dec_word in decimal_digit_words:
-        if(dec_word not in decimal_words):
+        if dec_word not in DECIMAL_WORDS:
             return 0
         else:
-            decimal_number_str.append(american_number_system[dec_word])
-    final_decimal_string = '0.' + ''.join(map(str,decimal_number_str))
+            decimal_number_str.append(NUMBERS_ENGLISH[dec_word])
+    final_decimal_string = '0.' + ''.join(map(str, decimal_number_str))
     return float(final_decimal_string)
 
 
-"""
-function to return integer for an input `number_sentence` string
-input: string
-output: int or double or None
-"""
-
-
 def word_to_num(number_sentence):
+    """
+    function to return integer for an input `number_sentence` string
+    input: string
+    output: int or double or None
+    """
     if type(number_sentence) is not str:
-        raise ValueError("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
+        raise ValueError(
+            "Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
 
-    number_sentence = number_sentence.replace('-', ' ')
-    number_sentence = number_sentence.lower()  # converting input to lowercase
-
-    if(number_sentence.isdigit()):  # return the number if user enters a number string
+    if number_sentence.isdigit():  # return the number if user enters a number string
         return int(number_sentence)
+
+    split_words = number_sentence.replace('-', ' ').replace(',', ' ').lower().split()
+
+    # removing and, & etc.
+    clean_numbers = [word for word in split_words if word in NUMBER_WORDS]
+
+    return _clean_words_to_num(clean_numbers)
+
+
+def numwords_in_sentence(sentence):
+    if type(sentence) is not str:
+        raise ValueError(
+            "Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
+
+    # TODO: some way to tell the difference between "one thousand, two hundred, and three" = 1203 and
+    # TODO  "four, seven, twelve, three" = "4, 7, 12, 3"
+    number_sentence = sentence.replace('-', ' ').replace(',', ' ').lower()
 
     split_words = number_sentence.strip().split()  # strip extra spaces and split sentence into words
 
-    clean_numbers = []
+    last_found_index = 0
+    new_sentence = ''
+    i = 0
+
+    while i < len(split_words):
+        if split_words[i] in NUMBER_WORDS:
+            num_words = split_words[i - 1:i + 1] if i > 0 and split_words[i - 1] == 'a' else [split_words[i]]
+            clean_words = [split_words[i]]
+            while i + 1 < len(split_words) and split_words[i + 1] in NUMBER_SAFE_WORDS:
+                i += 1
+                num_words.append(split_words[i])
+                if split_words[i] in NUMBER_WORDS:
+                    clean_words.append(split_words[i])
+            num = _clean_words_to_num(clean_words)
+            replace_start, replace_end = _get_replaceable(number_sentence, num_words, last_found_index)
+            new_sentence += sentence[last_found_index:replace_start] + str(num)
+            last_found_index = replace_end
+        i += 1
+
+    new_sentence += sentence[last_found_index:]
+
+    return new_sentence
+
+
+def _get_replaceable(sentence, clean_words, last_found_index):
+    start = sentence[last_found_index:].find(clean_words[0]) + last_found_index
+    end = start + len(clean_words[0])
+    for word in clean_words[1:]:
+        end += sentence[end:].lower().find(word) + len(word)
+    return start, end
+
+
+def _validate_clean_words(clean_words):
+    # Error message if the user enters invalid input!
+    if len(clean_words) == 0:
+        raise ValueError(
+            "No number words were found in the string.")
+
+        # Error if user enters million, billion, thousand or decimal point twice
+    if clean_words.count('thousand') > 1 or clean_words.count('million') > 1 or clean_words.count(
+            'billion') > 1 or clean_words.count('point') > 1:
+        raise ValueError(
+            "Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+
+    separators = list(filter(lambda x: x in ALL_SEPARATORS, clean_words))
+    sorted_seps = sorted(separators, key=lambda i: ALL_SEPARATORS.index(i))
+
+    if sorted_seps != separators:
+        raise ValueError(
+            "Malformed number! Something is out of order here.")
+
+
+def _clean_words_to_num(clean_words):
+    _validate_clean_words(clean_words)
     clean_decimal_numbers = []
 
-    # removing and, & etc.
-    for word in split_words:
-        if word in american_number_system:
-            clean_numbers.append(word)
-
-    # Error message if the user enters invalid input!
-    if len(clean_numbers) == 0:
-        raise ValueError("No valid number words found! Please enter a valid number word (eg. two million twenty three thousand and forty nine)") 
-
-    # Error if user enters million,billion, thousand or decimal point twice
-    if clean_numbers.count('thousand') > 1 or clean_numbers.count('million') > 1 or clean_numbers.count('billion') > 1 or clean_numbers.count('point')> 1:
-        raise ValueError("Redundant number word! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
-
     # separate decimal part of number (if exists)
-    if clean_numbers.count('point') == 1:
-        clean_decimal_numbers = clean_numbers[clean_numbers.index('point')+1:]
-        clean_numbers = clean_numbers[:clean_numbers.index('point')]
-
-    billion_index = clean_numbers.index('billion') if 'billion' in clean_numbers else -1
-    million_index = clean_numbers.index('million') if 'million' in clean_numbers else -1
-    thousand_index = clean_numbers.index('thousand') if 'thousand' in clean_numbers else -1
-
-    if (thousand_index > -1 and (thousand_index < million_index or thousand_index < billion_index)) or (million_index>-1 and million_index < billion_index):
-        raise ValueError("Malformed number! Please enter a valid number word (eg. two million twenty three thousand and forty nine)")
+    if clean_words.count('point') == 1:
+        clean_decimal_numbers = clean_words[clean_words.index('point') + 1:]
+        clean_words = clean_words[:clean_words.index('point')]
 
     total_sum = 0  # storing the number to be returned
 
-    if len(clean_numbers) > 0:
-        # hack for now, better way TODO
-        if len(clean_numbers) == 1:
-                total_sum += american_number_system[clean_numbers[0]]
+    if len(clean_words) > 0:
+        for word in SECTION_WORDS:
+            word_index = clean_words.index(word) if word in clean_words else -1
+            if word_index > -1:
+                total_sum += _number_formation(clean_words[:word_index])
+                clean_words = clean_words[word_index + 1:]
+            total_sum *= 1000
 
-        else:
-            if billion_index > -1:
-                billion_multiplier = number_formation(clean_numbers[0:billion_index])
-                total_sum += billion_multiplier * 1000000000
-
-            if million_index > -1:
-                if billion_index > -1:
-                    million_multiplier = number_formation(clean_numbers[billion_index+1:million_index])
-                else:
-                    million_multiplier = number_formation(clean_numbers[0:million_index])
-                total_sum += million_multiplier * 1000000
-
-            if thousand_index > -1:
-                if million_index > -1:
-                    thousand_multiplier = number_formation(clean_numbers[million_index+1:thousand_index])
-                elif billion_index > -1 and million_index == -1:
-                    thousand_multiplier = number_formation(clean_numbers[billion_index+1:thousand_index])
-                else:
-                    thousand_multiplier = number_formation(clean_numbers[0:thousand_index])
-                total_sum += thousand_multiplier * 1000
-
-            if thousand_index > -1 and thousand_index != len(clean_numbers)-1:
-                hundreds = number_formation(clean_numbers[thousand_index+1:])
-            elif million_index > -1 and million_index != len(clean_numbers)-1:
-                hundreds = number_formation(clean_numbers[million_index+1:])
-            elif billion_index > -1 and billion_index != len(clean_numbers)-1:
-                hundreds = number_formation(clean_numbers[billion_index+1:])
-            elif thousand_index == -1 and million_index == -1 and billion_index == -1:
-                hundreds = number_formation(clean_numbers)
-            else:
-                hundreds = 0
-            total_sum += hundreds
+        if clean_words:
+            total_sum += _number_formation(clean_words)
 
     # adding decimal part to total_sum (if exists)
     if len(clean_decimal_numbers) > 0:
-        decimal_sum = get_decimal_sum(clean_decimal_numbers)
+        decimal_sum = _get_decimal_sum(clean_decimal_numbers)
         total_sum += decimal_sum
 
     return total_sum
