@@ -2,81 +2,62 @@ from __future__ import print_function
 
 
 american_number_system = {
-    'zero': 0,
-    'one': 1,
-    'two': 2,
-    'three': 3,
-    'four': 4,
-    'five': 5,
-    'six': 6,
-    'seven': 7,
-    'eight': 8,
-    'nine': 9,
-    'ten': 10,
-    'eleven': 11,
-    'twelve': 12,
-    'thirteen': 13,
-    'fourteen': 14,
-    'fifteen': 15,
-    'sixteen': 16,
-    'seventeen': 17,
-    'eighteen': 18,
-    'nineteen': 19,
-    'twenty': 20,
-    'thirty': 30,
-    'forty': 40,
-    'fifty': 50,
-    'sixty': 60,
-    'seventy': 70,
-    'eighty': 80,
-    'ninety': 90,
-    'hundred': 100,
-    'thousand': 1000,
-    'million': 1000000,
-    'billion': 1000000000,
-    'point': '.'
+    'cero': 0,
+    'uno': 1,
+    'dos': 2,
+    'tres': 3,
+    'cuatro': 4,
+    'cinco': 5,
+    'seis': 6,
+    'siete': 7,
+    'ocho': 8,
+    'nueve': 9,
+    'diez' : 10,
+    'once' : 11,
+    'doce' : 12,
+    'trece' : 13,
+    'catorce' : 14,
+    'quince' : 15,
+    'dieciseis' : 16,
+    'diecisiete' : 17,
+    'dieciocho' : 18,
+    'diecinueve' : 19,
+    'veinte': 20,
+    'veintiuno': 21,
+    'veintidos': 22,
+    'veintitres': 23,
+    'veinticuatro': 24,
+    'veinticinco': 25,
+    'veintiseis': 26,
+    'veintisiete': 27,
+    'veintiocho': 28,
+    'veintinueve': 29,
+    'treinta': 30,
+    'cuarenta': 40,
+    'cincuenta': 50,
+    'sesenta': 60,
+    'setenta': 70,
+    'ochenta': 80,
+    'noventa': 90,
+    'cien': 100,
+    'ciento': 100,
+    'doscientos': 200,
+    'trescientos': 300,
+    'cuatrocientos': 400,
+    'quinientos': 500,
+    'seiscientos': 600,
+    'setecientos': 700,
+    'ochocientos': 800,
+    'novecientos': 900,
+    'mil': 1000,
+    'millon': 1000000,
+    'millones': 1000000,
+    'billon': 1000000000,
+    'punto': '.'
 }
 
-decimal_words = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine']
+decimal_words = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve']
 
-"""
-#TODO
-indian_number_system = {
-    'zero': 0,
-    'one': 1,
-    'two': 2,
-    'three': 3,
-    'four': 4,
-    'five': 5,
-    'six': 6,
-    'seven': 7,
-    'eight': 8,
-    'nine': 9,
-    'ten': 10,
-    'eleven': 11,
-    'twelve': 12,
-    'thirteen': 13,
-    'fourteen': 14,
-    'fifteen': 15,
-    'sixteen': 16,
-    'seventeen': 17,
-    'eighteen': 18,
-    'nineteen': 19,
-    'twenty': 20,
-    'thirty': 30,
-    'forty': 40,
-    'fifty': 50,
-    'sixty': 60,
-    'seventy': 70,
-    'eighty': 80,
-    'ninety': 90,
-    'hundred': 100,
-    'thousand': 1000,
-    'lac': 100000,
-    'lakh': 100000,
-    'crore': 10000000
-}
-"""
 
 
 """
@@ -128,13 +109,30 @@ input: string
 output: int or double or None
 """
 
+"""
+    function to normalize the input string to remove accents and other special characters
+    input: string
+    output: string
+"""
+def normalize(s):
+    replacements = (
+        ("á", "a"),
+        ("é", "e"),
+        ("í", "i"),
+        ("ó", "o"),
+        ("ú", "u"),
+    )
+    for a, b in replacements:
+        s = s.replace(a, b).replace(a.upper(), b.upper())
+    return s
 
 def word_to_num(number_sentence):
     if type(number_sentence) is not str:
-        raise ValueError("Type of input is not string! Please enter a valid number word (eg. \'two million twenty three thousand and forty nine\')")
+        raise ValueError(" Type of input is not string! Please enter a valid number word (eg. \'dos millones veinte tres mil y cuarenta y nueve\')")
 
     number_sentence = number_sentence.replace('-', ' ')
     number_sentence = number_sentence.lower()  # converting input to lowercase
+    number_sentence = normalize(number_sentence)  # removing accents and other special characters
 
     if(number_sentence.isdigit()):  # return the number if user enters a number string
         return int(number_sentence)

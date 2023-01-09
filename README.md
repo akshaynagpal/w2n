@@ -10,7 +10,7 @@ Please ensure that you have **updated pip** to the latest version before install
 
 You can install the module using Python Package Index using the below command.
 
-    pip install word2number
+    pip install word2number_es
 
 Make sure you install all requirements given in requirements.txt
 ```
@@ -20,7 +20,7 @@ pip install -r requirements.txt
 
 First you have to import the module using the below code.
 
-    from word2number import w2n
+    from word2number_es import w2n
 
 Then you can use the **word_to_num** method to convert a number-word to numeric digits, as shown below.
 ```

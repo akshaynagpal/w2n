@@ -1,0 +1,11 @@
+LICENSE.txt
+MANIFEST.in
+README.rst
+requirements.txt
+setup.py
+word2number_es/__init__.py
+word2number_es/w2n.py
+word2number_es.egg-info/PKG-INFO
+word2number_es.egg-info/SOURCES.txt
+word2number_es.egg-info/dependency_links.txt
+word2number_es.egg-info/top_level.txt
