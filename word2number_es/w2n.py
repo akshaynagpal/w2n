@@ -1,4 +1,4 @@
-NUMBERS_ENGLISH = {
+NUMBERS = {
     'cero': 0,
     'uno': 1,
     'dos': 2,
@@ -21,6 +21,7 @@ NUMBERS_ENGLISH = {
     'diecinueve' : 19,
     'veinte': 20,
     'veintiuno': 21,
+    'veintiun': 21,
     'veintidos': 22,
     'veintitres': 23,
     'veinticuatro': 24,
@@ -52,7 +53,7 @@ NUMBERS_ENGLISH = {
 
 SECTION_WORDS = ['quintillon', 'quatrillon', 'trillon', 'billon', 'millones', 'millon', 'mil']
 ALL_SEPARATORS = SECTION_WORDS + ['punto']
-NUMBER_WORDS = list(NUMBERS_ENGLISH.keys()) + SECTION_WORDS + ['ciento']
+NUMBER_WORDS = list(NUMBERS.keys()) + SECTION_WORDS + ['ciento']
 NUMBER_SAFE_WORDS = NUMBER_WORDS + ['y', '&']
 DECIMAL_WORDS = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve']
 
@@ -70,7 +71,7 @@ def _number_formation(number_strings):
     if hundred_index >= 0:
         number = 100 * _number_formation(number_strings[0:hundred_index])
         number_strings = number_strings[hundred_index + 1:]
-    number += sum([NUMBERS_ENGLISH[word] for word in number_strings])
+    number += sum([NUMBERS[word] for word in number_strings])
     return number
 
 
@@ -85,7 +86,7 @@ def _get_decimal_sum(decimal_digit_words):
         if dec_word not in DECIMAL_WORDS:
             return 0
         else:
-            decimal_number_str.append(NUMBERS_ENGLISH[dec_word])
+            decimal_number_str.append(NUMBERS[dec_word])
     final_decimal_string = '0.' + ''.join(map(str, decimal_number_str))
     return float(final_decimal_string)
 
