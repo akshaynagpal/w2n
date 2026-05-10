@@ -1,0 +1,31 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: word2number-i18n
+Upstream-Contact: Sebastian Ritter <bastie@users.noreply.github.com>
+Source: https://github.com/bastie/w2ni18n
+
+Files: .gitignore .travis.yml .github/* python/.settings/*
+Comment: project controlling files
+Copyright: 2020-2021 Sebastian Ritter <bastie@users.noreply.github.com>
+License: MIT
+
+Files: LICENSE README.md CONTRIBUTING.md requeriements.txt python/setup.py python/MANIFEST.in
+Comment: project files
+Copyright: 2016 Akshay Nagpal <akshaynagpal@user.noreplay.github.com>
+Copyright: 2020-2021 Sebastian Ritter <bastie@users.noreply.github.com>
+License: MIT
+
+Files: python/word2numberi18n/data/*.txt
+Comment: data files
+Copyright: 2020-2021 Sebastian Ritter <bastie@users.noreply.github.com>
+License: MIT
+
+Files: index.md _config.yml
+Comment: website files
+Copyright: 2021 Sebastian Ritter <bastie@users.noreply.github.com>
+License: MIT
+
+Files: java/src/word2numberi18n/data/*.txt
+Comment: data files
+Copyright: 2021 Sebastian Ritter <bastie@users.noreply.github.com>
+License: MIT
+
