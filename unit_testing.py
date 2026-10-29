@@ -33,6 +33,42 @@ class TestW2N(unittest.TestCase):
         self.assertEqual(w2n.word_to_num('nine point nine nine nine'), 9.999)
         self.assertEqual(w2n.word_to_num('seventh point nineteen'), 0)
 
+    def test_leading_scale_words(self):
+        # Reproduction tests for Issue #13:
+        # Scale words without explicit leading "one" must not crash with IndexError
+        self.assertEqual(w2n.word_to_num("thousand and five"), 1005)
+        self.assertEqual(w2n.word_to_num("thousand twenty"), 1020)
+        self.assertEqual(w2n.word_to_num("million and ten"), 1000010)
+        self.assertEqual(w2n.word_to_num("billion and one"), 1000000001)
+
+    def test_hundred_prefixed_addition(self):
+        # Scale word 'hundred' followed by smaller numbers must add, not multiply
+        self.assertEqual(w2n.word_to_num("hundred and five"), 105)
+        self.assertEqual(w2n.word_to_num("hundred and twenty"), 120)
+
+    def test_boundary_and_compound_scales(self):
+        # Comprehensive boundary tests for compound scale combinations
+        self.assertEqual(w2n.word_to_num("thousand and ninety nine"), 1099)
+        self.assertEqual(w2n.word_to_num("million two thousand and fifty"), 1002050)
+        self.assertEqual(w2n.word_to_num("billion and one hundred"), 1000000100)
+        self.assertEqual(w2n.word_to_num("hundred twenty five"), 125)
+        self.assertEqual(w2n.word_to_num("hundred and one"), 101)
+        self.assertEqual(w2n.word_to_num("thousand and one"), 1001)
+        self.assertEqual(w2n.word_to_num("million and one"), 1000001)
+
+    def test_decimal_with_leading_scales(self):
+        # Decimals combined with scale words
+        self.assertEqual(w2n.word_to_num("thousand point five"), 1000.5)
+        self.assertEqual(w2n.word_to_num("hundred and five point two"), 105.2)
+        self.assertEqual(w2n.word_to_num("million point zero five"), 1000000.05)
+
+    def test_boundary_error_handling(self):
+        # Ensure invalid inputs strictly continue to raise ValueError
+        self.assertRaises(ValueError, w2n.word_to_num, "")
+        self.assertRaises(ValueError, w2n.word_to_num, "   ")
+        self.assertRaises(ValueError, w2n.word_to_num, "random text with no numbers")
+        self.assertRaises(ValueError, w2n.word_to_num, "million billion")
+
     def test_negatives(self):
         self.assertRaises(ValueError, w2n.word_to_num, '112-')
         self.assertRaises(ValueError, w2n.word_to_num, '-')
